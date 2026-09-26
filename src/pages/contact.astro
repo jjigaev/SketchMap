@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InquiryForm from '../components/InquiryForm.astro';
+import { getLocale } from '../i18n';
+import { contactCopy, contactEmail } from '../data/contactCopy';
+
+const locale = getLocale(Astro.url.pathname);
+const copy = contactCopy[locale];
+---
+
+<BaseLayout title={copy.metaTitle} description={copy.metaDescription}>
+  <section class="contact-page site-width" aria-labelledby="contact-title">
+    <div class="contact-page__intro">
+      <p class="eyebrow">{copy.eyebrow}</p>
+      <h1 id="contact-title" class="editorial">{copy.title} <em>{copy.titleAccent}</em></h1>
+      <p class="contact-page__lede">{copy.lede}</p>
+
+      <div class="contact-page__details" aria-label={copy.detailsLabel}>
+        <div>
+          <p class="eyebrow">{copy.correspondence}</p>
+          <p><a href={`mailto:${contactEmail}`}>{contactEmail}</a></p>
+        </div>
+        <div>
+          <p class="eyebrow">{copy.locationLabel}</p>
+          <p>{copy.location}</p>
+        </div>
+      </div>
+    </div>
+    <InquiryForm locale={locale} />
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-page { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--grid-gap); padding-top: clamp(var(--space-7), 9vw, var(--space-9)); padding-bottom: var(--space-10); }
+  .contact-page__intro { grid-column: 1 / span 5; padding-right: var(--space-4); }
+  .contact-page__intro > .eyebrow { margin: 0 0 var(--space-6); }
+  .contact-page h1 { max-width: 11ch; margin: 0; font-size: clamp(4rem, 6.4vw, 7.5rem); font-weight: 350; letter-spacing: -0.055em; line-height: 0.98; }
+  .contact-page h1 em { font-weight: 350; }
+  .contact-page__lede { max-width: 31rem; margin: var(--space-6) 0 0; color: var(--color-muted); font-size: clamp(1.05rem, 1.15vw, 1.25rem); line-height: 1.55; }
+  .contact-page__details { display: grid; gap: var(--space-5); max-width: 32rem; margin-top: var(--space-9); padding-top: var(--space-3); border-top: 1px solid var(--color-mineral); }
+  .contact-page__details .eyebrow { margin: 0 0 var(--space-2); color: var(--color-muted); }
+  .contact-page__details p:not(.eyebrow) { margin: 0; font-size: 1.08rem; }
+  .contact-page :global(.inquiry) { grid-column: 7 / -1; padding-top: 0.3rem; }
+  @media (max-width: 1100px) {
+    .contact-page__intro { grid-column: 1 / span 5; }
+    .contact-page :global(.inquiry) { grid-column: 7 / -1; }
+    .contact-page h1 { font-size: clamp(3.5rem, 6.5vw, 5rem); }
+  }
+  @media (max-width: 800px) {
+    .contact-page { grid-template-columns: repeat(8, minmax(0, 1fr)); padding-top: var(--space-7); padding-bottom: var(--space-9); }
+    .contact-page__intro { grid-column: 1 / -1; padding-right: 0; }
+    .contact-page h1 { max-width: 12ch; font-size: clamp(3.7rem, 8vw, 6rem); }
+    .contact-page__lede { margin-top: var(--space-4); }
+    .contact-page__details { display: flex; flex-wrap: wrap; gap: var(--space-6); margin-top: var(--space-7); }
+    .contact-page :global(.inquiry) { grid-column: 1 / -1; margin-top: var(--space-7); }
+  }
+  @media (max-width: 590px) {
+    .contact-page { grid-template-columns: repeat(4, minmax(0, 1fr)); padding-top: var(--space-6); padding-bottom: var(--space-8); }
+    .contact-page__intro > .eyebrow { margin-bottom: var(--space-5); }
+    .contact-page h1 { font-size: clamp(3.5rem, 13vw, 4.75rem); }
+    .contact-page__details { gap: var(--space-4); margin-top: var(--space-7); }
+    .contact-page :global(.inquiry) { margin-top: var(--space-7); }
+  }
+</style>

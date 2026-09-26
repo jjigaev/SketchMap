@@ -1,0 +1,43 @@
+---
+import type { Locale } from '../i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const copy = {
+  ru: { label: '01 / Подход', title: 'Архитектура начинается', emphasis: 'с контекста.', body: 'Свет, рельеф и ритм повседневной жизни. Мы соединяем особенности места с точной работой материала, чтобы пространство ощущалось естественным для тех, кто в нём живёт.', keys: 'Место / Материал / Человек' },
+  kk: { label: '01 / Ұстаным', title: 'Сәулет', emphasis: 'ортаны түсінуден басталады.', body: 'Жарық, жер бедері және күнделікті өмір ырғағы. Біз мекеннің ерекшелігін материалға деген ұқыпты көзқараспен біріктіріп, адамдарға жақын кеңістік жасаймыз.', keys: 'Мекен / Материал / Адам' },
+  en: { label: '01 / Approach', title: 'Architecture begins', emphasis: 'with context.', body: 'Light, landscape and the rituals of daily life. We bring the character of a place together with a precise use of materials, making space feel natural to those who live within it.', keys: 'Place / Material / People' },
+}[locale];
+---
+
+<section class="introduction site-width" aria-labelledby="introduction-title">
+  <div class="introduction__label"><p class="eyebrow">{copy.label}</p><span class="introduction__mark" aria-hidden="true">43°15′ N<br />76°57′ E</span></div>
+  <div class="introduction__body">
+    <h2 class="introduction__title editorial" id="introduction-title">{copy.title} <em>{copy.emphasis}</em></h2>
+    <div class="introduction__bottom">
+      <p>{copy.body}</p>
+      <span class="eyebrow">{copy.keys}</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .introduction { display: grid; grid-template-columns: 2fr 10fr; gap: var(--grid-gap); padding: var(--space-7) 0 var(--space-10); border-top: 1px solid var(--color-ink); }
+  .introduction__label { display: flex; flex-direction: column; justify-content: space-between; min-height: 19rem; }
+  .introduction__label p { margin: 0; }
+  .introduction__mark { color: var(--color-olive); font-size: .75rem; font-weight: 600; letter-spacing: .1em; line-height: 1.45; }
+  .introduction__title { max-width: 65rem; margin: -0.12em 0 var(--space-7); font-size: clamp(3.5rem, 6.5vw, 7.25rem); font-weight: 300; line-height: 0.95; letter-spacing: -0.055em; }
+  .introduction__title em { font-weight: 300; }
+  .introduction__bottom { display: flex; justify-content: space-between; align-items: end; gap: var(--space-6); }
+  .introduction__bottom p { max-width: 28rem; margin: 0; font-size: clamp(1rem, 1.2vw, 1.125rem); line-height: 1.65; }
+  .introduction__bottom .eyebrow { color: var(--color-muted); white-space: nowrap; }
+  @media (max-width: 768px) {
+    .introduction { grid-template-columns: 1fr; padding-block: var(--space-6) var(--space-9); }
+    .introduction__label { min-height: 0; flex-direction: row; align-items: center; }
+    .introduction__mark { text-align: right; }
+    .introduction__title { margin: var(--space-5) 0 var(--space-6); font-size: clamp(3.2rem, 9vw, 5rem); }
+  }
+  @media (max-width: 480px) {
+    .introduction__bottom { align-items: start; flex-direction: column; gap: var(--space-5); }
+    .introduction__title { font-size: clamp(3.15rem, 14vw, 4.5rem); }
+  }
+</style>

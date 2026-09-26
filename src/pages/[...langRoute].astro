@@ -1,0 +1,41 @@
+---
+import HomePage from './index.astro';
+import ProjectsPage from './projects.astro';
+import StudioPage from './studio.astro';
+import ServicesPage from './services.astro';
+import ContactPage from './contact.astro';
+import ProjectDetailPage from './projects/[slug].astro';
+import { projects } from '../data/projects';
+import type { Locale } from '../i18n';
+
+type Page = 'home' | 'projects' | 'studio' | 'services' | 'contact' | 'detail';
+interface Props { page: Page; projectIndex?: number; }
+
+/** Every language and project has a real static HTML file for GitHub Pages. */
+export function getStaticPaths() {
+  const translatedLocales: Locale[] = ['kk', 'en'];
+  return translatedLocales.flatMap((locale) => [
+    { params: { langRoute: locale }, props: { page: 'home' as Page } },
+    ...(['projects', 'studio', 'services', 'contact'] as const).map((page) => ({
+      params: { langRoute: `${locale}/${page}` },
+      props: { page: page as Page },
+    })),
+    ...projects.map((project, projectIndex) => ({
+      params: { langRoute: `${locale}/projects/${project.slug}` },
+      props: { page: 'detail' as Page, projectIndex },
+    })),
+  ]);
+}
+
+const { page, projectIndex } = Astro.props;
+const project = typeof projectIndex === 'number' ? projects[projectIndex] : undefined;
+const next = typeof projectIndex === 'number' ? projects[(projectIndex + 1) % projects.length] : undefined;
+---
+
+{page === 'home' && <HomePage />}
+{page === 'projects' && <ProjectsPage />}
+{page === 'studio' && <StudioPage />}
+{page === 'services' && <ServicesPage />}
+{page === 'contact' && <ContactPage />}
+{page === 'detail' && project && next && typeof projectIndex === 'number' &&
+  <ProjectDetailPage project={project} next={next} index={projectIndex} />}

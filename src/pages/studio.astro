@@ -1,0 +1,336 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/paths';
+import { getLocale, localizedPath } from '../i18n';
+
+const locale = getLocale(Astro.url.pathname);
+const copy = {
+  ru: {
+    title: 'Студия — FORMA, архитектура и интерьеры',
+    description: 'FORMA — независимая студия архитектуры и интерьеров в Алматы. Исследуем место, свет и материал, чтобы создавать пространства для жизни.',
+    label: 'Студия', discipline: 'Архитектура и интерьеры',
+    headingFirst: 'Внимание', headingSecond: 'к месту.',
+    lead: 'Создаём пространства, которые вырастают из своего места и отвечают жизни людей.',
+    intro: 'FORMA — независимая студия архитектуры и интерьеров в Алматы. Мы работаем с домами, общественными пространствами и деталями, к которым люди прикасаются каждый день. В любом масштабе сохраняем любопытство и точность.',
+    imagesLabel: 'В студии FORMA',
+    teamAlt: 'Три дизайнера обсуждают чертежи и образцы камня в студии с видом на Алматы и горы',
+    teamCaption: 'В студии', teamNote: 'Идеи рождаются вместе.',
+    materialAlt: 'Чертежи, образцы камня и дерева и ветка цветущей яблони в студии Алматы',
+    materialCaption: 'Материалы', materialNote: 'От чертежа к прикосновению.',
+    philosophyLabel: 'Наш взгляд',
+    philosophyFirst: 'Пространство остаётся с нами надолго, когда в нём есть место для',
+    philosophyEmphasis: 'повседневной жизни.',
+    philosophyOne: 'Мы ищем точное соответствие между человеком и местом. Изучаем то, что уже существует, сохраняем важное и даём каждому новому элементу причину появиться.',
+    philosophyTwo: 'Работаем вместе и проверяем идеи руками. Эскизы, макеты и образцы помогают принимать решения, которые можно не только увидеть, но и почувствовать.',
+    factsLabel: 'Студия в цифрах', factsFirst: 'Небольшая команда.', factsSecond: 'Широкий взгляд.',
+    facts: [
+      { value: '2014', label: 'Год основания', note: 'Практика, выросшая из интереса к месту.' },
+      { value: '08', label: 'Человек в команде', note: 'Архитекторы, дизайнеры интерьеров и мастера.' },
+      { value: '32', label: 'Реализованных пространства', note: 'От частных домов до мест, открытых многим.' },
+    ],
+    processLabel: 'Как мы работаем', processFirst: 'От вопроса', processSecond: 'к пространству.',
+    processIntro: 'Сильный проект рождается из совместных решений, принятых вовремя. Четыре этапа задают ясный путь, оставляя место новым открытиям.',
+    process: [
+      { number: '01', title: 'Исследование', description: 'Сначала слушаем: изучаем задачу, участок и повседневные сценарии. Наблюдение помогает найти точку опоры.' },
+      { number: '02', title: 'Концепция', description: 'Ясная пространственная идея собирает проект воедино. Проверяем её через эскизы, референсы, материалы и диалог.' },
+      { number: '03', title: 'Проектирование', description: 'Пропорции, свет и материалы уточняем вместе. Рассматриваем каждое решение и в масштабе здания, и в масштабе руки.' },
+      { number: '04', title: 'Реализация', description: 'Сопровождаем воплощение проекта и координируем работу мастеров и специалистов, чтобы замысел сохранился в готовом пространстве.' },
+    ],
+    nextLabel: 'Далее / Наши услуги', nextTitle: 'Чем мы можем помочь',
+  },
+  kk: {
+    title: 'Студия — FORMA, сәулет және интерьер',
+    description: 'FORMA — Алматыдағы тәуелсіз сәулет және интерьер студиясы. Өмірге арналған кеңістіктер жасау үшін орынды, жарықты және материалды зерттейміз.',
+    label: 'Студия', discipline: 'Сәулет және интерьер',
+    headingFirst: 'Орынға', headingSecond: 'мән береміз.',
+    lead: 'Кеңістікті оның орнына сай, адамдардың күнделікті өміріне ыңғайлы етіп жасаймыз.',
+    intro: 'FORMA — Алматыдағы тәуелсіз сәулет және интерьер студиясы. Біз үйлермен, қоғамдық кеңістіктермен және адамдар күн сайын жанасатын бөлшектермен жұмыс істейміз. Әр ауқымға қызығушылықпен әрі дәлдікпен қараймыз.',
+    imagesLabel: 'FORMA студиясының ішінде',
+    teamAlt: 'Үш дизайнер Алматы мен таулар көрінетін студияда сызбалар мен тас үлгілерін талқылап отыр',
+    teamCaption: 'Студияда', teamNote: 'Идеялар бірлесіп туады.',
+    materialAlt: 'Алматы студиясындағы сызбалар, тас пен ағаш үлгілері және гүлдеген алма бұтағы',
+    materialCaption: 'Материалдар', materialNote: 'Сызбадан сезімге дейін.',
+    philosophyLabel: 'Біздің көзқарас',
+    philosophyFirst: 'Уақыт сынынан өтетін кеңістік',
+    philosophyEmphasis: 'күнделікті өмірге орын береді.',
+    philosophyOne: 'Адам мен орынның арасындағы үйлесімді іздейміз. Бар нәрсені зерттеп, маңыздысын сақтаймыз және әр жаңа элементтің себебін түсінеміз.',
+    philosophyTwo: 'Бірлесіп жұмыс істеп, идеяларды тәжірибеде тексереміз. Эскиздер, макеттер мен материал үлгілері көзбен көріп қана қоймай, сезінуге болатын шешімдерге жетелейді.',
+    factsLabel: 'Студия сандармен', factsFirst: 'Шағын команда.', factsSecond: 'Кең көзқарас.',
+    facts: [
+      { value: '2014', label: 'Құрылған жылы', note: 'Орынға деген қызығушылықтан басталған тәжірибе.' },
+      { value: '08', label: 'Команда мүшесі', note: 'Сәулетшілер, интерьер дизайнерлері және шеберлер.' },
+      { value: '32', label: 'Жүзеге асқан кеңістік', note: 'Жеке үйлерден көпшілікке ашық орындарға дейін.' },
+    ],
+    processLabel: 'Қалай жұмыс істейміз', processFirst: 'Сұрақтан', processSecond: 'кеңістікке.',
+    processIntro: 'Жақсы жоба бірге әрі уақытында қабылданған шешімдерден туады. Төрт кезең жұмысты жүйелейді және жаңа ізденіске орын қалдырады.',
+    process: [
+      { number: '01', title: 'Зерттеу', description: 'Алдымен міндетті, орынды және кеңістіктің күнделікті қолданылуын тыңдап, зерттейміз. Бақылау жұмысқа негіз болады.' },
+      { number: '02', title: 'Тұжырымдама', description: 'Айқын кеңістік идеясы жобаны біріктіреді. Оны эскиздер, мысалдар, материалдар және әңгіме арқылы тексереміз.' },
+      { number: '03', title: 'Жобалау', description: 'Пропорцияны, жарықты және материалды бірге жетілдіреміз. Әр шешімді ғимараттан бастап қолмен ұстайтын бөлшекке дейін қарастырамыз.' },
+      { number: '04', title: 'Іске асыру', description: 'Жоба жүзеге асқанда шеберлер мен мамандардың жұмысын үйлестіріп, бастапқы ойдың дайын кеңістікте сақталуын қадағалаймыз.' },
+    ],
+    nextLabel: 'Келесі / Қызметтер', nextTitle: 'Қызметтерді көру',
+  },
+  en: {
+    title: 'The studio — FORMA Architecture & Interiors',
+    description: 'Meet FORMA, an independent architecture and interiors studio in Almaty guided by close attention to place, light, and material.',
+    label: 'The studio', discipline: 'Architecture & interiors',
+    headingFirst: 'A practice in', headingSecond: 'close attention.',
+    lead: 'We make spaces that feel grounded in their place and open to the lives unfolding within them.',
+    intro: 'FORMA is an independent architecture and interiors studio in Almaty. Our work moves between buildings, rooms, and the details people touch every day. We bring the same curiosity to each scale.',
+    imagesLabel: 'Inside the FORMA studio',
+    teamAlt: 'Three designers reviewing drawings and stone samples in an Almaty studio overlooking the mountains',
+    teamCaption: 'In the studio', teamNote: 'Ideas are made together.',
+    materialAlt: 'Architectural drawings, stone and timber samples, and apple blossom in the Almaty studio',
+    materialCaption: 'Material study', materialNote: 'From drawing to touch.',
+    philosophyLabel: 'Our point of view',
+    philosophyFirst: 'The most lasting spaces are the ones that make room for',
+    philosophyEmphasis: 'ordinary life.',
+    philosophyOne: 'We look for a quiet fit between people and place. That means understanding what is already there, keeping what matters, and giving every new element a reason to exist.',
+    philosophyTwo: 'Our process is collaborative and deliberately hands-on. Sketches, mock-ups, and material samples help us make decisions that can be felt as well as seen.',
+    factsLabel: 'The practice, in brief', factsFirst: 'Small by design.', factsSecond: 'Wide in perspective.',
+    facts: [
+      { value: '2014', label: 'Practice established', note: 'A practice rooted in attention to place.' },
+      { value: '08', label: 'People in the studio', note: 'Architects, interior designers, and makers.' },
+      { value: '32', label: 'Completed spaces', note: 'From private homes to places shared by many.' },
+    ],
+    processLabel: 'How we work', processFirst: 'A clear path from', processSecond: 'question to place.',
+    processIntro: 'Good work comes from making the right decisions together, at the right time. Our four stages give each project structure without closing off discovery.',
+    process: [
+      { number: '01', title: 'Research', description: 'We listen first: to the brief, the site, and the routines a space needs to hold. Observation gives the work a useful starting point.' },
+      { number: '02', title: 'Concept', description: 'A clear spatial idea brings the project into focus. We test it through drawings, references, material studies, and conversation.' },
+      { number: '03', title: 'Design', description: 'Proportion, light, and material are refined together. Each decision is considered at the scale of the building and the hand.' },
+      { number: '04', title: 'Delivery', description: 'We stay close as the work is made, coordinating with craftspeople and consultants so the built result retains its intent.' },
+    ],
+    nextLabel: 'Next / What we do', nextTitle: 'Explore our services',
+  },
+}[locale];
+---
+
+<BaseLayout
+  title={copy.title}
+  description={copy.description}
+  image="/images/studio/team-workshop-v2.webp"
+>
+  <section class="studio-intro site-width" aria-labelledby="studio-title">
+    <div class="studio-intro__top eyebrow"><span>{copy.label}</span><span>{copy.discipline}</span></div>
+    <div class="studio-intro__grid">
+      <h1 class="studio-intro__title editorial" id="studio-title">{copy.headingFirst}<br /><em>{copy.headingSecond}</em></h1>
+      <div class="studio-intro__aside">
+        <p class="studio-intro__lead">{copy.lead}</p>
+        <p>{copy.intro}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="studio-images site-width" aria-label={copy.imagesLabel}>
+    <figure class="studio-images__main" data-studio-reveal>
+      <div class="studio-images__frame"><img src={withBase('/images/studio/team-workshop-v2.webp')} alt={copy.teamAlt} width="1440" height="960" loading="eager" decoding="async" /></div>
+      <figcaption><span>{copy.teamCaption}</span><span>{copy.teamNote}</span></figcaption>
+    </figure>
+    <figure class="studio-images__detail" data-studio-reveal>
+      <div class="studio-images__frame"><img src={withBase('/images/studio/material-study-v2.webp')} alt={copy.materialAlt} width="960" height="1200" loading="lazy" decoding="async" /></div>
+      <figcaption><span>{copy.materialCaption}</span><span>{copy.materialNote}</span></figcaption>
+    </figure>
+  </section>
+
+  <section class="philosophy" aria-labelledby="philosophy-title">
+    <div class="philosophy__inner site-width">
+      <p class="eyebrow">{copy.philosophyLabel}</p>
+      <div class="philosophy__stage">
+        <figure class="philosophy__visual philosophy__visual--place" aria-hidden="true" data-studio-reveal>
+          <img src={withBase('/images/projects/saya-house-detail-v2.webp')} alt="" width="960" height="1200" loading="lazy" decoding="async" />
+        </figure>
+        <h2 class="editorial" id="philosophy-title">{copy.philosophyFirst} <em>{copy.philosophyEmphasis}</em></h2>
+        <figure class="philosophy__visual philosophy__visual--making" aria-hidden="true" data-studio-reveal>
+          <img src={withBase('/images/projects/atelier-almaty-detail-v2.webp')} alt="" width="960" height="1200" loading="lazy" decoding="async" />
+        </figure>
+      </div>
+      <div class="philosophy__foot">
+        <p>{copy.philosophyOne}</p>
+        <p>{copy.philosophyTwo}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="studio-facts site-width" aria-labelledby="facts-title">
+    <div class="studio-facts__head">
+      <p class="eyebrow">{copy.factsLabel}</p>
+      <h2 class="editorial" id="facts-title">{copy.factsFirst}<br /><em>{copy.factsSecond}</em></h2>
+    </div>
+    <dl class="studio-facts__list">
+      {copy.facts.map((fact) => (
+        <div class="studio-facts__item">
+          <dt>{fact.label}</dt>
+          <dd class="studio-facts__value editorial">{fact.value}</dd>
+          <dd class="studio-facts__note">{fact.note}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  <section class="studio-process site-width" id="process" aria-labelledby="process-title">
+    <div class="studio-process__head">
+      <p class="eyebrow">{copy.processLabel}</p>
+      <h2 class="editorial" id="process-title">{copy.processFirst}<br /><em>{copy.processSecond}</em></h2>
+      <p>{copy.processIntro}</p>
+    </div>
+    <ol class="studio-process__list">
+      {copy.process.map((step) => (
+        <li class="studio-process__item" data-studio-reveal>
+          <span class="studio-process__number eyebrow" aria-hidden="true">{step.number}</span>
+          <h3 class="editorial">{step.title}</h3>
+          <p>{step.description}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="studio-next" aria-labelledby="studio-next-title">
+    <div class="studio-next__inner site-width">
+      <span class="eyebrow">{copy.nextLabel}</span>
+      <a href={localizedPath('/services/', locale)} aria-labelledby="studio-next-title">
+        <h2 class="editorial" id="studio-next-title">{copy.nextTitle}</h2>
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const studioReveals = document.querySelectorAll<HTMLElement>('[data-studio-reveal]');
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.remove('is-pending');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -5% 0px' });
+    studioReveals.forEach((item) => { item.classList.add('is-pending'); observer.observe(item); });
+  }
+</script>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    [data-studio-reveal] { transition: opacity var(--duration-reveal) ease, transform var(--duration-reveal) var(--ease-out); }
+    [data-studio-reveal].is-pending { opacity: 0; transform: translateY(1.25rem); }
+  }
+  .studio-intro { padding-block: var(--space-7) var(--space-8); }
+  .studio-intro__top { display: flex; justify-content: space-between; gap: var(--space-4); color: var(--color-muted); }
+  .studio-intro__grid { display: grid; grid-template-columns: minmax(0, 8fr) minmax(17rem, 4fr); align-items: end; gap: var(--grid-gap); padding-top: var(--space-7); }
+  .studio-intro__title { margin: 0; font-size: var(--text-title); font-weight: 300; line-height: .88; letter-spacing: -.064em; }
+  .studio-intro__title em { font-weight: 300; }
+  .studio-intro__aside { max-width: 28rem; justify-self: end; }
+  .studio-intro__aside p { margin: var(--space-4) 0 0; color: var(--color-muted); font-size: 1rem; line-height: 1.6; }
+  .studio-intro__aside .studio-intro__lead { margin: 0; color: var(--color-ink); font-family: var(--font-editorial); font-size: clamp(1.5rem, 2vw, 2.25rem); line-height: 1.2; letter-spacing: -.02em; }
+  .studio-images { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); align-items: end; gap: var(--grid-gap); padding-bottom: var(--space-9); }
+  .studio-images figure { min-width: 0; margin: 0; }
+  .studio-images__frame { overflow: hidden; background: var(--color-mineral); }
+  .studio-images__main .studio-images__frame { aspect-ratio: 3 / 2; }
+  .studio-images__detail .studio-images__frame { aspect-ratio: 4 / 5; }
+  .studio-images img { width: 100%; height: 100%; object-fit: cover; transition: transform 800ms var(--ease-out); }
+  .studio-images__main img { object-position: center; }
+  @media (hover: hover) and (pointer: fine) { .studio-images figure:hover img { transform: scale(1.025); } }
+  .studio-images figcaption { display: flex; justify-content: space-between; gap: var(--space-3); padding-top: var(--space-2); font-size: .82rem; color: var(--color-muted); }
+  .studio-images figcaption span:first-child { color: var(--color-ink); }
+  .philosophy { background: var(--color-ink); color: var(--color-chalk); }
+  .philosophy__inner { padding-block: var(--space-9); }
+  .philosophy .eyebrow { margin: 0 0 var(--space-5); color: var(--color-mineral); }
+  .philosophy__stage { position: relative; isolation: isolate; padding-block: var(--space-3) clamp(11rem, 16vw, 16rem); }
+  .philosophy__visual { position: absolute; z-index: -1; margin: 0; overflow: hidden; background: #313a32; }
+  .philosophy__visual img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .philosophy__visual--place { top: 1%; left: 5%; width: min(34%, 28rem); aspect-ratio: 4 / 3; }
+  .philosophy__visual--place img { object-position: 50% 42%; filter: brightness(.42) saturate(.75); }
+  .philosophy__visual--making { right: 3%; bottom: 0; width: min(27%, 23rem); aspect-ratio: 3 / 2; }
+  .philosophy__visual--making img { object-position: 50% 55%; filter: brightness(.85) saturate(.82); }
+  .philosophy h2 { position: relative; z-index: 1; max-width: 85rem; margin: 0; font-size: clamp(3.4rem, 7.2vw, 8rem); font-weight: 300; line-height: .98; letter-spacing: -.056em; }
+  .philosophy h2 em { font-weight: 300; color: var(--color-mineral); }
+  .philosophy__foot { display: grid; grid-template-columns: 1fr 1fr; gap: var(--grid-gap); max-width: 55rem; margin: var(--space-5) 0 0 auto; }
+  .philosophy__foot p { margin: 0; color: #d4d7ce; font-size: 1rem; line-height: 1.6; }
+  .studio-facts { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--grid-gap); padding-block: var(--space-9); }
+  .studio-facts__head .eyebrow { margin: 0 0 var(--space-7); color: var(--color-muted); }
+  .studio-facts__head h2 { margin: 0; font-size: var(--text-section); font-weight: 300; line-height: 1; letter-spacing: -.045em; }
+  .studio-facts__head em { font-weight: 300; }
+  .studio-facts__list { margin: 0; border-top: 1px solid var(--color-mineral); }
+  .studio-facts__item { display: grid; grid-template-columns: minmax(8rem, 1fr) minmax(5.5rem, .7fr) minmax(10rem, 1.4fr); align-items: baseline; gap: var(--grid-gap); padding: var(--space-4) 0; border-bottom: 1px solid var(--color-mineral); }
+  .studio-facts__item dt { font-size: .82rem; font-weight: 600; }
+  .studio-facts__item dd { margin: 0; }
+  .studio-facts__value { font-size: 3.4rem; font-weight: 300; line-height: .9; letter-spacing: -.05em; }
+  .studio-facts__note { color: var(--color-muted); font-size: .86rem; line-height: 1.45; }
+  .studio-process { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--grid-gap); padding-bottom: var(--space-9); }
+  .studio-process__head { padding-top: var(--space-7); border-top: 1px solid var(--color-mineral); }
+  .studio-process__head .eyebrow { margin: 0 0 var(--space-7); color: var(--color-muted); }
+  .studio-process__head h2 { margin: 0; font-size: var(--text-section); font-weight: 300; line-height: 1; letter-spacing: -.045em; }
+  .studio-process__head h2 em { font-weight: 300; }
+  .studio-process__head > p:last-child { max-width: 25rem; margin: var(--space-5) 0 0; color: var(--color-muted); line-height: 1.6; }
+  .studio-process__list { margin: 0; padding: 0; list-style: none; }
+  .studio-process__item { display: grid; grid-template-columns: 3rem minmax(9rem, 1fr) minmax(12rem, 1.5fr); gap: var(--grid-gap); padding: var(--space-5) 0; border-top: 1px solid var(--color-mineral); }
+  .studio-process__item:last-child { border-bottom: 1px solid var(--color-mineral); }
+  .studio-process__number { color: var(--color-muted); }
+  .studio-process__item h3 { margin: 0; font-size: clamp(1.8rem, 2.5vw, 2.7rem); font-weight: 350; line-height: 1; letter-spacing: -.035em; }
+  .studio-process__item p { margin: 0; color: var(--color-muted); font-size: .95rem; line-height: 1.55; }
+  .studio-next { border-top: 1px solid var(--color-mineral); }
+  .studio-next__inner { padding-block: var(--space-6) var(--space-8); }
+  .studio-next__inner > span { color: var(--color-muted); }
+  .studio-next a { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-5); margin-top: var(--space-5); transition: color var(--duration-fast) ease; }
+  .studio-next a:hover, .studio-next a:focus-visible { color: var(--color-olive); }
+  .studio-next h2 { margin: 0; font-size: clamp(3rem, 8vw, 8rem); font-weight: 300; line-height: .95; letter-spacing: -.06em; }
+  .studio-next a > span { font-size: clamp(2.5rem, 5vw, 5rem); line-height: .8; transition: transform var(--duration-fast) var(--ease-out); }
+  .studio-next a:hover > span { transform: translate(3px, -3px); }
+  @media (max-width: 1024px) {
+    .studio-intro__grid { grid-template-columns: 1fr; gap: var(--space-5); }
+    .studio-intro__aside { justify-self: start; max-width: 42rem; display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); }
+    .studio-intro__aside p { margin: 0; }
+    .studio-facts, .studio-process { grid-template-columns: minmax(0, 1fr); gap: var(--space-7); }
+    .studio-facts__head .eyebrow, .studio-process__head .eyebrow { margin-bottom: var(--space-5); }
+    .studio-process__head { border-top: 0; padding-top: 0; }
+  }
+  @media (max-width: 768px) {
+    .studio-intro { padding-block: var(--space-6) var(--space-7); }
+    .studio-intro__top span:last-child { text-align: right; }
+    .studio-intro__grid { padding-top: var(--space-7); }
+    .studio-intro__title { font-size: clamp(3.5rem, 11vw, 6rem); }
+    .studio-images { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: end; padding-bottom: var(--space-8); }
+    .studio-images__main .studio-images__frame { aspect-ratio: 4 / 5; }
+    .studio-images__detail .studio-images__frame { aspect-ratio: 4 / 5; }
+    .studio-images figcaption { display: block; }
+    .studio-images figcaption span { display: block; }
+    .studio-images figcaption span + span { margin-top: .2rem; }
+    .philosophy__inner { padding-block: var(--space-8); }
+    .philosophy__stage { padding-bottom: var(--space-8); }
+    .philosophy__visual--place { left: 3%; width: 42%; }
+    .philosophy__visual--making { width: 33%; }
+    .philosophy h2 { font-size: clamp(3rem, 8vw, 5rem); }
+    .philosophy__foot { margin-top: var(--space-5); }
+    .studio-facts { padding-block: var(--space-8); }
+    .studio-process { padding-bottom: var(--space-8); }
+  }
+  @media (max-width: 600px) {
+    .studio-intro__top span:last-child { display: none; }
+    .studio-intro__aside { display: block; }
+    .studio-intro__aside p + p { margin-top: var(--space-4); }
+    .studio-images { display: block; }
+    .studio-images__main .studio-images__frame { aspect-ratio: 4 / 5; }
+    .studio-images__detail { width: 54%; margin: var(--space-6) 0 0 auto !important; }
+    .studio-images__detail .studio-images__frame { aspect-ratio: 4 / 5; }
+    .philosophy .eyebrow { margin-bottom: var(--space-6); }
+    .philosophy__stage { display: grid; grid-template-columns: 1.1fr .9fr; gap: var(--space-3); padding: 0; }
+    .philosophy__visual { position: static; z-index: auto; width: 100%; }
+    .philosophy__visual--place { grid-column: 1; grid-row: 2; aspect-ratio: 4 / 5; }
+    .philosophy__visual--place img { filter: brightness(.9) saturate(.82); }
+    .philosophy__visual--making { grid-column: 2; grid-row: 2; align-self: end; aspect-ratio: 4 / 5; margin-top: var(--space-5); }
+    .philosophy__visual--making img { filter: saturate(.85); }
+    .philosophy h2 { font-size: clamp(3rem, 11vw, 4.8rem); }
+    .philosophy__stage h2 { grid-column: 1 / -1; grid-row: 1; margin-bottom: var(--space-5); }
+    .philosophy__foot { display: block; }
+    .philosophy__foot p + p { margin-top: var(--space-4); }
+    .studio-facts__item { grid-template-columns: 1fr auto; gap: var(--space-2); }
+    .studio-facts__item dt { align-self: end; }
+    .studio-facts__value { grid-column: 2; grid-row: 1; }
+    .studio-facts__note { grid-column: 1 / -1; max-width: 18rem; }
+    .studio-process__item { grid-template-columns: 2.5rem minmax(0, 1fr); gap: var(--space-2); }
+    .studio-process__item h3 { font-size: clamp(1.85rem, 8vw, 2.2rem); overflow-wrap: anywhere; }
+    .studio-process__item p { grid-column: 2; max-width: 25rem; }
+  }
+</style>

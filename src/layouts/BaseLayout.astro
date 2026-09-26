@@ -1,0 +1,75 @@
+---
+// These styles include Latin and Cyrillic-ext subsets, including Kazakh letters.
+import '@fontsource-variable/ibm-plex-sans/wght.css';
+import '@fontsource-variable/cormorant-garamond/wght.css';
+import '@fontsource-variable/cormorant-garamond/wght-italic.css';
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { withBase } from '../lib/paths';
+import { getLocale, localizedPath, locales, ui } from '../i18n';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  headerTheme?: 'paper' | 'image';
+}
+
+const locale = getLocale(Astro.url.pathname);
+const copy = ui(locale);
+const {
+  title = copy.title,
+  description = copy.description,
+  image,
+  headerTheme = 'paper',
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const alternateLinks = locales.map((alternateLocale) => ({
+  locale: alternateLocale,
+  href: new URL(localizedPath(Astro.url.pathname, alternateLocale), Astro.site).toString(),
+}));
+const ogLocale = { ru: 'ru_KZ', kk: 'kk_KZ', en: 'en_US' }[locale];
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#eeece6" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {alternateLinks.map((link) => <link rel="alternate" hreflang={link.locale} href={link.href} />)}
+    <link rel="alternate" hreflang="x-default" href={alternateLinks[0].href} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={`FORMA — ${copy.descriptor}`} />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {image && <meta property="og:image" content={new URL(withBase(image), Astro.site).toString()} />}
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <title>{title}</title>
+  </head>
+  <body id="top">
+    <a class="skip-link" href="#main">{copy.skip}</a>
+    <SiteHeader theme={headerTheme} />
+    <main id="main"><slot /></main>
+    <SiteFooter />
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: fixed;
+    z-index: 1000;
+    inset: 0 auto auto var(--gutter);
+    transform: translateY(-130%);
+    padding: 0.75rem 1rem;
+    background: var(--color-ink);
+    color: var(--color-chalk);
+    font-size: 0.875rem;
+  }
+  .skip-link:focus { transform: translateY(0); }
+</style>

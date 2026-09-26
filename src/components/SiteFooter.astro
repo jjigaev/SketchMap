@@ -1,0 +1,71 @@
+---
+import { getLocale, localizedPath, ui } from '../i18n';
+
+const locale = getLocale(Astro.url.pathname);
+const copy = ui(locale);
+
+const links = [
+  { label: copy.projects, href: localizedPath('/projects/', locale) },
+  { label: copy.studio, href: localizedPath('/studio/', locale) },
+  { label: copy.services, href: localizedPath('/services/', locale) },
+  { label: copy.contact, href: localizedPath('/contact/', locale) },
+];
+---
+
+<footer class="site-footer" id="footer">
+  <div class="site-footer__inner site-width">
+    <div class="site-footer__top">
+      <div>
+        <p class="eyebrow">FORMA / {copy.descriptor}</p>
+        <p class="site-footer__statement editorial">{copy.statement} <em>{copy.statementEmphasis}</em></p>
+      </div>
+      <a class="site-footer__inquiry" href={localizedPath('/contact/', locale)}>{copy.inquiry} <span aria-hidden="true">↗</span></a>
+    </div>
+
+    <div class="site-footer__brand" aria-hidden="true">FORMA</div>
+
+    <div class="site-footer__bottom">
+      <p>© {new Date().getFullYear()} FORMA. {copy.footerLegal}</p>
+      <nav aria-label={copy.footerNavLabel}>
+        {links.map((link) => <a href={link.href}>{link.label}</a>)}
+      </nav>
+      <a href="#top">{copy.toTop}</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer { overflow: hidden; border-top: 1px solid rgba(248, 247, 243, .24); background: var(--color-ink); color: var(--color-chalk); }
+  .site-footer__inner { padding-top: var(--space-8); }
+  .site-footer__top { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: var(--space-6); padding-bottom: var(--space-8); border-bottom: 1px solid rgba(248, 247, 243, 0.3); }
+  .site-footer__top .eyebrow { margin: 0 0 var(--space-5); color: var(--color-mineral); }
+  .site-footer__statement { max-width: 13ch; margin: 0; font-size: clamp(3rem, 6vw, 6.75rem); font-weight: 350; letter-spacing: -0.045em; line-height: 0.98; }
+  .site-footer__statement em { font-weight: 350; }
+  .site-footer__inquiry { display: inline-flex; align-items: center; justify-content: space-between; gap: var(--space-6); min-width: 16rem; padding: 0 0 var(--space-2); border-bottom: 1px solid var(--color-chalk); font-size: 0.94rem; transition: color var(--duration-fast) ease, border-color var(--duration-fast) ease; }
+  .site-footer__inquiry span { font-size: 1.2rem; }
+  .site-footer__inquiry:hover, .site-footer__bottom a:hover { color: var(--color-mineral); border-color: var(--color-mineral); }
+  .site-footer__brand { position: relative; left: -0.025em; width: max-content; margin: var(--space-6) 0 var(--space-4); font-family: var(--font-body); font-size: clamp(8rem, 23vw, 25rem); font-weight: 600; letter-spacing: -0.105em; line-height: 0.72; white-space: nowrap; }
+  .site-footer__brand span { color: var(--color-mineral); }
+  .site-footer__bottom { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: var(--space-6); min-height: 6rem; border-top: 1px solid rgba(248, 247, 243, 0.3); color: var(--color-mineral); font-size: 0.8rem; }
+  .site-footer__bottom p { margin: 0; }
+  .site-footer__bottom nav { display: flex; flex-wrap: wrap; gap: var(--space-4); }
+  .site-footer__bottom a { transition: color var(--duration-fast) ease; }
+  @media (max-width: 1100px) {
+    .site-footer__bottom { grid-template-columns: 1fr auto; row-gap: var(--space-2); padding: var(--space-4) 0; }
+    .site-footer__bottom > a { grid-column: 2; grid-row: 1; }
+    .site-footer__bottom nav { grid-column: 1 / -1; }
+  }
+  @media (max-width: 768px) {
+    .site-footer__inner { padding-top: var(--space-7); }
+    .site-footer__top { grid-template-columns: 1fr; padding-bottom: var(--space-7); }
+    .site-footer__inquiry { width: min(100%, 22rem); }
+    .site-footer__brand { margin: var(--space-6) 0 var(--space-4); font-size: clamp(5rem, 24.5vw, 12rem); }
+    .site-footer__bottom { grid-template-columns: 1fr auto; gap: var(--space-3); }
+    .site-footer__bottom nav { gap: var(--space-3); }
+  }
+  @media (max-width: 390px) {
+    .site-footer__statement { font-size: 3rem; }
+    .site-footer__bottom { font-size: 0.75rem; }
+    .site-footer__bottom p { max-width: 12rem; }
+  }
+</style>

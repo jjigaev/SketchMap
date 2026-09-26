@@ -1,0 +1,67 @@
+---
+import type { Locale } from '../i18n';
+import { localizedPath } from '../i18n';
+import { withBase } from '../lib/paths';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const copy = {
+  ru: { label: '03 / Студия', title: 'В диалоге', emphasis: 'рождается форма.', body: 'Мы работаем вместе с заказчиками, мастерами и инженерами — от планировки здания до тактильной детали. Лучшие идеи проходят проверку в разговоре и в материале.', studio: 'О студии', services: 'Наши услуги', imageAlt: 'Команда FORMA обсуждает чертежи и материалы в студии с видом на Алматы и горы', caption: 'В студии', phases: 'Исследование / Концепция / Проект / Реализация' },
+  kk: { label: '03 / Студия', title: 'Пішін', emphasis: 'сұхбаттан туады.', body: 'Біз тапсырыс берушілермен, шеберлермен және инженерлермен бірге ғимарат жоспарынан материал бөлшегіне дейін жұмыс істейміз. Үздік идеялар пікір алмасу мен тәжірибеде сыналады.', studio: 'Студия туралы', services: 'Қызметтеріміз', imageAlt: 'FORMA тобы Алматы мен таулар көрінетін студияда сызбалар мен материалдарды талқылап отыр', caption: 'Студияда', phases: 'Зерттеу / Тұжырымдама / Жоба / Іске асыру' },
+  en: { label: '03 / The studio', title: 'Form emerges', emphasis: 'through dialogue.', body: 'We work closely with clients, makers and engineers, from the plan of a building to the touch of a material. The best ideas are tested in conversation and in making.', studio: 'Discover the studio', services: 'Explore our services', imageAlt: 'FORMA team reviewing drawings and materials in their studio overlooking Almaty and the mountains', caption: 'In the studio', phases: 'Research / Concept / Design / Delivery' },
+}[locale];
+---
+
+<section class="studio-teaser site-width" aria-labelledby="studio-teaser-title">
+  <p class="studio-teaser__label eyebrow">{copy.label}</p>
+  <div class="studio-teaser__grid">
+    <div class="studio-teaser__copy">
+      <h2 class="editorial" id="studio-teaser-title">{copy.title} <em>{copy.emphasis}</em></h2>
+      <p>{copy.body}</p>
+      <div class="studio-teaser__links">
+        <a href={localizedPath('/studio/', locale)}><span>{copy.studio}</span><span aria-hidden="true">↗</span></a>
+        <a href={localizedPath('/services/', locale)}><span>{copy.services}</span><span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+    <figure>
+      <div class="studio-teaser__image"><img src={withBase('/images/studio/team-workshop-v2.webp')} alt={copy.imageAlt} width="1440" height="960" loading="lazy" decoding="async" /></div>
+      <figcaption class="eyebrow"><span>{copy.caption}</span><span>{copy.phases}</span></figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .studio-teaser { padding: var(--space-4) 0 var(--space-10); border-top: 1px solid var(--color-ink); }
+  .studio-teaser__label { margin: 0 0 var(--space-7); color: var(--color-muted); }
+  .studio-teaser__grid { display: grid; grid-template-columns: 5fr 7fr; align-items: end; gap: var(--grid-gap); }
+  .studio-teaser__copy { display: flex; flex-direction: column; align-items: start; padding-right: var(--space-7); }
+  .studio-teaser__copy h2 { max-width: 9ch; margin: 0 0 var(--space-6); font-size: clamp(3rem, 5vw, 5.75rem); font-weight: 300; line-height: 0.94; letter-spacing: -0.05em; }
+  .studio-teaser__copy h2 em { font-weight: 300; }
+  .studio-teaser__copy p { max-width: 27rem; margin: 0 0 var(--space-7); line-height: 1.65; }
+  .studio-teaser__links { width: 100%; max-width: 27rem; }
+  .studio-teaser__links a { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); min-height: 3.5rem; border-top: 1px solid var(--color-mineral); font-size: 0.9rem; font-weight: 600; transition: color var(--duration-fast) ease; }
+  .studio-teaser__links a:last-child { border-bottom: 1px solid var(--color-mineral); }
+  .studio-teaser__links a span:last-child { font-size: 1.2rem; transition: transform var(--duration-fast) var(--ease-out); }
+  .studio-teaser__links a:hover { color: var(--color-olive); }
+  .studio-teaser__links a:hover span:last-child { transform: translate(3px, -3px); }
+  figure { margin: 0; }
+  .studio-teaser__image { overflow: hidden; aspect-ratio: 1.28; background: var(--color-mineral); }
+  .studio-teaser__image img { width: 100%; height: 100%; object-fit: cover; transition: transform 800ms var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) { .studio-teaser__image:hover img { transform: scale(1.035); } }
+  figcaption { display: flex; justify-content: space-between; gap: var(--space-3); padding-top: var(--space-3); color: var(--color-muted); }
+  @media (max-width: 1024px) {
+    .studio-teaser__copy { padding-right: var(--space-5); }
+  }
+  @media (max-width: 768px) {
+    .studio-teaser__label { margin-bottom: var(--space-6); }
+    .studio-teaser__grid { grid-template-columns: 1fr; gap: var(--space-7); }
+    .studio-teaser__copy { padding-right: 0; }
+    .studio-teaser__copy h2 { max-width: 12ch; }
+    .studio-teaser__copy p { margin-bottom: var(--space-5); }
+    .studio-teaser__image { aspect-ratio: 1.4; }
+  }
+  @media (max-width: 480px) {
+    .studio-teaser__copy h2 { font-size: clamp(3.2rem, 13vw, 4.5rem); }
+    .studio-teaser__image { aspect-ratio: 0.95; }
+    figcaption { flex-direction: column; gap: 0.3rem; }
+  }
+</style>

@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectExplorer from '../components/ProjectExplorer.astro';
+import { getLocale } from '../i18n';
+const locale = getLocale(Astro.url.pathname);
+const copy = {
+  ru: { title: 'Проекты — FORMA', description: 'Архитектура и интерьеры в Казахстане и за его пределами: избранные жилые, коммерческие, гостиничные и культурные проекты FORMA.' },
+  kk: { title: 'Жобалар — FORMA', description: 'Қазақстандағы және басқа елдердегі сәулет пен интерьер: FORMA студиясының тұрғын үй, коммерциялық, қонақжайлық және мәдени жобалары.' },
+  en: { title: 'Projects — FORMA', description: 'Architecture and interiors in Kazakhstan and beyond: selected residential, commercial, hospitality and cultural projects by FORMA.' },
+}[locale];
+---
+
+<BaseLayout title={copy.title} description={copy.description}>
+  <ProjectExplorer locale={locale} />
+</BaseLayout>

@@ -1,0 +1,266 @@
+---
+import type { Locale } from '../i18n';
+import { contactEmail, formCopy } from '../data/contactCopy';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const copy = formCopy[locale];
+---
+
+<div class="inquiry" data-inquiry data-locale={locale}>
+  <form class="inquiry__form" data-inquiry-form novalidate>
+    <div class="inquiry__heading">
+      <p class="eyebrow">{copy.heading}</p>
+      <p>{copy.intro}</p>
+    </div>
+
+    <div class="inquiry__error-summary" data-error-summary role="alert" tabindex="-1" hidden>
+      <p>{copy.summary}</p>
+      <ul data-error-list></ul>
+    </div>
+
+    <div class="inquiry__fields">
+      <div class="field field--half" data-field="name">
+        <label for="inquiry-name">{copy.labels.name} <span aria-hidden="true">*</span></label>
+        <input id="inquiry-name" name="name" type="text" autocomplete="name" maxlength="100" aria-describedby="inquiry-name-error" required />
+        <p class="field__error" id="inquiry-name-error" hidden></p>
+      </div>
+
+      <div class="field field--half" data-field="email">
+        <label for="inquiry-email">{copy.labels.email} <span aria-hidden="true">*</span></label>
+        <input id="inquiry-email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" aria-describedby="inquiry-email-error" required />
+        <p class="field__error" id="inquiry-email-error" hidden></p>
+      </div>
+
+      <div class="field field--half field--select" data-field="projectType">
+        <label for="inquiry-project-type">{copy.labels.projectType} <span aria-hidden="true">*</span></label>
+        <div class="field__select-wrap">
+          <select id="inquiry-project-type" name="projectType" aria-describedby="inquiry-project-type-error" required>
+            <option value="">{copy.selectType}</option>
+            <option value="residential">{copy.types.residential}</option>
+            <option value="commercial">{copy.types.commercial}</option>
+            <option value="hospitality">{copy.types.hospitality}</option>
+            <option value="cultural">{copy.types.cultural}</option>
+            <option value="other">{copy.types.other}</option>
+          </select>
+        </div>
+        <p class="field__error" id="inquiry-project-type-error" hidden></p>
+      </div>
+
+      <div class="field field--half field--select" data-field="budget">
+        <label for="inquiry-budget">{copy.labels.budget} <span aria-hidden="true">*</span></label>
+        <div class="field__select-wrap">
+          <select id="inquiry-budget" name="budget" aria-describedby="inquiry-budget-error" required>
+            <option value="">{copy.selectBudget}</option>
+            <option value="under-25m">{copy.budgets.under}</option>
+            <option value="25-75m">{copy.budgets.mid}</option>
+            <option value="75-200m">{copy.budgets.upper}</option>
+            <option value="over-200m">{copy.budgets.over}</option>
+            <option value="undecided">{copy.budgets.undecided}</option>
+          </select>
+        </div>
+        <p class="field__error" id="inquiry-budget-error" hidden></p>
+      </div>
+
+      <div class="field field--message" data-field="message">
+        <label for="inquiry-message">{copy.labels.message} <span aria-hidden="true">*</span></label>
+        <textarea id="inquiry-message" name="message" rows="5" minlength="20" maxlength="3000" placeholder={copy.placeholder} aria-describedby="inquiry-message-hint inquiry-message-error" required></textarea>
+        <p class="field__hint" id="inquiry-message-hint">{copy.hint}</p>
+        <p class="field__error" id="inquiry-message-error" hidden></p>
+      </div>
+    </div>
+
+    <div class="inquiry__actions">
+      <button class="inquiry__submit" type="submit">
+        <span>{copy.submit}</span>
+        <span aria-hidden="true">↗</span>
+      </button>
+      <p>{copy.disclaimer}</p>
+    </div>
+  </form>
+
+  <section class="inquiry__success" data-inquiry-success tabindex="-1" aria-live="polite" hidden>
+    <p class="eyebrow">{copy.successEyebrow}</p>
+    <h2 class="editorial">{copy.successTitle}</h2>
+    <p>{copy.successText}</p>
+    <a class="inquiry__mail-link" data-inquiry-mail-link href={`mailto:${contactEmail}`}>{copy.openMail} <span aria-hidden="true">↗</span></a>
+    <button type="button" data-inquiry-reset>{copy.reset} <span aria-hidden="true">↗</span></button>
+  </section>
+</div>
+
+<script>
+  import { contactEmail, formCopy } from '../data/contactCopy';
+  import type { Locale } from '../i18n';
+  type FieldName = 'name' | 'email' | 'projectType' | 'budget' | 'message';
+  type FieldControl = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
+  const root = document.querySelector<HTMLElement>('[data-inquiry]');
+  const currentLocale = (root?.dataset.locale || 'ru') as Locale;
+  const copy = formCopy[currentLocale];
+  const form = root?.querySelector<HTMLFormElement>('[data-inquiry-form]');
+  const summary = root?.querySelector<HTMLElement>('[data-error-summary]');
+  const errorList = root?.querySelector<HTMLUListElement>('[data-error-list]');
+  const success = root?.querySelector<HTMLElement>('[data-inquiry-success]');
+  const resetButton = root?.querySelector<HTMLButtonElement>('[data-inquiry-reset]');
+  const mailLink = root?.querySelector<HTMLAnchorElement>('[data-inquiry-mail-link]');
+  const fieldOrder: FieldName[] = ['name', 'email', 'projectType', 'budget', 'message'];
+  const labels: Record<FieldName, string> = copy.labels;
+  const requiredMessages: Record<FieldName, string> = {
+    name: copy.errors.name,
+    email: copy.errors.email,
+    projectType: copy.errors.projectType,
+    budget: copy.errors.budget,
+    message: copy.errors.message,
+  };
+
+  function controlFor(name: FieldName): FieldControl | null {
+    return form?.elements.namedItem(name) as FieldControl | null;
+  }
+
+  function errorFor(name: FieldName, control: FieldControl): string {
+    const value = control.value.trim();
+    if (!value) return requiredMessages[name];
+    if (name === 'name' && value.length < 2) return copy.errors.nameShort;
+    if (name === 'email' && (control as HTMLInputElement).validity.typeMismatch) return copy.errors.emailInvalid;
+    if (name === 'message' && value.length < 20) return copy.errors.messageShort;
+    return '';
+  }
+
+  function setFieldError(name: FieldName, message: string) {
+    const control = controlFor(name);
+    const field = form?.querySelector<HTMLElement>(`[data-field="${name}"]`);
+    const error = field?.querySelector<HTMLElement>('.field__error');
+    if (!control || !field || !error) return;
+    field.classList.toggle('field--invalid', Boolean(message));
+    if (message) control.setAttribute('aria-invalid', 'true');
+    else control.removeAttribute('aria-invalid');
+    error.textContent = message;
+    error.hidden = !message;
+  }
+
+  function hideSummary() {
+    if (!summary || !errorList) return;
+    summary.hidden = true;
+    errorList.replaceChildren();
+  }
+
+  if (form && summary && errorList && success && resetButton && mailLink) {
+    fieldOrder.forEach((name) => {
+      const control = controlFor(name);
+      control?.addEventListener('blur', () => setFieldError(name, errorFor(name, control)));
+      control?.addEventListener('input', () => {
+        if (control.getAttribute('aria-invalid') === 'true') setFieldError(name, errorFor(name, control));
+        if (!summary.hidden) hideSummary();
+      });
+      control?.addEventListener('change', () => {
+        if (control.getAttribute('aria-invalid') === 'true') setFieldError(name, errorFor(name, control));
+        if (!summary.hidden) hideSummary();
+      });
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const errors: { name: FieldName; message: string }[] = [];
+      fieldOrder.forEach((name) => {
+        const control = controlFor(name);
+        if (!control) return;
+        const message = errorFor(name, control);
+        setFieldError(name, message);
+        if (message) errors.push({ name, message });
+      });
+
+      if (errors.length) {
+        errorList.replaceChildren(...errors.map(({ name, message }) => {
+          const item = document.createElement('li');
+          const link = document.createElement('a');
+          link.href = `#${controlFor(name)?.id}`;
+          link.textContent = `${labels[name]}: ${message}`;
+          item.append(link);
+          return item;
+        }));
+        summary.hidden = false;
+        controlFor(errors[0].name)?.focus();
+        return;
+      }
+
+      hideSummary();
+      const fieldValue = (name: FieldName) => controlFor(name)?.value.trim() ?? '';
+      const selectedText = (name: 'projectType' | 'budget') =>
+        (controlFor(name) as HTMLSelectElement)?.selectedOptions[0]?.textContent?.trim() ?? '';
+      const mailSubject = `${copy.heading} — ${fieldValue('name').replace(/[\r\n]/g, ' ')}`;
+      const mailBody = [
+        `${copy.labels.name}: ${fieldValue('name')}`,
+        `${copy.labels.email}: ${fieldValue('email')}`,
+        `${copy.labels.projectType}: ${selectedText('projectType')}`,
+        `${copy.labels.budget}: ${selectedText('budget')}`,
+        `${copy.labels.message}:\n${fieldValue('message')}`,
+      ].join('\n\n');
+      mailLink.href = `mailto:${contactEmail}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`;
+      fieldOrder.forEach((name) => setFieldError(name, ''));
+      form.hidden = true;
+      success.hidden = false;
+      success.focus();
+    });
+
+    resetButton.addEventListener('click', () => {
+      success.hidden = true;
+      form.hidden = false;
+      hideSummary();
+      controlFor('name')?.focus();
+    });
+  }
+</script>
+
+<style>
+  .inquiry { min-width: 0; --color-error: #8d3b2f; }
+  .inquiry__form[hidden], .inquiry__success[hidden], .inquiry__error-summary[hidden], .field__error[hidden] { display: none; }
+  .inquiry__heading { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); padding-bottom: var(--space-5); border-bottom: 1px solid var(--color-ink); }
+  .inquiry__heading .eyebrow { margin: 0; white-space: nowrap; }
+  .inquiry__heading > p:last-child { max-width: 16rem; margin: 0; color: var(--color-muted); font-size: 0.87rem; line-height: 1.45; }
+  .inquiry__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-5); }
+  .field { position: relative; min-width: 0; padding-top: var(--space-5); }
+  .field--message { grid-column: 1 / -1; }
+  .field label { display: block; margin-bottom: var(--space-2); font-size: 0.88rem; font-weight: 550; }
+  .field label span { color: var(--color-olive); }
+  .field input, .field select, .field textarea { display: block; width: 100%; min-height: 3.25rem; padding: 0.75rem 0; border: 0; border-bottom: 1px solid var(--color-mineral); border-radius: 0; background: transparent; color: var(--color-ink); font-size: 1rem; line-height: 1.5; transition: border-color var(--duration-fast) ease, background-color var(--duration-fast) ease; }
+  .field input:hover, .field select:hover, .field textarea:hover { border-color: var(--color-muted); }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: 0; border-color: var(--color-olive); box-shadow: inset 0 -1px var(--color-olive); }
+  .field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible { outline: 2px solid var(--color-olive); outline-offset: 4px; }
+  .field select { appearance: none; padding-right: 2.5rem; cursor: pointer; }
+  .field__select-wrap { position: relative; }
+  .field__select-wrap::after { content: ''; position: absolute; right: 0.35rem; top: 50%; width: 0.55rem; height: 0.55rem; border-right: 1px solid var(--color-ink); border-bottom: 1px solid var(--color-ink); transform: translateY(-70%) rotate(45deg); pointer-events: none; }
+  .field option { color: var(--color-ink); background: var(--color-chalk); }
+  .field textarea { min-height: 9.5rem; resize: none; }
+  .field textarea::placeholder { color: var(--color-muted); opacity: 0.8; }
+  .field__hint, .field__error { margin: var(--space-2) 0 0; font-size: 0.8rem; line-height: 1.4; }
+  .field__hint { color: var(--color-muted); }
+  .field__error { color: var(--color-error); }
+  .field--invalid input, .field--invalid select, .field--invalid textarea { border-color: var(--color-error); }
+  .inquiry__error-summary { margin: var(--space-4) 0 0; padding: var(--space-3) var(--space-4); border-left: 2px solid var(--color-error); background: var(--color-chalk); }
+  .inquiry__error-summary > p { margin: 0 0 var(--space-2); font-weight: 600; }
+  .inquiry__error-summary ul { margin: 0; padding-left: 1.25rem; font-size: 0.88rem; line-height: 1.6; }
+  .inquiry__error-summary a { text-decoration: underline; text-underline-offset: 0.15em; }
+  .inquiry__actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: var(--space-4); margin-top: var(--space-6); }
+  .inquiry__submit { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); min-height: 4.25rem; padding: 1rem 1.25rem; border: 1px solid var(--color-ink); background: var(--color-ink); color: var(--color-chalk); text-align: left; transition: background-color var(--duration-fast) ease, color var(--duration-fast) ease; }
+  .inquiry__submit:hover { background: var(--color-olive); border-color: var(--color-olive); }
+  .inquiry__submit span:last-child { font-size: 1.35rem; line-height: 1; }
+  .inquiry__actions p { max-width: 19rem; margin: 0; color: var(--color-muted); font-size: 0.8rem; line-height: 1.45; }
+  .inquiry__success { padding: var(--space-7) 0 var(--space-8); border-top: 1px solid var(--color-ink); }
+  .inquiry__success .eyebrow { margin: 0 0 var(--space-5); }
+  .inquiry__success h2 { max-width: 36rem; margin: 0; font-size: clamp(3.5rem, 6vw, 6rem); font-weight: 350; letter-spacing: -0.05em; line-height: 0.98; }
+  .inquiry__success > p:not(.eyebrow) { max-width: 30rem; margin: var(--space-5) 0; color: var(--color-muted); line-height: 1.6; }
+  .inquiry__mail-link { display: flex; width: fit-content; min-width: min(100%, 18rem); align-items: center; justify-content: space-between; gap: var(--space-5); padding: 1rem 1.25rem; background: var(--color-ink); color: var(--color-chalk); transition: background-color var(--duration-fast) ease; }
+  .inquiry__mail-link:hover { background: var(--color-olive); }
+  .inquiry__success button { display: inline-flex; gap: var(--space-3); align-items: center; margin-top: var(--space-5); padding: 0 0 0.35rem; border: 0; border-bottom: 1px solid var(--color-ink); background: transparent; color: var(--color-ink); }
+  .inquiry__success button:hover { color: var(--color-olive); border-color: var(--color-olive); }
+  @media (max-width: 1100px) {
+    .inquiry__heading { display: block; }
+    .inquiry__heading > p:last-child { margin-top: var(--space-2); }
+    .inquiry__actions { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 590px) {
+    .inquiry__fields { grid-template-columns: 1fr; }
+    .field--message { grid-column: auto; }
+    .inquiry__submit { width: 100%; }
+  }
+</style>

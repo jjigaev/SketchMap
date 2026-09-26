@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HomeHero from '../components/HomeHero.astro';
+import HomeIntroduction from '../components/HomeIntroduction.astro';
+import SelectedProjects from '../components/SelectedProjects.astro';
+import HomeStudioTeaser from '../components/HomeStudioTeaser.astro';
+import HomePracticeGallery from '../components/HomePracticeGallery.astro';
+import { getProjects } from '../data/projects';
+import { getLocale } from '../i18n';
+
+const locale = getLocale(Astro.url.pathname);
+const featured = getProjects(locale)[0];
+---
+
+<BaseLayout image={featured.hero.src}>
+  <HomeHero locale={locale} />
+  <HomeIntroduction locale={locale} />
+  <SelectedProjects locale={locale} />
+  <HomeStudioTeaser locale={locale} />
+  <HomePracticeGallery locale={locale} />
+</BaseLayout>

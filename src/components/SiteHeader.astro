@@ -1,0 +1,215 @@
+---
+import { getLocale, localizedPath, ui, type Locale } from '../i18n';
+import { withBase } from '../lib/paths';
+
+interface Props { theme?: 'paper' | 'image'; }
+const { theme = 'paper' } = Astro.props;
+const locale = getLocale(Astro.url.pathname);
+const copy = ui(locale);
+
+const links = [
+  { label: copy.projects, href: localizedPath('/projects/', locale) },
+  { label: copy.studio, href: localizedPath('/studio/', locale) },
+  { label: copy.services, href: localizedPath('/services/', locale) },
+  { label: copy.contact, href: localizedPath('/contact/', locale) },
+];
+const currentPath = localizedPath(Astro.url.pathname, locale);
+const cityLabel = { ru: 'Алматы, Казахстан', kk: 'Алматы, Қазақстан', en: 'Almaty, Kazakhstan' }[locale];
+const languages: { locale: Locale; label: string; name: string }[] = [
+  { locale: 'ru', label: 'RU', name: 'Русский' },
+  { locale: 'kk', label: 'ҚАЗ', name: 'Қазақша' },
+  { locale: 'en', label: 'EN', name: 'English' },
+];
+---
+
+<header class:list={['site-header', `site-header--${theme}`]} data-site-header>
+  <div class="site-header__inner site-width">
+    <button class="site-header__menu-button" type="button" aria-expanded="false" aria-controls="site-navigation-panel" aria-label={copy.menu} data-menu-toggle data-menu-open-label={copy.menu} data-menu-close-label={copy.close}>
+      <span class="menu-glyph" aria-hidden="true"><i></i><i></i></span>
+      <span data-menu-label>{copy.menu}</span>
+    </button>
+    <a class="site-header__brand" href={localizedPath('/', locale)} aria-label={copy.brandLabel}>FORMA</a>
+    <nav class="site-header__languages" aria-label={copy.languageLabel}>
+      {languages.map((language) => <a href={localizedPath(Astro.url.pathname, language.locale)} lang={language.locale} hreflang={language.locale} aria-label={language.name} aria-current={locale === language.locale ? 'page' : undefined} data-language-switch>{language.label}</a>)}
+    </nav>
+  </div>
+  <div class="site-header__panel" id="site-navigation-panel" aria-hidden="true" hidden inert>
+    <div class="site-header__panel-inner site-width">
+      <div class="site-header__panel-content">
+        <p class="site-header__panel-kicker eyebrow">{copy.descriptor}</p>
+        <nav class="site-header__panel-links" aria-label={copy.navLabel}>
+          {links.map((link, index) => <a href={link.href} aria-current={currentPath.startsWith(link.href) ? 'page' : undefined} style={`--menu-index: ${index}`}><span>{link.label}</span><span class="site-header__link-arrow" aria-hidden="true">↗</span></a>)}
+        </nav>
+        <p class="site-header__panel-signature eyebrow">FORMA / {cityLabel}</p>
+      </div>
+      <figure class="site-header__panel-image">
+        <img src={withBase('/images/projects/saya-house-hero-v2.webp')} alt="" width="900" height="1125" loading="lazy" decoding="async" />
+        <figcaption class="eyebrow">FORMA / {copy.descriptor}</figcaption>
+      </figure>
+    </div>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-site-header]');
+  const toggle = header?.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const label = header?.querySelector<HTMLElement>('[data-menu-label]');
+  const panel = header?.querySelector<HTMLElement>('#site-navigation-panel');
+  const main = document.querySelector<HTMLElement>('main');
+  const footer = document.querySelector<HTMLElement>('footer');
+  const skipLink = document.querySelector<HTMLElement>('.skip-link');
+  const languageLinks = [...(header?.querySelectorAll<HTMLAnchorElement>('[data-language-switch]') || [])];
+  const languagePaths = languageLinks.map((link) => link.getAttribute('href') || '/');
+  let closeTimer = 0;
+  let openFrame = 0;
+  let savedOverflow = '';
+  let savedPadding = '';
+
+  function syncLanguageLinks() {
+    const suffix = `${window.location.search}${window.location.hash}`;
+    languageLinks.forEach((link, index) => { link.href = `${languagePaths[index]}${suffix}`; });
+  }
+  syncLanguageLinks();
+  for (const link of languageLinks) {
+    for (const eventName of ['pointerenter', 'focus', 'click', 'auxclick', 'contextmenu']) {
+      link.addEventListener(eventName, syncLanguageLinks);
+    }
+  }
+  window.addEventListener('popstate', syncLanguageLinks);
+  window.addEventListener('hashchange', syncLanguageLinks);
+  window.addEventListener('forma:urlchange', syncLanguageLinks);
+
+  function setOpen(open: boolean, restoreFocus = true) {
+    if (!header || !toggle || !panel || !label) return;
+    window.clearTimeout(closeTimer);
+    window.cancelAnimationFrame(openFrame);
+    const accessibleLabel = open ? toggle.dataset.menuCloseLabel || 'Close' : toggle.dataset.menuOpenLabel || 'Menu';
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', accessibleLabel);
+    label.textContent = accessibleLabel;
+
+    if (open) {
+      panel.hidden = false;
+      panel.inert = false;
+      panel.setAttribute('aria-hidden', 'false');
+      if (main) main.inert = true;
+      if (footer) footer.inert = true;
+      if (skipLink) skipLink.inert = true;
+      savedOverflow = document.body.style.overflow;
+      savedPadding = document.body.style.paddingRight;
+      const scrollbar = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.overflow = 'hidden';
+      if (scrollbar > 0) document.body.style.paddingRight = `${scrollbar}px`;
+      // Give the closed clip a layout frame before starting the reveal.
+      void panel.offsetHeight;
+      header.classList.remove('site-header--menu-closing');
+      header.classList.add('site-header--menu-open');
+      openFrame = window.requestAnimationFrame(() => {
+        panel.querySelector<HTMLElement>('a')?.focus({ preventScroll: true });
+      });
+      return;
+    }
+
+    if (restoreFocus || panel.contains(document.activeElement)) toggle.focus({ preventScroll: true });
+    header.classList.remove('site-header--menu-open');
+    header.classList.add('site-header--menu-closing');
+    panel.inert = true;
+    panel.setAttribute('aria-hidden', 'true');
+    if (main) main.inert = false;
+    if (footer) footer.inert = false;
+    if (skipLink) skipLink.inert = false;
+    document.body.style.overflow = savedOverflow;
+    document.body.style.paddingRight = savedPadding;
+    const finishClose = () => {
+      if (toggle.getAttribute('aria-expanded') === 'false') {
+        panel.hidden = true;
+        header.classList.remove('site-header--menu-closing');
+      }
+    };
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) finishClose();
+    else closeTimer = window.setTimeout(finishClose, 760);
+  }
+
+  toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+  panel?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setOpen(false, false)));
+  document.addEventListener('keydown', (event) => {
+    if (toggle?.getAttribute('aria-expanded') !== 'true' || !header) return;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      setOpen(false);
+      return;
+    }
+    if (event.key !== 'Tab') return;
+    const focusable = [...header.querySelectorAll<HTMLElement>('button:not([disabled]), a[href]')]
+      .filter((element) => element.getClientRects().length > 0 && !element.closest('[inert]'));
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && (document.activeElement === first || !header.contains(document.activeElement))) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && (document.activeElement === last || !header.contains(document.activeElement))) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+</script>
+
+<style>
+  .site-header { --header-height: 6rem; position: relative; z-index: 30; background: var(--color-paper); color: var(--color-ink); transition: background-color 380ms var(--ease-out), color 380ms var(--ease-out); }
+  .site-header--menu-open { background: var(--color-ink); color: var(--color-chalk); }
+  .site-header__inner { position: relative; z-index: 2; min-height: var(--header-height); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; border-bottom: 1px solid var(--color-mineral); transition: border-color 380ms var(--ease-out); }
+  .site-header--menu-open .site-header__inner { border-color: rgba(248, 247, 243, .28); }
+  .site-header__brand { grid-column: 2; justify-self: center; width: max-content; font-size: 1.8rem; line-height: 1; font-weight: 600; letter-spacing: -0.075em; }
+  .site-header__menu-button { grid-column: 1; grid-row: 1; justify-self: start; display: inline-flex; align-items: center; gap: 1rem; min-height: 2.75rem; padding: .5rem 0; border: 0; background: transparent; color: inherit; font-size: .84rem; font-weight: 500; letter-spacing: .04em; }
+  .menu-glyph { display: grid; gap: 6px; width: 25px; }
+  .menu-glyph i { display: block; width: 100%; height: 1px; background: currentColor; transition: transform 400ms var(--ease-out); }
+  .site-header--menu-open .menu-glyph i:first-child { transform: translateY(3.5px) rotate(45deg); }
+  .site-header--menu-open .menu-glyph i:last-child { transform: translateY(-3.5px) rotate(-45deg); }
+  .site-header__languages { grid-column: 3; grid-row: 1; justify-self: end; display: flex; align-items: center; gap: .7rem; }
+  .site-header__languages a { padding: .5rem .08rem; color: var(--color-muted); font-size: .72rem; font-weight: 600; letter-spacing: .06em; white-space: nowrap; transition: color 240ms ease; }
+  .site-header__languages a:hover, .site-header__languages a:focus-visible { color: var(--color-olive); }
+  .site-header__languages a[aria-current="page"] { color: var(--color-ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .35em; }
+  .site-header--menu-open .site-header__languages a { color: rgba(248, 247, 243, .62); }
+  .site-header--menu-open .site-header__languages a:hover, .site-header--menu-open .site-header__languages a:focus-visible, .site-header--menu-open .site-header__languages a[aria-current="page"] { color: var(--color-chalk); }
+  .site-header__panel { position: fixed; z-index: 1; inset: var(--header-height) 0 0; min-height: 0; overflow-y: auto; overscroll-behavior: contain; background: var(--color-ink); color: var(--color-chalk); clip-path: inset(0 0 100% 0); opacity: .96; transition: clip-path 760ms var(--ease-out), opacity 760ms var(--ease-out); }
+  .site-header__panel[hidden] { display: none; }
+  .site-header--menu-open .site-header__panel { clip-path: inset(0 0 0 0); opacity: 1; }
+  .site-header__panel-inner { min-height: calc(100dvh - var(--header-height)); display: grid; grid-template-columns: minmax(0, 1fr) minmax(15rem, 31%); gap: clamp(3rem, 8vw, 9rem); align-items: center; padding-block: clamp(2rem, 5vh, 5rem); }
+  .site-header__panel-content { min-width: 0; }
+  .site-header__panel-kicker, .site-header__panel-signature { margin: 0; color: rgba(248, 247, 243, .6); }
+  .site-header__panel-links { display: grid; margin-block: clamp(2rem, 5vh, 5rem); }
+  .site-header__panel-links a { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .2em 0 .28em; border-bottom: 1px solid rgba(248, 247, 243, .25); font-family: var(--font-editorial); font-size: clamp(3.25rem, 5.35vw, 6.5rem); font-weight: 350; line-height: 1.13; letter-spacing: -.055em; opacity: 0; transform: translateY(1.1rem); transition: opacity 600ms var(--ease-out), transform 700ms var(--ease-out), color 250ms ease; }
+  .site-header--menu-open .site-header__panel-links a { opacity: 1; transform: translateY(0); transition-delay: calc(180ms + var(--menu-index) * 65ms); }
+  .site-header__panel-links a:hover, .site-header__panel-links a:focus-visible, .site-header__panel-links a[aria-current="page"] { color: #c5cfbc; }
+  .site-header__link-arrow { font-family: var(--font-body); font-size: .28em; font-weight: 400; line-height: 1; letter-spacing: 0; transition: transform 300ms var(--ease-out); }
+  .site-header__panel-links a:hover .site-header__link-arrow, .site-header__panel-links a:focus-visible .site-header__link-arrow { transform: translate(3px, -3px); }
+  .site-header__panel-image { align-self: center; margin: 0; opacity: 0; transform: translateY(1.5rem); transition: opacity 900ms var(--ease-out), transform 900ms var(--ease-out); }
+  .site-header--menu-open .site-header__panel-image { opacity: 1; transform: translateY(0); transition-delay: 230ms; }
+  .site-header__panel-image img { width: 100%; height: min(58vh, 42rem); min-height: 19rem; object-fit: cover; object-position: center; filter: saturate(.74); }
+  .site-header__panel-image figcaption { margin-top: .75rem; color: rgba(248, 247, 243, .6); }
+  @media (max-width: 900px) { .site-header__panel-inner { grid-template-columns: minmax(0, 1fr) 29%; gap: 2rem; } .site-header__panel-links a { font-size: clamp(2.65rem, 5.6vw, 4.5rem); } }
+  @media (max-width: 768px) {
+    .site-header { --header-height: 4.75rem; }
+    .site-header__brand { font-size: 1.55rem; }
+    .site-header__menu-button { gap: .55rem; font-size: .75rem; }
+    .menu-glyph { width: 22px; }
+    .site-header__languages { gap: .45rem; }
+    .site-header__languages a { font-size: .65rem; }
+    .site-header__panel-inner { display: flex; flex-direction: column; align-items: stretch; justify-content: center; min-height: calc(100dvh - var(--header-height)); padding-block: var(--space-5); }
+    .site-header__panel-links { margin-block: var(--space-5); }
+    .site-header__panel-links a { font-size: clamp(2.55rem, 9vw, 4.6rem); padding-block: .3em; }
+    .site-header__panel-image { display: none; }
+  }
+  @media (max-width: 430px) {
+    .site-header__menu-button { font-size: 0; gap: 0; min-width: 2.75rem; }
+    .site-header__menu-button [data-menu-label] { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+    .site-header__languages { gap: .28rem; }
+    .site-header__languages a { font-size: .62rem; }
+    .site-header__panel-links a { font-size: clamp(2.35rem, 10vw, 3.75rem); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .site-header__panel { clip-path: none; opacity: 1; }
+    .site-header__panel-links a, .site-header__panel-image { opacity: 1; transform: none; }
+  }
+</style>

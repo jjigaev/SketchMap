@@ -1,0 +1,70 @@
+---
+import type { Project } from '../data/projects';
+import { getLocale, localizedPath, type Locale } from '../i18n';
+import { withBase } from '../lib/paths';
+
+interface Props { project: Project; index: number; locale?: Locale; count?: number; }
+const { project, index, locale = getLocale(Astro.url.pathname), count = 6 } = Astro.props;
+const number = String(index + 1).padStart(2, '0');
+const labels = {
+  ru: { view: 'Смотреть проект', aria: `Открыть проект «${project.title}», ${project.categoryLabel.toLowerCase()}, ${project.location}` },
+  kk: { view: 'Жобаны көру', aria: `${project.title} жобасын ашу, ${project.categoryLabel.toLowerCase()}, ${project.location}` },
+  en: { view: 'View project', aria: `View ${project.title}, ${project.categoryLabel.toLowerCase()} project in ${project.location}` },
+}[locale];
+---
+
+<article class="project-card" data-project-card data-category={project.category}>
+  <a class="project-card__link" href={localizedPath(`/projects/${project.slug}/`, locale)} aria-label={labels.aria}>
+    <div class="project-card__image" style={`view-transition-name: project-${project.slug}`}>
+      <img class="project-card__primary" src={withBase(project.hero.src)} alt={project.hero.alt} width={project.hero.width} height={project.hero.height} loading="lazy" decoding="async" />
+      <img class="project-card__preview" src={withBase(project.gallery[1].src)} alt="" width={project.gallery[1].width} height={project.gallery[1].height} loading="lazy" decoding="async" aria-hidden="true" />
+      <span class="project-card__view eyebrow" aria-hidden="true">{labels.view} <span>↗</span></span>
+    </div>
+    <div class="project-card__meta">
+      <span class="project-card__number eyebrow">{number} / {String(count).padStart(2, '0')}</span>
+      <span class="project-card__category eyebrow">{project.categoryLabel}</span>
+      <span class="project-card__year eyebrow">{project.year}</span>
+    </div>
+    <div class="project-card__name-row">
+      <h3 class="project-card__title editorial">{project.title}</h3>
+      <span class="project-card__arrow" aria-hidden="true">↗</span>
+    </div>
+    <p class="project-card__location">{project.location}</p>
+  </a>
+</article>
+
+<style>
+  .project-card { min-width: 0; }
+  .project-card[hidden] { display: none !important; }
+  .project-card__link { display: block; }
+  .project-card__image { position: relative; overflow: hidden; aspect-ratio: 1.38; background: var(--color-mineral); transition: clip-path 850ms var(--ease-out), opacity 850ms var(--ease-out), transform 850ms var(--ease-out); }
+  .project-card[data-reveal="waiting"] .project-card__image { clip-path: inset(0 0 10% 0); opacity: 0.72; transform: translateY(18px); }
+  .project-card__image img { width: 100%; height: 100%; object-fit: cover; transition: transform 800ms var(--ease-out), opacity 550ms var(--ease-out); }
+  .project-card__preview { position: absolute; inset: 0; opacity: 0; }
+  .project-card__view { position: absolute; right: 0; bottom: 0; display: flex; align-items: center; gap: var(--space-3); padding: 0.8rem 1rem; background: var(--color-paper); color: var(--color-ink); transform: translateY(101%); transition: transform var(--duration-filter) var(--ease-out); }
+  .project-card__view span { font-size: 1.15rem; line-height: 0.7; }
+  .project-card__meta { display: grid; grid-template-columns: 1fr 1fr auto; gap: var(--grid-gap); padding-top: var(--space-3); color: var(--color-muted); }
+  .project-card__category { color: var(--color-ink); }
+  .project-card__name-row { display: flex; justify-content: space-between; gap: var(--space-3); align-items: baseline; margin-top: var(--space-2); }
+  .project-card__title { margin: 0; font-size: clamp(2.25rem, 3.3vw, 4rem); font-weight: 350; line-height: 0.98; letter-spacing: -0.04em; overflow-wrap: anywhere; }
+  .project-card__arrow { font-size: 1.5rem; line-height: 1; transition: transform var(--duration-fast) var(--ease-out); }
+  .project-card__location { margin: var(--space-2) 0 0; color: var(--color-muted); font-size: 0.88rem; }
+  @media (hover: hover) and (pointer: fine) {
+    .project-card__link:hover .project-card__primary, .project-card__link:focus-visible .project-card__primary { transform: scale(1.035); }
+    .project-card__link:hover .project-card__preview, .project-card__link:focus-visible .project-card__preview { opacity: 1; transform: scale(1.035); }
+    .project-card__link:hover .project-card__view, .project-card__link:focus-visible .project-card__view { transform: translateY(0); }
+    .project-card__link:hover .project-card__arrow, .project-card__link:focus-visible .project-card__arrow { transform: translate(3px, -3px); }
+  }
+  @media (max-width: 768px) {
+    .project-card__image { aspect-ratio: 1.15; }
+    .project-card__title { font-size: clamp(2.4rem, 7vw, 3.75rem); }
+  }
+  @media (max-width: 480px) {
+    .project-card__image { aspect-ratio: 1.08; }
+    .project-card__meta { grid-template-columns: auto 1fr auto; }
+    .project-card__category { justify-self: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .project-card__image, .project-card__image img, .project-card__view, .project-card__arrow { transition-duration: 0.01ms; }
+  }
+</style>

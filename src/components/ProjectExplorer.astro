@@ -1,0 +1,179 @@
+---
+import ProjectCard from './ProjectCard.astro';
+import { categoryLabels, getProjects, type ProjectCategory } from '../data/projects';
+import { getLocale, type Locale } from '../i18n';
+
+interface Props { locale?: Locale; }
+const locale = Astro.props.locale ?? getLocale(Astro.url.pathname);
+const projects = getProjects(locale);
+const categories: Array<'All' | ProjectCategory> = ['All', 'Residential', 'Commercial', 'Hospitality', 'Cultural'];
+const copy = {
+  ru: { archive: 'Архив', title: 'Избранные', titleEm: 'проекты.', intro: 'Дома, рабочие и общественные пространства в Казахстане и за его пределами. В основе каждого проекта — характер места и жизнь, которая будет разворачиваться внутри.', filter: 'Фильтр проектов по категории', all: 'Все' },
+  kk: { archive: 'Мұрағат', title: 'Таңдаулы', titleEm: 'жобалар.', intro: 'Қазақстандағы және одан тыс жерлердегі үйлер, жұмыс және қоғамдық кеңістіктер. Әр жобаның негізінде орынның сипаты мен сол жерде өтетін өмір жатыр.', filter: 'Жобаларды санат бойынша сүзу', all: 'Барлығы' },
+  en: { archive: 'Archive', title: 'Selected', titleEm: 'work.', intro: 'Homes, workplaces and public spaces in Kazakhstan and beyond. Each project begins with the character of its place and the life that will unfold within it.', filter: 'Filter projects by category', all: 'All' },
+}[locale];
+const countText = locale === 'ru' ? 'Показано 06 проектов' : locale === 'kk' ? '06 жоба көрсетілді' : 'Showing 06 projects';
+---
+
+<section class="explorer site-width" data-project-explorer data-locale={locale} aria-labelledby="projects-title">
+  <div class="explorer__intro">
+    <div>
+      <p class="eyebrow">{copy.archive} / 01—{String(projects.length).padStart(2, '0')}</p>
+      <h1 class="explorer__title editorial" id="projects-title">{copy.title} <em>{copy.titleEm}</em></h1>
+    </div>
+    <p class="explorer__description">{copy.intro}</p>
+  </div>
+  <div class="explorer__toolbar">
+    <div class="explorer__filters" role="group" aria-label={copy.filter}>
+      {categories.map((category) => <button type="button" data-filter={category} aria-pressed={category === 'All' ? 'true' : 'false'}>{category === 'All' ? copy.all : categoryLabels[locale][category]}</button>)}
+    </div>
+    <p class="explorer__count eyebrow" data-result-count aria-live="polite">{countText}</p>
+  </div>
+  <div class="explorer__grid" data-project-grid>
+    {projects.map((project, index) => <ProjectCard project={project} index={index} locale={locale} count={projects.length} />)}
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+  import { Flip } from 'gsap/Flip';
+  gsap.registerPlugin(Flip);
+
+  const explorer = document.querySelector<HTMLElement>('[data-project-explorer]');
+  const cards = Array.from(explorer?.querySelectorAll<HTMLElement>('[data-project-card]') ?? []);
+  const buttons = Array.from(explorer?.querySelectorAll<HTMLButtonElement>('[data-filter]') ?? []);
+  const count = explorer?.querySelector<HTMLElement>('[data-result-count]');
+  const locale = explorer?.dataset.locale ?? 'ru';
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let pending: string | null = null;
+  let running = false;
+
+  if (!reduced.matches && 'IntersectionObserver' in window) {
+    const reveal = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        (entry.target as HTMLElement).dataset.reveal = 'shown';
+        reveal.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -4% 0px' });
+    cards.forEach((card) => {
+      if (card.getBoundingClientRect().top > window.innerHeight * 0.72) card.dataset.reveal = 'waiting';
+      reveal.observe(card);
+    });
+  }
+
+  const showCount = (value: number) => {
+    if (!count) return;
+    const padded = String(value).padStart(2, '0');
+    if (locale === 'ru') {
+      const noun = value % 10 === 1 && value % 100 !== 11 ? 'проект' : value % 10 >= 2 && value % 10 <= 4 && (value % 100 < 12 || value % 100 > 14) ? 'проекта' : 'проектов';
+      count.textContent = `Показано ${padded} ${noun}`;
+    } else if (locale === 'kk') {
+      count.textContent = `${padded} жоба көрсетілді`;
+    } else {
+      count.textContent = `Showing ${padded} ${value === 1 ? 'project' : 'projects'}`;
+    }
+  };
+
+  const animate = (targets: HTMLElement[], vars: gsap.TweenVars): Promise<void> => new Promise((resolve) => {
+    if (targets.length === 0) return resolve();
+    gsap.to(targets, { ...vars, onComplete: resolve });
+  });
+
+  async function applyFilter(category: string) {
+    const matching = (card: HTMLElement) => category === 'All' || card.dataset.category === category;
+    const leaving = cards.filter((card) => !card.hidden && !matching(card));
+    const entering = cards.filter((card) => card.hidden && matching(card));
+
+    if (reduced.matches || document.visibilityState === 'hidden') {
+      cards.forEach((card) => { card.hidden = !matching(card); gsap.set(card, { clearProps: 'opacity,transform' }); });
+      showCount(cards.filter((card) => !card.hidden).length);
+      return;
+    }
+
+    await animate(leaving, { autoAlpha: 0, y: 12, duration: 0.28, ease: 'power2.in' });
+    const state = Flip.getState(cards.filter((card) => !card.hidden));
+    leaving.forEach((card) => { card.hidden = true; gsap.set(card, { clearProps: 'all' }); });
+    entering.forEach((card) => { card.hidden = false; gsap.set(card, { autoAlpha: 0, y: 16 }); });
+    const visible = cards.filter((card) => !card.hidden);
+    showCount(visible.length);
+    await new Promise<void>((resolve) => {
+      Flip.from(state, { targets: visible, duration: 0.7, ease: 'power3.inOut', absolute: true, onComplete: resolve });
+    });
+    await animate(entering, { autoAlpha: 1, y: 0, duration: 0.52, ease: 'power3.out', stagger: 0.06 });
+    if (entering.length > 0) gsap.set(entering, { clearProps: 'opacity,visibility,transform' });
+  }
+
+  async function runQueue() {
+    if (running) return;
+    running = true;
+    while (pending !== null) {
+      const category = pending;
+      pending = null;
+      await applyFilter(category);
+    }
+    running = false;
+  }
+
+  buttons.forEach((button) => button.addEventListener('click', () => {
+    const category = button.dataset.filter ?? 'All';
+    buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+    const url = new URL(window.location.href);
+    if (category === 'All') url.searchParams.delete('category');
+    else url.searchParams.set('category', category);
+    window.history.replaceState(window.history.state, '', url);
+    window.dispatchEvent(new Event('forma:urlchange'));
+    pending = category;
+    void runQueue();
+  }));
+
+  const initial = new URL(window.location.href).searchParams.get('category');
+  const active = buttons.find((button) => button.dataset.filter === initial);
+  if (active) {
+    buttons.forEach((button) => button.setAttribute('aria-pressed', String(button === active)));
+    cards.forEach((card) => { card.hidden = card.dataset.category !== initial; });
+    showCount(cards.filter((card) => !card.hidden).length);
+  }
+</script>
+
+<style>
+  .explorer { padding: var(--space-8) 0 var(--space-10); }
+  .explorer__intro { display: grid; grid-template-columns: 7fr 5fr; align-items: end; gap: var(--grid-gap); }
+  .explorer__intro .eyebrow { margin: 0 0 var(--space-4); color: var(--color-muted); }
+  .explorer__title { margin: 0; font-size: var(--text-title); font-weight: 300; line-height: 0.9; letter-spacing: -0.06em; }
+  .explorer__title em { font-weight: 300; }
+  .explorer__description { max-width: 28rem; margin: 0 0 0.25rem auto; font-size: clamp(1rem, 1.2vw, 1.15rem); line-height: 1.58; }
+  .explorer__toolbar { display: flex; align-items: end; justify-content: space-between; gap: var(--space-4); margin: var(--space-8) 0 var(--space-5); padding-top: var(--space-3); border-top: 1px solid var(--color-ink); }
+  .explorer__filters { display: flex; flex-wrap: wrap; gap: 0.2rem var(--space-5); }
+  .explorer__filters button { position: relative; min-height: 2.75rem; padding: 0.45rem 0; border: 0; background: transparent; color: var(--color-muted); font-size: 0.91rem; cursor: pointer; transition: color var(--duration-fast) ease; }
+  .explorer__filters button::after { content: ''; position: absolute; inset: auto 0 0; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform var(--duration-fast) var(--ease-out); }
+  .explorer__filters button:hover, .explorer__filters button[aria-pressed="true"] { color: var(--color-ink); }
+  .explorer__filters button:focus-visible { outline: 2px solid var(--color-olive); outline-offset: 4px; }
+  .explorer__filters button[aria-pressed="true"]::after { transform: scaleX(1); }
+  .explorer__count { margin: 0 0 0.9rem; color: var(--color-muted); white-space: nowrap; }
+  .explorer__grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--grid-gap); row-gap: var(--space-8); align-items: start; }
+  .explorer__grid :global(.project-card) { grid-column: span 6; }
+  .explorer__grid :global(.project-card:nth-child(4n + 1)), .explorer__grid :global(.project-card:nth-child(4n + 4)) { grid-column: span 7; }
+  .explorer__grid :global(.project-card:nth-child(4n + 2)), .explorer__grid :global(.project-card:nth-child(4n + 3)) { grid-column: span 5; padding-top: var(--space-9); }
+  .explorer__grid :global(.project-card:nth-child(4n + 2) .project-card__image), .explorer__grid :global(.project-card:nth-child(4n + 3) .project-card__image) { aspect-ratio: 0.88; }
+  @media (max-width: 1024px) {
+    .explorer__grid :global(.project-card:nth-child(4n + 2)), .explorer__grid :global(.project-card:nth-child(4n + 3)) { padding-top: var(--space-7); }
+  }
+  @media (max-width: 768px) {
+    .explorer { padding-top: var(--space-7); }
+    .explorer__intro { grid-template-columns: 1fr; gap: var(--space-5); }
+    .explorer__description { margin-left: 0; }
+    .explorer__toolbar { align-items: start; flex-direction: column; margin-top: var(--space-7); gap: var(--space-2); }
+    .explorer__filters { gap: 0.15rem var(--space-4); }
+    .explorer__count { margin: 0; }
+    .explorer__grid { grid-template-columns: repeat(8, minmax(0, 1fr)); row-gap: var(--space-7); }
+    .explorer__grid :global(.project-card), .explorer__grid :global(.project-card:nth-child(n)) { grid-column: span 4; padding-top: 0; }
+    .explorer__grid :global(.project-card:nth-child(n) .project-card__image) { aspect-ratio: 0.9; }
+  }
+  @media (max-width: 600px) {
+    .explorer__filters { display: flex; flex-wrap: wrap; gap: 0.1rem var(--space-4); }
+    .explorer__grid { display: block; }
+    .explorer__grid :global(.project-card + .project-card) { margin-top: var(--space-7); }
+    .explorer__grid :global(.project-card:nth-child(n) .project-card__image) { aspect-ratio: 1.08; }
+  }
+</style>

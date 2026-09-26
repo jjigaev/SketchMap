@@ -1,0 +1,288 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getProjects } from '../data/projects';
+import { withBase } from '../lib/paths';
+import { getLocale, localizedPath } from '../i18n';
+
+const locale = getLocale(Astro.url.pathname);
+const localizedProjects = getProjects(locale);
+const reference = localizedProjects.find((project) => project.slug === 'saya-house') ?? localizedProjects[0];
+
+const copy = {
+  ru: {
+    title: 'Услуги — FORMA, архитектура и интерьеры',
+    description: 'Архитектура, дизайн интерьера, пространственная стратегия и разработка концепций. FORMA ведёт проект от первого вопроса до готового пространства.',
+    label: 'Услуги', count: 'Четыре направления работы',
+    headingFirst: 'От здания', headingSecond: 'до детали.',
+    intro: 'От первой идеи до последнего решения о материале мы рассматриваем архитектуру и интерьер как единое целое. Можно доверить нам весь проект или отдельный его этап.',
+    figureCaption: 'Архитектура для жизни',
+    disciplinesLabel: 'Наши направления', disciplinesFirst: 'Что входит', disciplinesSecond: 'в работу.',
+    scopeLabel: 'Что мы делаем',
+    services: [
+      {
+        title: 'Архитектура',
+        description: 'Новые здания и реконструкции, отвечающие месту и образу жизни. Работаем от изучения участка до деталей строительства.',
+        scope: ['Исследование участка', 'Планировка', 'Рабочая документация', 'Авторское сопровождение'],
+      },
+      {
+        title: 'Дизайн интерьера',
+        description: 'Цельные пространства: от общей атмосферы до деталей, к которым прикасаются каждый день. Материалы, мебель и свет рассматриваем вместе.',
+        scope: ['Концепция интерьера', 'Подбор материалов', 'Проектирование мебели', 'Комплектация'],
+      },
+      {
+        title: 'Стратегия пространства',
+        description: 'Исследуем пространства со сложными сценариями и меняющимися потребностями. Изучаем движение, связи и возможности до выбора проектного решения.',
+        scope: ['Формирование задания', 'Сценарии использования', 'Планирование площадей', 'Карта опыта'],
+      },
+      {
+        title: 'Разработка концепции',
+        description: 'Создаём ясную основу будущего места. Эскизы, визуальные ориентиры и исследования материалов помогают увидеть идею и обсудить её развитие.',
+        scope: ['Арт-дирекция', 'Предпроектное исследование', 'Визуальный сценарий', 'Поиск материалов'],
+      },
+    ],
+    togetherLabel: 'Работаем вместе', togetherFirst: 'Один диалог.', togetherSecond: 'Много взглядов.',
+    togetherText: 'У каждого проекта свой ритм. Мы собираем команду под его задачи, привлекаем профильных специалистов и при этом сохраняем для клиента одну понятную точку контакта.',
+    processLink: 'Наш процесс',
+    materialAlt: 'Чертежи, образцы камня и дерева и цветущая яблоня на столе студии в Алматы',
+    materialCaption: 'Проверяем идеи в масштабе руки.',
+    nextLabel: 'Есть идея для нового места?', nextTitle: 'Давайте обсудим.',
+  },
+  kk: {
+    title: 'Қызметтер — FORMA, сәулет және интерьер',
+    description: 'Сәулет, интерьер дизайны, кеңістік стратегиясы және тұжырымдама әзірлеу. FORMA жобаны алғашқы сұрақтан дайын кеңістікке дейін алып жүреді.',
+    label: 'Қызметтер', count: 'Жұмыстың төрт бағыты',
+    headingFirst: 'Әр ауқымда', headingSecond: 'бір көзқарас.',
+    intro: 'Алғашқы идеядан материалға қатысты соңғы шешімге дейін сәулет пен интерьерді біртұтас қарастырамыз. Бізге жобаны толық немесе белгілі бір кезеңін тапсыруға болады.',
+    figureCaption: 'Өмірге арналған сәулет',
+    disciplinesLabel: 'Біздің бағыттар', disciplinesFirst: 'Жобаға', disciplinesSecond: 'не қосамыз.',
+    scopeLabel: 'Жұмыс ауқымы',
+    services: [
+      {
+        title: 'Сәулет',
+        description: 'Орынға және өмір сүру салтына сай жаңа ғимараттар мен жаңарту жобалары. Телімді зерттеуден құрылыс бөлшектеріне дейін жұмыс істейміз.',
+        scope: ['Телімді зерттеу', 'Кеңістікті жоспарлау', 'Жұмыс сызбалары', 'Авторлық сүйемелдеу'],
+      },
+      {
+        title: 'Интерьер дизайны',
+        description: 'Жалпы атмосферадан күнделікті жанасатын бөлшекке дейін тұтас кеңістік жасаймыз. Материалды, жиһазды және жарықты бірге ойластырамыз.',
+        scope: ['Интерьер тұжырымдамасы', 'Материал таңдау', 'Жиһаз жобалау', 'Жабдықтау'],
+      },
+      {
+        title: 'Кеңістік стратегиясы',
+        description: 'Күрделі қолданысы мен өзгермелі қажеттілігі бар орындарды зерттейміз. Жоба бағытын таңдаудан бұрын қозғалысты, байланыстарды және мүмкіндіктерді талдаймыз.',
+        scope: ['Міндетті айқындау', 'Қолдану сценарийлері', 'Аумақты жоспарлау', 'Тәжірибе картасы'],
+      },
+      {
+        title: 'Тұжырымдама әзірлеу',
+        description: 'Болашақ кеңістікке айқын негіз жасаймыз. Эскиздер, визуалды бағдарлар және материал зерттеуі идеяны көріп, келесі қадамды талқылауға көмектеседі.',
+        scope: ['Шығармашылық бағыт', 'Алдын ала зерттеу', 'Визуалды сценарий', 'Материал зерттеуі'],
+      },
+    ],
+    togetherLabel: 'Бірге жұмыс істеу', togetherFirst: 'Бір әңгіме.', togetherSecond: 'Көп көзқарас.',
+    togetherText: 'Әр жобаның өз ырғағы бар. Міндетіне қарай команда жинап, мамандарды шақырамыз және тапсырыс беруші үшін бір айқын байланыс арнасын сақтаймыз.',
+    processLink: 'Жұмыс тәсіліміз',
+    materialAlt: 'Алматы студиясындағы үстелде жатқан сызбалар, тас пен ағаш үлгілері және гүлдеген алма бұтағы',
+    materialCaption: 'Идеяларды қолмен ұстайтын ауқымда тексереміз.',
+    nextLabel: 'Ойыңызда жаңа жоба бар ма?', nextTitle: 'Бізге айтыңыз.',
+  },
+  en: {
+    title: 'Services — FORMA Architecture & Interiors',
+    description: 'Architecture, interior design, spatial strategy, and concept development by FORMA. An integrated approach from first question to finished place.',
+    label: 'Services', count: 'Four ways of working',
+    headingFirst: 'Space, at', headingSecond: 'every scale.',
+    intro: 'From the first idea to the last material decision, we bring architecture and interiors into one conversation. Our services can be commissioned together or focused around a particular stage of a project.',
+    figureCaption: 'Architecture as a lived experience',
+    disciplinesLabel: 'Our disciplines', disciplinesFirst: 'What we bring', disciplinesSecond: 'to a project.',
+    scopeLabel: 'Typical scope',
+    services: [
+      {
+        title: 'Architecture',
+        description: 'Buildings and renovations shaped around their setting and the way they will be lived in. We work from the first site question through the detail of construction.',
+        scope: ['Site studies', 'Spatial planning', 'Detailed design', 'Site coordination'],
+      },
+      {
+        title: 'Interior Design',
+        description: 'Rooms with a sense of continuity, from the overall atmosphere to the elements touched every day. Material, furniture, and light are considered as one.',
+        scope: ['Interior concepts', 'Material palettes', 'Joinery design', 'Furniture selection'],
+      },
+      {
+        title: 'Spatial Strategy',
+        description: 'Early thinking for spaces with many users or changing needs. We study movement, relationships, and possibilities before a design direction is fixed.',
+        scope: ['Brief development', 'Use studies', 'Space planning', 'Experience mapping'],
+      },
+      {
+        title: 'Concept Development',
+        description: 'A coherent starting point for a future place. Drawings, references, and material tests make an idea clear enough to discuss and take forward.',
+        scope: ['Creative direction', 'Feasibility studies', 'Visual narratives', 'Material research'],
+      },
+    ],
+    togetherLabel: 'Working together', togetherFirst: 'One conversation,', togetherSecond: 'many perspectives.',
+    togetherText: 'Every commission has its own rhythm. We build a team around the needs of the work, bringing specialist knowledge into the process while keeping one clear point of contact for our clients.',
+    processLink: 'See our process',
+    materialAlt: 'Drawings, stone and timber samples, and apple blossom on a table in the Almaty studio',
+    materialCaption: 'Ideas tested at the scale of a hand.',
+    nextLabel: 'Have a place in mind?', nextTitle: 'Tell us about it.',
+  },
+}[locale];
+---
+
+<BaseLayout
+  title={copy.title}
+  description={copy.description}
+  image={reference.hero.src}
+>
+  <section class="services-intro site-width" aria-labelledby="services-title">
+    <div class="services-intro__top eyebrow"><span>{copy.label}</span><span>{copy.count}</span></div>
+    <div class="services-intro__grid">
+      <h1 class="services-intro__title editorial" id="services-title">{copy.headingFirst}<br /><em>{copy.headingSecond}</em></h1>
+      <p>{copy.intro}</p>
+    </div>
+    <figure class="services-intro__figure" data-services-reveal>
+      <div class="services-intro__image"><img src={withBase(reference.hero.src)} alt={reference.hero.alt} width={reference.hero.width} height={reference.hero.height} fetchpriority="high" decoding="async" /></div>
+      <figcaption><span>{reference.title}, {reference.location}</span><span>{copy.figureCaption}</span></figcaption>
+    </figure>
+  </section>
+
+  <section class="service-list site-width" aria-labelledby="service-list-title">
+    <div class="service-list__head">
+      <p class="eyebrow">{copy.disciplinesLabel}</p>
+      <h2 class="editorial" id="service-list-title">{copy.disciplinesFirst}<br /><em>{copy.disciplinesSecond}</em></h2>
+    </div>
+    <div class="service-list__items">
+      {copy.services.map((service) => (
+        <article class="service-list__item" data-services-reveal>
+          <h3 class="editorial">{service.title}</h3>
+          <p class="service-list__description">{service.description}</p>
+          <div class="service-list__scope">
+            <p class="eyebrow">{copy.scopeLabel}</p>
+            <ul>{service.scope.map((item) => <li>{item}</li>)}</ul>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="working-together" aria-labelledby="working-title">
+    <div class="working-together__inner site-width">
+      <div class="working-together__copy">
+        <p class="eyebrow">{copy.togetherLabel}</p>
+        <h2 class="editorial" id="working-title">{copy.togetherFirst}<br /><em>{copy.togetherSecond}</em></h2>
+        <p>{copy.togetherText}</p>
+        <a href={localizedPath('/studio/#process', locale)} class="working-together__link"><span>{copy.processLink}</span><span aria-hidden="true">↗</span></a>
+      </div>
+      <figure>
+        <div class="working-together__image"><img src={withBase('/images/studio/material-study-v2.webp')} alt={copy.materialAlt} width="960" height="1200" loading="lazy" decoding="async" /></div>
+        <figcaption>{copy.materialCaption}</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="services-next" aria-labelledby="services-next-title">
+    <div class="services-next__inner site-width">
+      <p class="eyebrow">{copy.nextLabel}</p>
+      <a href={localizedPath('/contact/', locale)} aria-labelledby="services-next-title"><h2 class="editorial" id="services-next-title">{copy.nextTitle}</h2><span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const serviceReveals = document.querySelectorAll<HTMLElement>('[data-services-reveal]');
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.remove('is-pending');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -5% 0px' });
+    serviceReveals.forEach((item) => { item.classList.add('is-pending'); observer.observe(item); });
+  }
+</script>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    [data-services-reveal] { transition: opacity var(--duration-reveal) ease, transform var(--duration-reveal) var(--ease-out); }
+    [data-services-reveal].is-pending { opacity: 0; transform: translateY(1.25rem); }
+  }
+  .services-intro { padding-block: var(--space-7) var(--space-9); }
+  .services-intro__top { display: flex; justify-content: space-between; gap: var(--space-4); color: var(--color-muted); }
+  .services-intro__grid { display: grid; grid-template-columns: minmax(0, 8fr) minmax(17rem, 4fr); align-items: end; gap: var(--grid-gap); padding-block: var(--space-7) var(--space-8); }
+  .services-intro__title { margin: 0; font-size: var(--text-title); font-weight: 300; line-height: .88; letter-spacing: -.064em; }
+  .services-intro__title em { font-weight: 300; }
+  .services-intro__grid > p { max-width: 27rem; justify-self: end; margin: 0 0 .3rem; color: var(--color-muted); font-size: 1.06rem; line-height: 1.6; }
+  .services-intro__figure { margin: 0; }
+  .services-intro__image { aspect-ratio: 16 / 9; overflow: hidden; background: var(--color-mineral); }
+  .services-intro__image img { width: 100%; height: 100%; object-fit: cover; transition: transform 800ms var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) { .services-intro__figure:hover img { transform: scale(1.025); } }
+  .services-intro figcaption { display: flex; justify-content: space-between; gap: var(--space-3); padding-top: var(--space-2); font-size: .82rem; color: var(--color-muted); }
+  .services-intro figcaption span:first-child { color: var(--color-ink); }
+  .service-list { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--grid-gap); padding-bottom: var(--space-9); }
+  .service-list__head { border-top: 1px solid var(--color-mineral); padding-top: var(--space-7); }
+  .service-list__head .eyebrow { margin: 0 0 var(--space-7); color: var(--color-muted); }
+  .service-list__head h2 { margin: 0; font-size: var(--text-section); font-weight: 300; line-height: 1; letter-spacing: -.045em; }
+  .service-list__head h2 em { font-weight: 300; }
+  .service-list__item { display: grid; grid-template-columns: minmax(12rem, 1fr) minmax(13rem, 1.3fr); column-gap: var(--grid-gap); padding: var(--space-5) 0 var(--space-6); border-top: 1px solid var(--color-mineral); }
+  .service-list__item:last-child { border-bottom: 1px solid var(--color-mineral); }
+  .service-list__item h3 { margin: 0; font-size: clamp(2rem, 3vw, 3.5rem); font-weight: 350; line-height: 1; letter-spacing: -.04em; }
+  .service-list__description { margin: 0; max-width: 29rem; font-size: .99rem; line-height: 1.6; }
+  .service-list__scope { grid-column: 2; margin-top: var(--space-5); }
+  .service-list__scope .eyebrow { margin: 0 0 var(--space-3); color: var(--color-muted); }
+  .service-list__scope ul { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--grid-gap); row-gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+  .service-list__scope li { padding-top: var(--space-2); border-top: 1px solid var(--color-mineral); color: var(--color-muted); font-size: .84rem; }
+  .working-together { background: var(--color-chalk); }
+  .working-together__inner { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--grid-gap); padding-block: var(--space-9); }
+  .working-together__copy { display: flex; flex-direction: column; align-items: flex-start; padding-right: var(--space-7); }
+  .working-together__copy .eyebrow { margin: 0 0 var(--space-7); color: var(--color-muted); }
+  .working-together__copy h2 { margin: 0; font-size: var(--text-section); font-weight: 300; line-height: 1; letter-spacing: -.045em; }
+  .working-together__copy h2 em { font-weight: 300; }
+  .working-together__copy > p:not(.eyebrow) { max-width: 28rem; margin: var(--space-6) 0 0; color: var(--color-muted); line-height: 1.6; }
+  .working-together__link { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-6); width: min(100%, 16rem); margin-top: auto; padding: var(--space-7) 0 var(--space-2); border-bottom: 1px solid var(--color-ink); font-size: .88rem; font-weight: 600; transition: color var(--duration-fast) ease, border-color var(--duration-fast) ease; }
+  .working-together__link:hover, .working-together__link:focus-visible { color: var(--color-olive); border-color: var(--color-olive); }
+  .working-together__link span:last-child { font-size: 1.6rem; font-weight: 400; line-height: .8; }
+  .working-together figure { margin: 0; }
+  .working-together__image { aspect-ratio: 4 / 5; overflow: hidden; background: var(--color-mineral); }
+  .working-together img { width: 100%; height: 100%; object-fit: cover; }
+  .working-together figcaption { padding-top: var(--space-2); color: var(--color-muted); font-size: .82rem; }
+  .services-next { border-top: 1px solid var(--color-mineral); }
+  .services-next__inner { padding-block: var(--space-6) var(--space-8); }
+  .services-next__inner > p { margin: 0; color: var(--color-muted); }
+  .services-next a { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-5); margin-top: var(--space-5); transition: color var(--duration-fast) ease; }
+  .services-next a:hover, .services-next a:focus-visible { color: var(--color-olive); }
+  .services-next h2 { margin: 0; font-size: clamp(3rem, 8vw, 8rem); font-weight: 300; line-height: .95; letter-spacing: -.06em; }
+  .services-next a > span { font-size: clamp(2.5rem, 5vw, 5rem); line-height: .8; transition: transform var(--duration-fast) var(--ease-out); }
+  .services-next a:hover > span { transform: translate(3px, -3px); }
+  @media (max-width: 1024px) {
+    .services-intro__grid { grid-template-columns: 1fr; gap: var(--space-5); }
+    .services-intro__grid > p { justify-self: start; max-width: 41rem; }
+    .service-list { grid-template-columns: 1fr; gap: var(--space-7); }
+    .service-list__head { border: 0; padding: 0; }
+    .service-list__head .eyebrow { margin-bottom: var(--space-5); }
+    .working-together__copy { padding-right: var(--space-4); }
+  }
+  @media (max-width: 768px) {
+    .services-intro { padding-block: var(--space-6) var(--space-8); }
+    .services-intro__grid { padding-block: var(--space-7) var(--space-7); }
+    .services-intro__title { font-size: clamp(3.5rem, 11vw, 6rem); }
+    .services-intro__image { aspect-ratio: 4 / 5; }
+    .service-list { padding-bottom: var(--space-8); }
+    .working-together__inner { padding-block: var(--space-8); }
+  }
+  @media (max-width: 600px) {
+    .services-intro__top span:last-child { display: none; }
+    .services-intro figcaption { display: block; }
+    .services-intro figcaption span { display: block; }
+    .services-intro figcaption span + span { margin-top: .2rem; }
+    .service-list__item { display: block; }
+    .service-list__item h3 { font-size: 2.6rem; }
+    .service-list__description { margin-top: var(--space-4); }
+    .service-list__scope { margin-top: var(--space-5); }
+    .working-together__inner { display: block; }
+    .working-together__copy { padding: 0; }
+    .working-together__copy .eyebrow { margin-bottom: var(--space-5); }
+    .working-together__link { margin: var(--space-5) 0 var(--space-7); padding-top: 0; }
+    .working-together figure { width: 76%; margin-left: auto; }
+  }
+  @media (max-width: 390px) {
+    .service-list__scope ul { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,0 +1,179 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getProjects, type Project } from '../../data/projects';
+import { getLocale, localizedPath } from '../../i18n';
+import { withBase } from '../../lib/paths';
+
+interface Props { project?: Project; next?: Project; index?: number; }
+export function getStaticPaths() {
+  return getProjects('ru').map((project, index) => ({
+    params: { slug: project.slug },
+    props: { index },
+  }));
+}
+
+const locale = getLocale(Astro.url.pathname);
+const projects = getProjects(locale);
+const index = Astro.props.index ?? projects.findIndex((item) => item.slug === Astro.params.slug);
+if (index < 0 || index >= projects.length) throw new Error(`Unknown project: ${Astro.params.slug}`);
+const project = projects[index];
+const next = projects[(index + 1) % projects.length];
+const number = String(index + 1).padStart(2, '0');
+const copy = {
+  ru: { back: 'Все проекты', project: 'Проект', architecture: 'Архитектура и интерьеры', story: 'Проект', about: 'О проекте', typology: 'Типология', location: 'Место', year: 'Год', gallery: 'Детали', galleryAria: 'Галерея проекта', material: 'Материал и свет', space: 'Пространство', next: 'Следующий проект', nextAria: 'Следующий проект' },
+  kk: { back: 'Барлық жобалар', project: 'Жоба', architecture: 'Сәулет және интерьер', story: 'Жоба туралы', about: 'Жоба туралы', typology: 'Түрі', location: 'Орны', year: 'Жылы', gallery: 'Бөлшектер', galleryAria: 'Жоба галереясы', material: 'Материал мен жарық', space: 'Кеңістік', next: 'Келесі жоба', nextAria: 'Келесі жоба' },
+  en: { back: 'All projects', project: 'Project', architecture: 'Architecture & interiors', story: 'The project', about: 'About', typology: 'Typology', location: 'Location', year: 'Year', gallery: 'A closer look', galleryAria: 'Project image gallery', material: 'Material and light', space: 'Spatial study', next: 'Next project', nextAria: 'Next project' },
+}[locale];
+---
+
+<BaseLayout title={`${project.title} — FORMA`} description={project.summary} image={project.hero.src}>
+  <article class="detail">
+    <header class="detail__heading site-width">
+      <a class="detail__back eyebrow" href={localizedPath('/projects/', locale)}><span aria-hidden="true">↖</span> {copy.back}</a>
+      <div class="detail__heading-grid">
+        <div>
+          <p class="eyebrow detail__index">{copy.project} {number} / {String(projects.length).padStart(2, '0')} <span>—</span> {project.categoryLabel}</p>
+          <h1 class="detail__title editorial" data-long={project.title.length > 13}>{project.title}<span aria-hidden="true">.</span></h1>
+        </div>
+        <p class="detail__summary editorial">{project.summary}</p>
+      </div>
+    </header>
+
+    <figure class="detail__hero">
+      <div class="detail__hero-image" style={`view-transition-name: project-${project.slug}`}><img src={withBase(project.hero.src)} alt={project.hero.alt} width={project.hero.width} height={project.hero.height} fetchpriority="high" decoding="async" /></div>
+      <figcaption class="detail__hero-caption site-width"><span class="eyebrow">{project.title} / {project.location}</span><span class="eyebrow">{copy.architecture}, {project.year}</span></figcaption>
+    </figure>
+
+    <section class="detail__story site-width" aria-labelledby="story-title">
+      <div class="detail__story-label"><p class="eyebrow">01 / {copy.story}</p><h2 id="story-title" class="sr-only">{copy.about}: {project.title}</h2></div>
+      <div class="detail__story-copy">
+        <p class="detail__lead editorial">{project.description[0]}</p>
+        {project.description.slice(1).map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+      <dl class="detail__facts">
+        <div><dt class="eyebrow">{copy.typology}</dt><dd>{project.categoryLabel}</dd></div>
+        <div><dt class="eyebrow">{copy.location}</dt><dd>{project.location}</dd></div>
+        <div><dt class="eyebrow">{copy.year}</dt><dd>{project.year}</dd></div>
+      </dl>
+    </section>
+
+    <section class="detail__gallery site-width" aria-label={`${project.title}: ${copy.galleryAria}`}>
+      <p class="eyebrow detail__gallery-label">02 / {copy.gallery}</p>
+      <figure class="detail__gallery-detail">
+        <div class="detail__frame" data-detail-reveal><img src={withBase(project.gallery[0].src)} alt={project.gallery[0].alt} width={project.gallery[0].width} height={project.gallery[0].height} loading="lazy" decoding="async" /></div>
+        <figcaption class="eyebrow">{copy.material} / 01</figcaption>
+      </figure>
+      <figure class="detail__gallery-room">
+        <div class="detail__frame" data-detail-reveal><img src={withBase(project.gallery[1].src)} alt={project.gallery[1].alt} width={project.gallery[1].width} height={project.gallery[1].height} loading="lazy" decoding="async" /></div>
+        <figcaption class="eyebrow">{copy.space} / 02</figcaption>
+      </figure>
+    </section>
+
+    <nav class="detail__next site-width" aria-label={copy.nextAria}>
+      <a href={localizedPath(`/projects/${next.slug}/`, locale)}>
+        <div class="detail__next-top"><span class="eyebrow">{copy.next} / {String((index + 1) % projects.length + 1).padStart(2, '0')}</span><span class="eyebrow">{next.categoryLabel} · {next.location}</span></div>
+        <div class="detail__next-main"><span class="detail__next-title editorial">{next.title}</span><span class="detail__next-arrow" aria-hidden="true">↗</span></div>
+        <div class="detail__next-image" style={`view-transition-name: project-${next.slug}`}><img src={withBase(next.hero.src)} alt="" width={next.hero.width} height={next.hero.height} loading="lazy" decoding="async" /></div>
+      </a>
+    </nav>
+  </article>
+</BaseLayout>
+
+<script>
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const frames = document.querySelectorAll<HTMLElement>('[data-detail-reveal]');
+  if (!reduced.matches && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        (entry.target as HTMLElement).dataset.reveal = 'shown';
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.16 });
+    frames.forEach((frame) => { frame.dataset.reveal = 'waiting'; observer.observe(frame); });
+  }
+</script>
+
+<style>
+  .detail { padding-top: var(--space-5); }
+  figure { margin: 0; }
+  .detail__back { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 2.75rem; color: var(--color-muted); transition: color var(--duration-fast) ease; }
+  .detail__back span { font-size: 1.35rem; line-height: 0.8; }
+  .detail__back:hover { color: var(--color-ink); }
+  .detail__heading-grid { display: grid; grid-template-columns: 8fr 4fr; align-items: end; gap: var(--grid-gap); padding: var(--space-7) 0 var(--space-6); }
+  .detail__index { margin: 0 0 var(--space-4); color: var(--color-muted); }
+  .detail__index span { margin-inline: var(--space-2); }
+  .detail__title { max-width: 11ch; margin: 0 0 -0.1em -0.04em; font-size: clamp(5rem, 10.5vw, 11rem); font-weight: 300; line-height: 0.86; letter-spacing: -0.075em; overflow-wrap: normal; }
+  .detail__title[data-long="true"] { max-width: 14ch; font-size: clamp(4.2rem, 8vw, 8.8rem); }
+  .detail__title span { color: var(--color-olive); }
+  .detail__summary { max-width: 22rem; justify-self: end; margin: 0 0 0.1rem; font-size: clamp(1.4rem, 2vw, 2.1rem); line-height: 1.15; letter-spacing: -0.02em; }
+  .detail__hero-image { overflow: hidden; aspect-ratio: 1.83; background: var(--color-mineral); }
+  .detail__hero-image img { width: 100%; height: 100%; object-fit: cover; }
+  .detail__hero-caption { display: flex; justify-content: space-between; gap: var(--space-4); padding-top: var(--space-3); color: var(--color-muted); }
+  .detail__story { display: grid; grid-template-columns: 2fr 7fr 3fr; gap: var(--grid-gap); padding-block: var(--space-10); }
+  .detail__story-label .eyebrow { margin: 0; }
+  .detail__story-copy { max-width: 48rem; }
+  .detail__story-copy p { max-width: 43rem; margin: 0 0 var(--space-5); color: var(--color-muted); font-size: clamp(1rem, 1.2vw, 1.125rem); line-height: 1.7; }
+  .detail__story-copy .detail__lead { max-width: 47rem; color: var(--color-ink); font-size: clamp(1.9rem, 3vw, 3.15rem); font-weight: 350; line-height: 1.15; letter-spacing: -0.025em; }
+  .detail__facts { margin: 0; padding-left: var(--space-4); border-left: 1px solid var(--color-mineral); }
+  .detail__facts div + div { margin-top: var(--space-5); }
+  .detail__facts dt { color: var(--color-muted); }
+  .detail__facts dd { margin: var(--space-2) 0 0; font-size: 0.92rem; }
+  .detail__gallery { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--grid-gap); align-items: start; padding-top: var(--space-4); border-top: 1px solid var(--color-ink); }
+  .detail__gallery-label { grid-column: 1 / -1; margin: 0 0 var(--space-6); }
+  .detail__gallery-detail { grid-column: 2 / span 4; }
+  .detail__gallery-room { grid-column: 7 / span 6; margin-top: var(--space-9); }
+  .detail__frame { overflow: hidden; background: var(--color-mineral); transition: clip-path 900ms var(--ease-out); }
+  .detail__frame[data-reveal="waiting"] { clip-path: inset(0 0 10% 0); }
+  .detail__frame img { transition: transform 900ms var(--ease-out), opacity 900ms var(--ease-out); }
+  .detail__frame[data-reveal="waiting"] img { opacity: 0.78; transform: scale(1.045); }
+  .detail__gallery-detail .detail__frame { aspect-ratio: 0.75; }
+  .detail__gallery-room .detail__frame { aspect-ratio: 1.4; }
+  .detail__frame img { width: 100%; height: 100%; object-fit: cover; }
+  .detail__gallery figcaption { margin-top: var(--space-2); color: var(--color-muted); }
+  .detail__next { margin-top: var(--space-10); padding: var(--space-3) 0 var(--space-10); border-top: 1px solid var(--color-ink); }
+  .detail__next a { display: block; }
+  .detail__next-top, .detail__next-main { display: flex; justify-content: space-between; gap: var(--space-4); }
+  .detail__next-top { color: var(--color-muted); }
+  .detail__next-main { align-items: baseline; padding: var(--space-5) 0 var(--space-6); }
+  .detail__next-title { font-size: clamp(4rem, 9vw, 10rem); line-height: 0.9; letter-spacing: -0.06em; overflow-wrap: anywhere; }
+  .detail__next-arrow { font-size: clamp(2rem, 4vw, 4rem); line-height: 0.8; transition: transform var(--duration-fast) var(--ease-out); }
+  .detail__next-image { overflow: hidden; width: min(58%, 48rem); aspect-ratio: 1.8; background: var(--color-mineral); }
+  .detail__next-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 800ms var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) { .detail__next a:hover .detail__next-image img { transform: scale(1.04); } .detail__next a:hover .detail__next-arrow { transform: translate(4px, -4px); } }
+  @media (max-width: 1024px) {
+    .detail__story { grid-template-columns: 2fr 6fr; }
+    .detail__facts { grid-column: 2; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); padding: var(--space-4) 0 0; border-left: 0; border-top: 1px solid var(--color-mineral); }
+    .detail__facts div + div { margin-top: 0; }
+  }
+  @media (max-width: 768px) {
+    .detail__heading-grid { grid-template-columns: 1fr; gap: var(--space-5); padding-top: var(--space-6); }
+    .detail__summary { justify-self: start; max-width: 34rem; }
+    .detail__hero-image { aspect-ratio: 1.25; }
+    .detail__story { grid-template-columns: 1fr; gap: var(--space-5); padding-block: var(--space-9); }
+    .detail__facts { grid-column: 1; }
+    .detail__gallery { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+    .detail__gallery-detail { grid-column: 1 / span 4; }
+    .detail__gallery-room { grid-column: 5 / span 4; margin-top: var(--space-8); }
+  }
+  @media (max-width: 600px) {
+    .detail__title, .detail__title[data-long="true"] { font-size: clamp(4.1rem, 16vw, 7.5rem); overflow-wrap: anywhere; }
+    .detail__summary { font-size: 1.55rem; }
+    .detail__hero-image { aspect-ratio: 0.95; }
+    .detail__hero-caption { flex-direction: column; gap: 0.25rem; }
+    .detail__story { padding-block: var(--space-8); }
+    .detail__story-copy .detail__lead { font-size: clamp(2rem, 8vw, 3rem); }
+    .detail__facts { gap: var(--space-3); }
+    .detail__gallery { display: block; }
+    .detail__gallery-label { margin-bottom: var(--space-5); }
+    .detail__gallery-detail { width: 82%; }
+    .detail__gallery-room { width: 92%; margin: var(--space-7) 0 0 auto; }
+    .detail__next { margin-top: var(--space-9); padding-bottom: var(--space-9); }
+    .detail__next-top { flex-direction: column; gap: var(--space-1); }
+    .detail__next-title { font-size: clamp(3.6rem, 15vw, 6rem); }
+    .detail__next-image { width: 100%; aspect-ratio: 1.35; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .detail__frame, .detail__frame img, .detail__next-image img, .detail__next-arrow { transition-duration: 0.01ms; }
+  }
+</style>

@@ -1,0 +1,118 @@
+---
+import type { Locale } from '../i18n';
+import { localizedPath } from '../i18n';
+import { getProjects, type ProjectCategory } from '../data/projects';
+import { withBase } from '../lib/paths';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+
+const order: ProjectCategory[] = ['Residential', 'Commercial', 'Hospitality', 'Cultural'];
+const projects = getProjects(locale);
+const practices = order.flatMap((category) => {
+  const project = projects.find((item) => item.category === category);
+  return project ? [project] : [];
+});
+
+const copy = {
+  ru: {
+    eyebrow: 'Архитектура и интерьеры',
+    title: 'Наши направления',
+    intro: 'От частного дома до общественного пространства — у каждой задачи свой масштаб, материал и ритм.',
+    all: 'Все проекты',
+  },
+  kk: {
+    eyebrow: 'Сәулет және интерьер',
+    title: 'Біздің бағыттар',
+    intro: 'Жеке үйден қоғамдық кеңістікке дейін — әр міндеттің өз ауқымы, материалы және ырғағы бар.',
+    all: 'Барлық жобалар',
+  },
+  en: {
+    eyebrow: 'Architecture & interiors',
+    title: 'Our practice',
+    intro: 'From a private home to a public space, each brief has its own scale, material language and rhythm.',
+    all: 'View all projects',
+  },
+}[locale];
+---
+
+<section class="practice" aria-labelledby="practice-title">
+  <div class="site-width">
+    <p class="practice__eyebrow eyebrow">{copy.eyebrow}</p>
+    <div class="practice__heading">
+      <span class="practice__rule" aria-hidden="true"></span>
+      <h2 class="editorial" id="practice-title">{copy.title}</h2>
+      <span class="practice__rule" aria-hidden="true"></span>
+    </div>
+    <p class="practice__intro">{copy.intro}</p>
+
+    <div class="practice__grid">
+      {practices.map((project) => (
+        <a class="practice__item" href={localizedPath(`/projects/${project.slug}/`, locale)}>
+          <div class="practice__image">
+            <img src={withBase(project.gallery[0].src)} alt={project.gallery[0].alt} width={project.gallery[0].width} height={project.gallery[0].height} loading="lazy" decoding="async" />
+            <span class="practice__image-arrow" aria-hidden="true">↗</span>
+          </div>
+          <div class="practice__caption">
+            <p class="practice__category eyebrow">{project.categoryLabel}</p>
+            <h3 class="editorial">{project.title}</h3>
+            <p class="practice__location">{project.location}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <a class="practice__all" href={localizedPath('/projects/', locale)}>
+      <span class="eyebrow">{copy.all}</span><span aria-hidden="true">↗</span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .practice { padding: var(--space-8) 0 var(--space-9); background: var(--color-ink); color: var(--color-chalk); }
+  .practice__eyebrow { margin: 0 0 var(--space-4); color: var(--color-mineral); text-align: center; }
+  .practice__heading { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: clamp(1rem, 3vw, 3rem); }
+  .practice__rule { height: 1px; background: color-mix(in srgb, var(--color-chalk) 36%, transparent); }
+  .practice__heading h2 { margin: 0; font-size: clamp(3.8rem, 6.7vw, 7.5rem); font-weight: 400; line-height: .92; letter-spacing: -.055em; text-align: center; }
+  .practice__intro { max-width: 39rem; margin: var(--space-4) auto var(--space-7); color: color-mix(in srgb, var(--color-chalk) 75%, transparent); font-size: clamp(.95rem, 1.2vw, 1.1rem); line-height: 1.6; text-align: center; }
+  .practice__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(.8rem, 1.8vw, 2rem); }
+  .practice__item { display: block; min-width: 0; cursor: pointer; }
+  .practice__item:focus-visible, .practice__all:focus-visible { outline: 2px solid var(--color-chalk); outline-offset: 6px; }
+  .practice__image { position: relative; overflow: hidden; aspect-ratio: .77; background: var(--color-muted); }
+  .practice__image img { width: 100%; height: 100%; object-fit: cover; transition: transform calc(var(--duration-reveal) + 220ms) var(--ease-out), filter calc(var(--duration-reveal) + 220ms) var(--ease-out); }
+  .practice__image-arrow { position: absolute; right: var(--space-3); bottom: var(--space-3); display: grid; place-items: center; width: 2.7rem; height: 2.7rem; background: var(--color-chalk); color: var(--color-ink); font-size: 1.35rem; transform: translateY(.5rem); opacity: 0; transition: transform var(--duration-reveal) var(--ease-out), opacity var(--duration-reveal) var(--ease-out); }
+  .practice__caption { padding-top: var(--space-3); }
+  .practice__category { margin: 0 0 var(--space-2); color: var(--color-mineral); }
+  .practice__caption h3 { margin: 0; font-size: clamp(1.8rem, 2.6vw, 3rem); font-weight: 400; line-height: 1.02; letter-spacing: -.035em; }
+  .practice__location { margin: var(--space-2) 0 0; color: var(--color-mineral); font-size: .88rem; line-height: 1.45; }
+  .practice__all { display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); min-height: 4rem; margin-top: var(--space-7); border-top: 1px solid color-mix(in srgb, var(--color-chalk) 36%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--color-chalk) 36%, transparent); transition: color var(--duration-fast); }
+  .practice__all span:last-child { font-size: 1.5rem; transition: transform var(--duration-fast) var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) {
+    .practice__item:hover .practice__image img, .practice__item:focus-visible .practice__image img { transform: scale(1.055); filter: saturate(1.06); }
+    .practice__item:hover .practice__image-arrow, .practice__item:focus-visible .practice__image-arrow { transform: translateY(0); opacity: 1; }
+    .practice__all:hover { color: var(--color-mineral); }
+    .practice__all:hover span:last-child { transform: translate(3px, -3px); }
+  }
+  @media (max-width: 1024px) {
+    .practice { padding: var(--space-7) 0 var(--space-8); }
+    .practice__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--space-6); }
+    .practice__image { aspect-ratio: .88; }
+  }
+  @media (max-width: 600px) {
+    .practice { padding: var(--space-7) 0 var(--space-7); }
+    .practice__heading { grid-template-columns: 1fr; gap: 0; }
+    .practice__rule { display: none; }
+    .practice__heading h2 { font-size: clamp(3.5rem, 13vw, 5rem); }
+    .practice__intro { margin: var(--space-4) 0 var(--space-6); text-align: left; }
+    .practice__grid { gap: var(--space-5) var(--space-2); }
+    .practice__image { aspect-ratio: .72; }
+    .practice__category { font-size: .66rem; letter-spacing: .1em; }
+    .practice__caption h3 { font-size: clamp(1.65rem, 7vw, 2.4rem); }
+    .practice__location { font-size: .76rem; }
+    .practice__image-arrow { display: none; }
+    .practice__all { margin-top: var(--space-6); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .practice__image img, .practice__image-arrow, .practice__all, .practice__all span:last-child { transition-duration: .01ms; }
+  }
+</style>

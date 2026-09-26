@@ -1,0 +1,140 @@
+---
+import type { Locale } from '../i18n';
+import { withBase } from '../lib/paths';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const copy = {
+  ru: { discipline: 'Архитектура и интерьеры', location: 'Алматы · Казахстан', first: 'Сначала место.', second: 'Затем форма.', film: 'Ботанический сад / Алматы', alt: 'Ботанический сад Алматы с высоты: аллеи, зелёные массивы и горы Заилийского Алатау', brandLine: 'FORMA — студия пространства', photoMotion: 'анимация фото', explore: 'Смотреть проекты', pause: 'Приостановить видео', play: 'Воспроизвести видео' },
+  kk: { discipline: 'Сәулет және интерьер', location: 'Алматы · Қазақстан', first: 'Әуелі мекен.', second: 'Содан соң пішін.', film: 'Ботаникалық бақ / Алматы', alt: 'Алматы ботаникалық бағының аллеялары, жасыл желегі және Іле Алатауының таулары', brandLine: 'FORMA — кеңістік студиясы', photoMotion: 'фото анимациясы', explore: 'Жобаларды көру', pause: 'Бейнені кідірту', play: 'Бейнені ойнату' },
+  en: { discipline: 'Architecture and interiors', location: 'Almaty · Kazakhstan', first: 'Place first.', second: 'Form follows.', film: 'Botanical Garden / Almaty', alt: 'Aerial view of Almaty Botanical Garden, its green avenues and the Trans-Ili Alatau mountains', brandLine: 'FORMA — studio of place', photoMotion: 'animated photograph', explore: 'Explore projects', pause: 'Pause video', play: 'Play video' },
+}[locale];
+---
+
+<section class="home-hero" aria-labelledby="home-hero-title" data-home-hero data-locale={locale}>
+  <div class="home-hero__head site-width">
+    <div class="home-hero__topline eyebrow"><span>{copy.discipline}</span><span>{copy.location}</span></div>
+    <h1 class="home-hero__title editorial" id="home-hero-title">
+      <span class="home-hero__line"><span>{copy.first}</span></span>
+      <span class="home-hero__line"><span><em>{copy.second}</em></span></span>
+    </h1>
+  </div>
+  <figure class="home-hero__film">
+    <div class="home-hero__film-frame" data-film-frame>
+      <picture><source media="(max-width: 600px)" srcset={withBase('/video/forma-almaty-botanical-portrait-poster.jpg')} /><img class="home-hero__poster" src={withBase('/video/forma-almaty-botanical-poster.jpg')} alt={copy.alt} width="1920" height="1080" fetchpriority="high" decoding="async" /></picture>
+      <video class="home-hero__video" data-src-desktop={withBase('/video/forma-almaty-botanical-12s.mp4')} data-src-mobile={withBase('/video/forma-almaty-botanical-portrait-12s.mp4')} muted loop playsinline preload="none" aria-hidden="true"></video>
+      <div class="home-hero__film-overlay" aria-hidden="true"></div>
+      <div class="home-hero__film-label eyebrow"><span>FORMA</span><span>{copy.film}</span></div>
+      <button class="home-hero__video-control" type="button" hidden aria-label={copy.pause} data-play-label={copy.play} data-pause-label={copy.pause}><span class="home-hero__pause-icon" aria-hidden="true">Ⅱ</span><span class="home-hero__play-icon" aria-hidden="true">▶</span></button>
+    </div>
+    <figcaption class="home-hero__film-caption site-width"><div class="home-hero__caption-meta"><span class="eyebrow">{copy.brandLine}</span><small class="home-hero__credit"><a href="https://commons.wikimedia.org/wiki/File:%D0%90%D0%BB%D0%BC%D0%B0%D1%82%D1%8B,_%D0%B1%D0%BE%D1%82%D1%81%D0%B0%D0%B4_%D1%81%D0%B2%D0%B5%D1%80%D1%85%D1%83.jpg" target="_blank" rel="noopener noreferrer">Nikolai Bulykin</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a> · {copy.photoMotion}</small></div><a class="home-hero__explore" href="#selected-work"><span>{copy.explore}</span><span aria-hidden="true">↘</span></a></figcaption>
+  </figure>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  const hero = document.querySelector<HTMLElement>('[data-home-hero]');
+  if (hero) {
+    const video = hero.querySelector<HTMLVideoElement>('.home-hero__video');
+    const control = hero.querySelector<HTMLButtonElement>('.home-hero__video-control');
+    const film = hero.querySelector<HTMLElement>('[data-film-frame]');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+    let manuallyPaused = false;
+    let available = false;
+    const updateControl = () => {
+      if (!video || !control) return;
+      const paused = video.paused;
+      control.setAttribute('aria-label', paused ? control.dataset.playLabel || '' : control.dataset.pauseLabel || '');
+      control.classList.toggle('is-paused', paused);
+    };
+    if (video && control && !reducedMotion.matches && !connection?.saveData) {
+      const mobileFilm = window.matchMedia('(max-width: 600px)');
+      const filmSource = () => mobileFilm.matches ? video.dataset.srcMobile : video.dataset.srcDesktop;
+      video.src = filmSource() || '';
+      mobileFilm.addEventListener('change', () => {
+        if (reducedMotion.matches) return;
+        const wasPlaying = !video.paused;
+        video.pause();
+        hero.classList.remove('has-video');
+        control.hidden = true;
+        available = false;
+        video.src = filmSource() || '';
+        video.load();
+        if (wasPlaying && !manuallyPaused && document.visibilityState === 'visible') video.play().catch(() => {});
+      });
+      video.addEventListener('playing', () => { available = true; hero.classList.add('has-video'); control.hidden = false; updateControl(); });
+      video.addEventListener('pause', updateControl);
+      video.addEventListener('error', () => { hero.classList.remove('has-video'); control.hidden = true; });
+      control.addEventListener('click', () => { if (video.paused) { manuallyPaused = false; video.play().catch(() => { control.hidden = true; }); } else { manuallyPaused = true; video.pause(); } });
+      new IntersectionObserver(([entry]) => {
+        if (!entry) return;
+        if (entry.isIntersecting && !manuallyPaused && document.visibilityState === 'visible') video.play().catch(() => { if (!available) control.hidden = true; });
+        else if (!entry.isIntersecting && !video.paused) video.pause();
+      }, { threshold: 0.15 }).observe(hero);
+      document.addEventListener('visibilitychange', () => { if (document.hidden) video.pause(); else if (!manuallyPaused && hero.getBoundingClientRect().bottom > 0) video.play().catch(() => {}); });
+      reducedMotion.addEventListener('change', () => { if (reducedMotion.matches) { video.pause(); hero.classList.remove('has-video'); control.hidden = true; } else if (!manuallyPaused) video.play().catch(() => {}); });
+    }
+    if (!reducedMotion.matches) {
+      const lines = hero.querySelectorAll<HTMLElement>('.home-hero__line > span');
+      const topline = hero.querySelector<HTMLElement>('.home-hero__topline');
+      const caption = hero.querySelector<HTMLElement>('.home-hero__film-caption');
+      gsap.timeline({ defaults: { ease: 'power3.out' } })
+        .fromTo(topline, { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.6, clearProps: 'all' })
+        .fromTo(lines, { yPercent: 112 }, { yPercent: 0, duration: 1.18, stagger: 0.2, clearProps: 'transform' }, '-=0.16')
+        .fromTo(film, { clipPath: 'inset(15% 0 85% 0)', scale: 0.96 }, { clipPath: 'inset(0% 0 0% 0)', scale: 1, duration: 1.42, clearProps: 'clipPath,transform' }, '-=0.48')
+        .fromTo(caption, { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.78, clearProps: 'all' }, '-=0.52');
+      gsap.registerPlugin(ScrollTrigger);
+      const media = hero.querySelector<HTMLElement>('.home-hero__film');
+      if (media) gsap.to(media, { '--film-inset': '0px', ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom 45%', scrub: 0.8 } });
+    }
+  }
+</script>
+
+<style>
+  .home-hero { padding-top: clamp(2.25rem, 4vw, 4.5rem); overflow: clip; }
+  .home-hero__head { position: relative; z-index: 2; }
+  .home-hero__topline { display: flex; justify-content: space-between; gap: var(--space-3); color: var(--color-muted); }
+  .home-hero__title { position: relative; z-index: 2; margin: clamp(2.5rem, 5vw, 5.5rem) 0 0.12em; font-size: clamp(6rem, 10.75vw, 12.5rem); font-weight: 400; line-height: 0.86; letter-spacing: -0.06em; }
+  .home-hero__line { display: block; overflow: hidden; padding-right: 0.04em; padding-bottom: 0.13em; }
+  .home-hero[data-locale="kk"] .home-hero__title { margin-bottom: 0.24em; font-size: clamp(5.7rem, 9.6vw, 11.25rem); line-height: 0.95; letter-spacing: -0.048em; }
+  .home-hero[data-locale="kk"] .home-hero__line { padding-bottom: 0.18em; }
+  .home-hero__line > span { display: block; width: max-content; max-width: 100%; }
+  .home-hero__line:last-child { padding-left: clamp(2rem, 9vw, 10rem); }
+  .home-hero__line em { font-weight: 400; }
+  .home-hero__film { --film-inset: var(--gutter); position: relative; z-index: 1; width: calc(100% - var(--film-inset) * 2); margin: 0 auto; }
+  .home-hero__film-frame { position: relative; isolation: isolate; overflow: hidden; aspect-ratio: 2.05; min-height: 27rem; background: #171b18; }
+  .home-hero__poster, .home-hero__video, .home-hero__film-overlay { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .home-hero__poster, .home-hero__video { object-fit: cover; object-position: center top; }
+  .home-hero__poster { filter: saturate(0.9); }
+  .home-hero__video { opacity: 0; filter: saturate(0.9); transition: opacity 800ms var(--ease-out); }
+  .home-hero.has-video .home-hero__video { opacity: 1; }
+  .home-hero__film-overlay { pointer-events: none; background: linear-gradient(180deg, rgba(0,0,0,.22), transparent 22%, transparent 72%, rgba(0,0,0,.2)); }
+  .home-hero__film-label { position: absolute; top: var(--space-4); left: var(--space-4); right: var(--space-4); display: flex; justify-content: space-between; gap: var(--space-3); color: var(--color-chalk); text-shadow: 0 1px 6px rgba(0,0,0,.35); }
+  .home-hero__film-label span:first-child { white-space: nowrap; }
+  .home-hero__video-control { position: absolute; right: var(--space-4); bottom: var(--space-4); display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border: 1px solid rgba(255,255,255,.8); border-radius: 50%; background: rgba(20,24,21,.24); color: white; backdrop-filter: blur(3px); transition: background var(--duration-fast), transform var(--duration-fast); }
+  .home-hero__video-control[hidden] { display: none; }
+  .home-hero__video-control:hover { background: rgba(20,24,21,.65); transform: scale(1.07); }
+  .home-hero__pause-icon { font-size: 1rem; letter-spacing: -.18em; transform: translateX(-.1em); }
+  .home-hero__play-icon { display: none; font-size: .8rem; transform: translateX(.1em); }
+  .home-hero__video-control.is-paused .home-hero__pause-icon { display: none; }
+  .home-hero__video-control.is-paused .home-hero__play-icon { display: block; }
+  .home-hero__film-caption { display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); padding-top: var(--space-3); }
+  .home-hero__caption-meta { display: flex; flex-direction: column; align-items: flex-start; gap: .35rem; }
+  .home-hero__film-caption .eyebrow { color: var(--color-muted); }
+  .home-hero__credit { color: var(--color-muted); font-size: .65rem; letter-spacing: .02em; line-height: 1.4; }
+  .home-hero__credit a { text-decoration: underline; text-underline-offset: .16em; }
+  .home-hero__credit a:hover { color: var(--color-ink); }
+  .home-hero__explore { display: inline-flex; align-items: center; gap: var(--space-4); padding-bottom: .35rem; border-bottom: 1px solid var(--color-ink); font-size: .86rem; font-weight: 600; transition: color var(--duration-fast), border-color var(--duration-fast); }
+  .home-hero__explore:hover { color: var(--color-olive); border-color: var(--color-olive); }
+  .home-hero__explore span:last-child { font-size: 1.35rem; line-height: 0.8; }
+  @media (max-width: 1024px) { .home-hero__title { font-size: clamp(5.4rem, 10.7vw, 9rem); } .home-hero__film-frame { aspect-ratio: 1.65; min-height: 0; } }
+  @media (max-width: 768px) { .home-hero { padding-top: var(--space-5); } .home-hero__title { margin-top: var(--space-7); font-size: clamp(4.5rem, 11.5vw, 6.5rem); } .home-hero__line:last-child { padding-left: clamp(1.25rem, 7vw, 4rem); } .home-hero__film-frame { aspect-ratio: 1.12; } }
+  @media (max-width: 768px) { .home-hero[data-locale="kk"] .home-hero__title { font-size: clamp(4.1rem, 9.8vw, 6rem); } }
+  @media (max-width: 480px) { .home-hero__topline span:last-child { text-align: right; } .home-hero__title { margin: var(--space-7) 0 0.1em; font-size: clamp(3.2rem, 15vw, 4.35rem); letter-spacing: -.06em; } .home-hero__line:last-child { padding-left: 0; } .home-hero__film-frame { aspect-ratio: .78; } .home-hero__film-label { top: var(--space-3); left: var(--space-3); right: var(--space-3); } .home-hero__film-label span:last-child { text-align: right; } .home-hero__video-control { right: var(--space-3); bottom: var(--space-3); } .home-hero__film-caption { align-items: start; } .home-hero__film-caption .eyebrow { max-width: 8rem; } }
+  @media (max-width: 480px) { .home-hero__poster, .home-hero__video { object-position: 50% center; } }
+  @media (max-width: 480px) { .home-hero[data-locale="kk"] .home-hero__title { margin-bottom: 0.35em; font-size: clamp(2.9rem, 12.5vw, 3.9rem); letter-spacing: -0.05em; } }
+  @media (prefers-reduced-motion: reduce) { .home-hero__video { display: none; } }
+</style>
