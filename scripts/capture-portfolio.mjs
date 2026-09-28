@@ -21,12 +21,14 @@ await mkdir("review/portfolio", { recursive: true });
 await mkdir("public/portfolio/media", { recursive: true });
 try {
   const page = await browser.newPage({ reducedMotion: "reduce" });
-  const pages = {
-    forma: "/SketchMap/",
-    oryn: "/SketchMap/portfolio/demos/oryn/",
-    "aq-tis": "/SketchMap/portfolio/demos/aq-tis/",
-    sary: "/SketchMap/portfolio/demos/sary/",
-  };
+  const pages = process.argv.includes("--portfolio-only")
+    ? {}
+    : {
+        forma: "/SketchMap/",
+        oryn: "/SketchMap/portfolio/demos/oryn/",
+        "aq-tis": "/SketchMap/portfolio/demos/aq-tis/",
+        sary: "/SketchMap/portfolio/demos/sary/",
+      };
   for (const [slug, path] of Object.entries(pages)) {
     for (const [device, width, height] of [
       ["desktop", 1440, 960],
@@ -67,6 +69,12 @@ try {
         .resize(1200, 630, { fit: "cover", position: "top" })
         .jpeg({ quality: 82 })
         .toFile("public/portfolio/media/og.jpg");
+    await page
+      .locator(".team-grid")
+      .screenshot({ path: `review/portfolio/team-${device}.png` });
+    await page
+      .locator(".contact-section")
+      .screenshot({ path: `review/portfolio/contact-${device}.png` });
   }
 } finally {
   await browser.close();

@@ -735,8 +735,8 @@ sup {
 .team-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  max-width: 650px;
+  gap: clamp(40px, 7vw, 100px);
+  max-width: 1100px;
   margin-top: 70px;
 }
 .team-avatar {
@@ -751,14 +751,37 @@ sup {
   letter-spacing: -3px;
 }
 .team-grid h3 {
-  font-size: 22px;
+  font-size: 26px;
   margin-top: 20px;
   margin-bottom: 8px;
 }
 .team-grid p {
-  font-size: 12px;
+  font-size: 14px;
+  line-height: 1.7;
   margin-top: 12px;
   color: #c5cec0;
+}
+.team-grid article > .eyebrow {
+  display: block;
+  line-height: 1.7;
+}
+.team-skills {
+  margin-top: 24px;
+}
+.team-skills ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+}
+.team-skills li {
+  border: 1px solid #677260;
+  border-radius: 30px;
+  padding: 7px 12px;
+  font-size: 12px;
+  color: #e0e5dc;
 }
 .placeholder-note {
   font-size: 11px;
@@ -813,9 +836,26 @@ sup {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  min-height: 44px;
+  min-height: 70px;
   font-size: 16px;
   border-bottom: 1px solid #7891f0;
+}
+.contact-channels > a[href^="mailto:"] {
+  grid-column: 1 / -1;
+}
+.contact-channel-name {
+  min-width: 0;
+  padding-block: 10px;
+}
+.contact-channel-name small {
+  display: block;
+  margin-top: 5px;
+  color: #e0e7ff;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.contact-channels > a > svg {
+  flex-shrink: 0;
 }
 .pending-channel small {
   font-size: 10px;
@@ -1125,14 +1165,18 @@ sup {
     padding: 11px 14px;
   }
   .team-grid {
-    gap: 25px;
+    grid-template-columns: 1fr;
+    gap: 36px;
     margin-top: 40px;
   }
   .team-avatar {
     height: 80px;
   }
   .team-grid h3 {
-    font-size: 20px;
+    font-size: 24px;
+  }
+  .team-grid p {
+    font-size: 13px;
   }
   .contact-section {
     padding-top: 38px;

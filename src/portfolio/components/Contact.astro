@@ -5,23 +5,33 @@ const contact = studio.contact;
 const channels = [
   {
     label: "WhatsApp",
+    value: contact.whatsapp,
     href: contact.whatsapp
       ? `https://wa.me/${contact.whatsapp.replace(/\D/g, "")}`
       : "",
   },
   {
     label: "Telegram",
+    value: contact.telegram,
     href: contact.telegram
       ? `https://t.me/${contact.telegram.replace(/^@/, "")}`
       : "",
   },
-  { label: "Email", href: contact.email ? `mailto:${contact.email}` : "" },
+  {
+    label: "Email",
+    value: contact.email,
+    href: contact.email ? `mailto:${contact.email}` : "",
+  },
   {
     label: "Телефон",
+    value: contact.phone,
     href: contact.phone ? `tel:${contact.phone.replace(/[^+\d]/g, "")}` : "",
   },
 ];
 const hasContact = channels.some((channel) => channel.href);
+const visibleChannels = hasContact
+  ? channels.filter((channel) => channel.href)
+  : channels;
 ---
 
 <section class="contact-section" id="contact">
@@ -49,10 +59,13 @@ const hasContact = channels.some((channel) => channel.href);
         Начнём с простого разговора.
       </p>
       <div class="contact-channels">
-        {channels.map((channel) =>
+        {visibleChannels.map((channel) =>
           channel.href ? (
             <a href={channel.href}>
-              {channel.label}
+              <span class="contact-channel-name">
+                {channel.label}
+                <small>{channel.value}</small>
+              </span>
               <Arrow diagonal />
             </a>
           ) : (
