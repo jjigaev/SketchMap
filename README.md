@@ -1,5 +1,9 @@
 # FORMA — Architecture & Interiors
 
+This repository also contains a web/digital studio portfolio at **`/SketchMap/portfolio/`**. FORMA remains at **`/SketchMap/`**, with all of its original routes, visual identity, assets and deployment configuration preserved. The portfolio adds four case studies and three interactive fictional-brand demos: ORYN (development), AQ TIS (dental) and SARY (restaurant). FORMA is labeled as an implemented website for a fictional studio, not a real client commission.
+
+Portfolio architecture, editable contacts/team, media provenance and the release checklist are in [`docs/PORTFOLIO.md`](docs/PORTFOLIO.md). Run `npm run check`, `npm run build`, then `npm test` for the production-preview checks. The entire repository now builds 41 HTML pages; the 33-page count below describes FORMA only.
+
 A standalone fictional website for an Almaty-based architecture and interior design studio, created to be presented later as a commercial web-development portfolio project. It is the studio's own client-facing site, not the web developer's portfolio site. The studio, projects, and inquiry details are concept material. Russian is the default language, with complete Kazakh and English versions.
 
 ## Run locally

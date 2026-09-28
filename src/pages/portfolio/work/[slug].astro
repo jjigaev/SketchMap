@@ -1,0 +1,166 @@
+---
+import PortfolioLayout from "../../../portfolio/layouts/PortfolioLayout.astro";
+import Contact from "../../../portfolio/components/Contact.astro";
+import Arrow from "../../../portfolio/components/Arrow.astro";
+import FormaCredit from "../../../portfolio/components/FormaCredit.astro";
+import {
+  projects,
+  type Project,
+  projectLabel,
+  caseUrl,
+} from "../../../portfolio/projects";
+import { withBase } from "../../../lib/paths";
+import { studio } from "../../../portfolio/config";
+export function getStaticPaths() {
+  return projects.map((project, index) => ({
+    params: { slug: project.slug },
+    props: { project, next: projects[(index + 1) % projects.length] },
+  }));
+}
+interface Props {
+  project: Project;
+  next: Project;
+}
+const { project, next } = Astro.props;
+---
+
+<PortfolioLayout
+  title={`${project.title} — кейс сайта | ${studio.name}`}
+  description={project.description}
+  image={project.cover}
+>
+  <section class="case-head shell" id="top">
+    <a class="back-link" href={withBase("/portfolio/#work")}>
+      ← Все работы
+    </a>
+    <div class="section-kicker">
+      <span>{projectLabel(project)}</span>
+      <span>{project.industry.toUpperCase()}</span>
+    </div>
+    <h1>{project.title}</h1>
+    <div class="case-head-bottom">
+      <p>{project.line}</p>
+      <a class="button primary" href={withBase(project.liveUrl)}>
+        Посмотреть сайт <Arrow diagonal />
+      </a>
+    </div>
+  </section>
+  <div class={`case-cover ${project.theme}`}>
+    <div class="desktop-frame">
+      <div class="browser-chrome">
+        <i></i>
+        <i></i>
+        <i></i>
+        <span>{project.title.toLowerCase()} / website</span>
+      </div>
+      <img
+        src={withBase(project.cover)}
+        width="1440"
+        height="960"
+        alt={`Скриншот сайта ${project.title} на большом экране`}
+        fetchpriority="high"
+      />
+    </div>
+  </div>
+  {project.slug === "forma" && (
+    <div class="shell">
+      <FormaCredit />
+    </div>
+  )}
+  <section class="case-story shell">
+    <h2>О проекте</h2>
+    <div class="story-content">
+      <div>
+        <h3>
+          {project.type === "concept"
+            ? "CONCEPT GOAL / ЗАДАЧА КОНЦЕПТА"
+            : "ЗАДАЧА САЙТА"}
+        </h3>
+        <p>{project.goal}</p>
+      </div>
+      <div>
+        <h3>Визуальное направление</h3>
+        <p>{project.direction}</p>
+      </div>
+      <div>
+        <h3>Решение</h3>
+        <p>{project.solution}</p>
+      </div>
+    </div>
+  </section>
+  <section class="case-devices">
+    <div class="section-heading">
+      <h2>
+        Один характер.
+        <br />
+        <span class="muted">Любой экран.</span>
+      </h2>
+      <p>
+        Реальные скриншоты реализованных страниц.
+        <br />
+        От большого экрана до телефона.
+      </p>
+    </div>
+    <div class="device-composition">
+      <figure>
+        <div class="desktop-frame">
+          <div class="browser-chrome">
+            <i></i>
+            <i></i>
+            <i></i>
+          </div>
+          <img
+            src={withBase(project.cover)}
+            alt={`${project.title}: desktop-версия`}
+            width="1440"
+            height="960"
+            loading="lazy"
+          />
+        </div>
+        <figcaption>DESKTOP / 1440 PX</figcaption>
+      </figure>
+      <figure>
+        <div class="phone-frame">
+          <img
+            src={withBase(`/portfolio/media/${project.slug}-mobile.webp`)}
+            width="390"
+            height="844"
+            alt={`${project.title}: адаптивная версия на телефоне`}
+            loading="lazy"
+          />
+        </div>
+        <figcaption>MOBILE / 390 PX</figcaption>
+      </figure>
+    </div>
+  </section>
+  <section class="case-features shell">
+    <div>
+      <h2>В деталях</h2>
+      <ul class="feature-list">
+        {project.features.map((feature) => (
+          <li>{feature}</li>
+        ))}
+      </ul>
+    </div>
+    <div>
+      <h2>Технологии и результат</h2>
+      <div class="tech-tags">
+        {project.technologies.map((technology) => (
+          <span>{technology}</span>
+        ))}
+      </div>
+      <p class="result-copy">{project.result}</p>
+      <a class="button" href={withBase(project.liveUrl)}>
+        Открыть {project.title} <Arrow diagonal />
+      </a>
+    </div>
+  </section>
+  <div class="next-project shell">
+    <span>СЛЕДУЮЩИЙ ПРОЕКТ</span>
+    <a href={withBase(caseUrl(next.slug))}>
+      {next.title}
+      <Arrow diagonal />
+    </a>
+  </div>
+  <Contact />
+</PortfolioLayout>

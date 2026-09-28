@@ -1,0 +1,87 @@
+---
+import { studio } from "../config";
+import Arrow from "./Arrow.astro";
+const contact = studio.contact;
+const channels = [
+  {
+    label: "WhatsApp",
+    value: contact.whatsapp,
+    href: contact.whatsapp
+      ? `https://wa.me/${contact.whatsapp.replace(/\D/g, "")}`
+      : "",
+  },
+  {
+    label: "Telegram",
+    value: contact.telegram,
+    href: contact.telegram
+      ? `https://t.me/${contact.telegram.replace(/^@/, "")}`
+      : "",
+  },
+  {
+    label: "Email",
+    value: contact.email,
+    href: contact.email ? `mailto:${contact.email}` : "",
+  },
+  {
+    label: "Телефон",
+    value: contact.phone,
+    href: contact.phone ? `tel:${contact.phone.replace(/[^+\d]/g, "")}` : "",
+  },
+];
+const hasContact = channels.some((channel) => channel.href);
+const visibleChannels = hasContact
+  ? channels.filter((channel) => channel.href)
+  : channels;
+---
+
+<section class="contact-section" id="contact">
+  <div class="shell">
+    <div class="section-kicker">
+      <span>ЕСТЬ ПРОЕКТ?</span>
+      <span>ДАВАЙТЕ ОБСУДИМ</span>
+    </div>
+    <div class="contact-heading">
+      <h2>
+        Хорошие идеи
+        <br />
+        заслуживают
+        <br />
+        <span>хорошего сайта.</span>
+      </h2>
+      <span class="contact-arrow" aria-hidden="true">
+        ↗
+      </span>
+    </div>
+    <div class="contact-bottom">
+      <p>
+        Расскажите о вашем бизнесе.
+        <br />
+        Начнём с простого разговора.
+      </p>
+      <div class="contact-channels">
+        {visibleChannels.map((channel) =>
+          channel.href ? (
+            <a href={channel.href}>
+              <span class="contact-channel-name">
+                {channel.label}
+                <small>{channel.value}</small>
+              </span>
+              <Arrow diagonal />
+            </a>
+          ) : (
+            <span class="pending-channel">
+              {channel.label}
+              <small>Скоро</small>
+            </span>
+          ),
+        )}
+      </div>
+    </div>
+    {!hasContact && (
+      <p class="contact-placeholder">
+        Контакты студии пока не добавлены. Связь через сайт станет доступна
+        после их заполнения.
+      </p>
+    )}
+  </div>
+</section>

@@ -1,0 +1,44 @@
+---
+interface Props {
+  city: string;
+  address?: string;
+  map?: string;
+  phone?: string;
+  whatsapp?: string;
+}
+const { city, address = "", map = "", phone = "", whatsapp = "" } = Astro.props;
+---
+
+<div class="location-placeholder">
+  <div class="location-grid" aria-hidden="true">
+    <span>↗</span>
+  </div>
+  <div>
+    <span class="demo-eyebrow">{city.toUpperCase()}</span>
+    <h3>{address || "Здесь будет наш адрес"}</h3>
+    <p>
+      {address
+        ? "Будем рады встрече."
+        : "Место для адреса и карты реальной компании."}
+    </p>
+    <div class="contact-options">
+      {map ? (
+        <a href={map} target="_blank" rel="noopener noreferrer">
+          Открыть карту ↗
+        </a>
+      ) : (
+        <span>Карта: адрес не указан</span>
+      )}
+      {phone ? (
+        <a href={`tel:${phone.replace(/[^+\d]/g, "")}`}>Позвонить ↗</a>
+      ) : (
+        <span>Телефон: не указан</span>
+      )}
+      {whatsapp ? (
+        <a href={`https://wa.me/${whatsapp.replace(/\D/g, "")}`}>WhatsApp ↗</a>
+      ) : (
+        <span>WhatsApp: не указан</span>
+      )}
+    </div>
+  </div>
+</div>

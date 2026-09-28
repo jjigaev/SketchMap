@@ -1,0 +1,73 @@
+---
+import { type Project, caseUrl, projectLabel } from "../projects";
+import { withBase } from "../../lib/paths";
+import Arrow from "./Arrow.astro";
+import FormaCredit from "./FormaCredit.astro";
+interface Props {
+  project: Project;
+  index: number;
+}
+const { project, index } = Astro.props;
+---
+
+<article
+  class={`project-showcase project-${project.theme}`}
+  data-category={project.type}
+  data-reveal
+>
+  <a
+    class="project-preview"
+    href={withBase(caseUrl(project.slug))}
+    aria-label={`Смотреть кейс ${project.title}`}
+  >
+    <div class="project-stage-label">
+      <span>{project.title}</span>
+      <span>{project.industry}</span>
+    </div>
+    <div class="desktop-frame">
+      <div class="browser-chrome">
+        <i></i>
+        <i></i>
+        <i></i>
+        <span>{project.title.toLowerCase()} / website</span>
+      </div>
+      <img
+        src={withBase(project.cover)}
+        width="1440"
+        height="960"
+        alt={`Настоящий скриншот главной страницы сайта ${project.title}`}
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+    <span class="preview-open">
+      <Arrow diagonal />
+    </span>
+  </a>
+  {project.slug === "forma" && <FormaCredit />}
+  <div class="project-caption">
+    <div>
+      <div class="project-meta">
+        <span>
+          {String(index + 1).padStart(2, "0")} / {projectLabel(project)}
+        </span>
+        <span>{project.industry}</span>
+      </div>
+      <h3>
+        <a href={withBase(caseUrl(project.slug))}>
+          {project.title}
+          <Arrow diagonal />
+        </a>
+      </h3>
+      <p>{project.description}</p>
+    </div>
+    <div class="project-links">
+      <a href={withBase(caseUrl(project.slug))}>
+        Подробнее о проекте <Arrow />
+      </a>
+      <a href={withBase(project.liveUrl)}>
+        Открыть сайт <Arrow diagonal />
+      </a>
+    </div>
+  </div>
+</article>

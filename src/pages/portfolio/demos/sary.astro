@@ -1,0 +1,262 @@
+---
+import DemoLayout from "../../../portfolio/layouts/DemoLayout.astro";
+import DemoForm from "../../../portfolio/components/DemoForm.astro";
+import DemoLocation from "../../../portfolio/components/DemoLocation.astro";
+import { demoContacts } from "../../../portfolio/config";
+import { withBase } from "../../../lib/paths";
+const food = withBase("/portfolio/media/restaurant.webp");
+const interior = withBase("/portfolio/media/interior.webp");
+const menu = [
+  {
+    category: "starters",
+    name: "Тыква, лабне, фисташка",
+    detail: "Печёная тыква · пряное масло · зелень",
+    price: "4 200 ₸",
+  },
+  {
+    category: "starters",
+    name: "Томаты и мягкий сыр",
+    detail: "Сезонные томаты · базилик · оливковое масло",
+    price: "3 800 ₸",
+  },
+  {
+    category: "mains",
+    name: "Паста с лесными грибами",
+    detail: "Свежая паста · грибы · выдержанный сыр",
+    price: "5 600 ₸",
+  },
+  {
+    category: "mains",
+    name: "Рыба и зелёные овощи",
+    detail: "Филе рыбы · сезонные овощи · лимон",
+    price: "6 800 ₸",
+  },
+  {
+    category: "desserts",
+    name: "Груша и ваниль",
+    detail: "Томлёная груша · ванильный крем · орехи",
+    price: "3 200 ₸",
+  },
+  {
+    category: "desserts",
+    name: "Шоколад и вишня",
+    detail: "Тёмный шоколад · вишня · хрустящий крамбл",
+    price: "3 400 ₸",
+  },
+];
+---
+
+<DemoLayout
+  name="sary"
+  slug="sary"
+  theme="restaurant"
+  title="SARY — вкус оставаться"
+  description="Концепт современного ресторана Алматы. Сезонная кухня, тёплая атмосфера и демонстрация бронирования."
+  image="/portfolio/media/restaurant.webp"
+>
+  <header class="demo-header wrap" id="top">
+    <a href="#top" class="demo-brand">
+      sary<span>•</span>
+    </a>
+    <nav aria-label="Навигация SARY">
+      <a href="#concept">История</a>
+      <a href="#menu">Меню</a>
+      <a href="#interior">Пространство</a>
+    </nav>
+    <a class="demo-header-cta" href="#reservation">
+      Забронировать стол ↗
+    </a>
+  </header>
+  <section class="sary-hero">
+    <img
+      src={food}
+      srcset={`${withBase("/portfolio/media/restaurant-800.webp")} 800w, ${food} 1600w`}
+      sizes="100vw"
+      alt="Концептуальная фотография блюда: запечённая тыква с лабне и зеленью на керамической тарелке"
+      width="1600"
+      height="900"
+      fetchpriority="high"
+    />
+    <div class="sary-hero-copy wrap">
+      <span class="demo-eyebrow">СЕЗОННАЯ КУХНЯ / АЛМАТЫ</span>
+      <h1>
+        Вкус
+        <br />
+        <em>оставаться.</em>
+      </h1>
+      <p>
+        Хорошая еда. Близкие люди.
+        <br />И вечер, которому не нужен повод.
+      </p>
+      <a href="#reservation" class="demo-button">
+        Забронировать стол <span>↗</span>
+      </a>
+    </div>
+    <div class="sary-hero-bottom wrap">
+      <span>ТАМ, ГДЕ ВЕЧЕР СТАНОВИТСЯ ИСТОРИЕЙ</span>
+      <a href="#concept">ЗАМЕДЛИТЬСЯ ↓</a>
+    </div>
+  </section>
+  <section class="wrap demo-section sary-concept" id="concept">
+    <span class="demo-eyebrow">01 / НАША ИДЕЯ</span>
+    <div>
+      <h2>
+        Не спешить.
+        <br />
+        Чувствовать вкус.
+        <br />
+        <em>Быть здесь.</em>
+      </h2>
+      <p>
+        SARY — концепт места, где сезон задаёт меню, а разговоры — ритм вечера.
+        Простые продукты, внимание к деталям и тёплый свет на вашем столе.
+      </p>
+      <p class="demo-note">
+        Вымышленный ресторан для Алматы. Атмосфера и меню созданы как
+        дизайн-концепт.
+      </p>
+    </div>
+    <span class="sary-sun" aria-hidden="true">
+      ✳
+    </span>
+  </section>
+  <section class="sary-menu demo-section" id="menu" data-filter-group>
+    <div class="wrap">
+      <div class="demo-title-row">
+        <div>
+          <span class="demo-eyebrow">02 / МЕНЮ</span>
+          <h2>
+            Вдохновлено
+            <br />
+            <em>сезоном.</em>
+          </h2>
+        </div>
+        <p>
+          Знакомые вкусы.
+          <br />
+          Новый повод встретиться.
+        </p>
+      </div>
+      <div class="demo-filters" aria-label="Раздел меню">
+        <button type="button" data-filter="all" aria-pressed="true">
+          Всё меню
+        </button>
+        <button type="button" data-filter="starters" aria-pressed="false">
+          Начало
+        </button>
+        <button type="button" data-filter="mains" aria-pressed="false">
+          Главное
+        </button>
+        <button type="button" data-filter="desserts" aria-pressed="false">
+          Сладкое
+        </button>
+      </div>
+      <div class="sary-menu-list">
+        {menu.map((dish) => (
+          <article data-category={dish.category}>
+            <div>
+              <h3>{dish.name}</h3>
+              <p>{dish.detail}</p>
+            </div>
+            <span>{dish.price}</span>
+          </article>
+        ))}
+      </div>
+      <div class="demo-kicker">
+        <span class="demo-note">
+          Демонстрационные блюда и цены. Не является действующим меню.
+        </span>
+        <span data-filter-status aria-live="polite">
+          Показано: 6
+        </span>
+      </div>
+    </div>
+  </section>
+  <section class="sary-signature">
+    <img
+      src={food}
+      alt="Сезонное блюдо концепта SARY: тыква с лабне и фисташками"
+      width="1600"
+      height="900"
+      loading="lazy"
+    />
+    <div>
+      <span class="demo-eyebrow">БЛЮДО НАСТРОЕНИЯ</span>
+      <h2>
+        Солнце
+        <br />
+        <em>на тарелке.</em>
+      </h2>
+      <p>
+        Печёная тыква, нежный лабне, фисташки и ароматное масло. Тёплая история
+        из нескольких простых ингредиентов.
+      </p>
+      <a href="#menu">Вернуться к меню ↗</a>
+    </div>
+  </section>
+  <section class="wrap demo-section sary-interior" id="interior">
+    <div class="demo-title-row">
+      <div>
+        <span class="demo-eyebrow">03 / ПРОСТРАНСТВО</span>
+        <h2>
+          Ваш маленький
+          <br />
+          <em>побег из суеты.</em>
+        </h2>
+      </div>
+      <p>
+        Фактура дерева. Мягкий свет.
+        <br />
+        Место для долгих разговоров.
+      </p>
+    </div>
+    <div class="sary-gallery">
+      <figure>
+        <img
+          src={interior}
+          srcset={`${withBase("/portfolio/media/interior-800.webp")} 800w, ${interior} 1600w`}
+          sizes="(max-width: 760px) 100vw, 65vw"
+          alt="Визуализация интерьера SARY: деревянные столы, винные кресла и тёплые светильники"
+          width="1600"
+          height="900"
+          loading="lazy"
+        />
+        <figcaption>01 / Пространство для встречи</figcaption>
+      </figure>
+      <figure>
+        <img
+          src={food}
+          alt="Керамика, сезонная еда и тёплый свет — визуальная атмосфера концепта"
+          width="1600"
+          height="900"
+          loading="lazy"
+        />
+        <figcaption>02 / Внимание к деталям</figcaption>
+      </figure>
+    </div>
+  </section>
+  <section class="sary-reservation demo-section" id="reservation">
+    <div class="wrap">
+      <div class="demo-title-row">
+        <div>
+          <span class="demo-eyebrow">04 / ДО ВСТРЕЧИ</span>
+          <h2>
+            Оставим место
+            <br />
+            <em>для вас.</em>
+          </h2>
+        </div>
+        <div>
+          <p>Алматы / вымышленный ресторан</p>
+          <p class="demo-note">
+            {demoContacts.sary.hours || "Часы работы будут добавлены."}
+          </p>
+        </div>
+      </div>
+      <div class="demo-contact-grid">
+        <DemoLocation city="Алматы" {...demoContacts.sary} />
+        <DemoForm kind="reservation" />
+      </div>
+    </div>
+  </section>
+</DemoLayout>
