@@ -1,0 +1,313 @@
+---
+import DemoLayout from "../../../portfolio/layouts/DemoLayout.astro";
+import DemoForm from "../../../portfolio/components/DemoForm.astro";
+import DemoLocation from "../../../portfolio/components/DemoLocation.astro";
+import { demoContacts } from "../../../portfolio/config";
+import { withBase } from "../../../lib/paths";
+const image = withBase("/portfolio/media/dental.webp");
+---
+
+<DemoLayout
+  name="aq tis"
+  slug="aq-tis"
+  theme="dental"
+  title="AQ TIS — забота начинается с доверия"
+  description="Демонстрационный сайт вымышленной стоматологической клиники. Спокойный интерфейс и понятный путь к записи."
+  image="/portfolio/media/dental.webp"
+>
+  <header class="demo-header wrap" id="top">
+    <a href="#top" class="demo-brand">
+      aq tis
+      <span class="dental-logo" aria-hidden="true">
+        ✳
+      </span>
+    </a>
+    <nav aria-label="Навигация AQ TIS">
+      <a href="#services">Услуги</a>
+      <a href="#team">Врачи</a>
+      <a href="#faq">Вопросы</a>
+    </nav>
+    <a class="demo-header-cta" href="#booking">
+      Записаться ↗
+    </a>
+  </header>
+  <section class="dental-hero wrap">
+    <div class="dental-hero-copy">
+      <span class="demo-eyebrow">
+        <i></i> СТОМАТОЛОГИЯ С ВНИМАНИЕМ К ВАМ
+      </span>
+      <h1>
+        Забота начинается
+        <br />с <em>доверия.</em>
+      </h1>
+      <p>
+        Знакомство, понятный план и внимание к вашим вопросам. Первый шаг к
+        здоровой улыбке — спокойный разговор.
+      </p>
+      <a class="demo-button" href="#booking">
+        Записаться на консультацию <span>↗</span>
+      </a>
+      <div class="dental-hero-note">
+        <span aria-hidden="true">✳</span>
+        <span>
+          Ваш комфорт — часть
+          <br />
+          хорошего опыта.
+        </span>
+      </div>
+    </div>
+    <div class="dental-hero-media">
+      <img
+        src={image}
+        srcset={`${withBase("/portfolio/media/dental-800.webp")} 800w, ${image} 1600w`}
+        sizes="(max-width: 760px) 100vw, 55vw"
+        alt="Визуализация спокойного светлого кабинета стоматологии с зелёными акцентами"
+        width="1600"
+        height="900"
+        fetchpriority="high"
+      />
+      <span>МЕСТО, ГДЕ ВАС СЛЫШАТ</span>
+    </div>
+  </section>
+  <section class="dental-values wrap">
+    <span>Понятно объясняем</span>
+    <span>Внимательно слушаем</span>
+    <span>Планируем вместе</span>
+    <span>Думаем о комфорте</span>
+  </section>
+  <section class="wrap demo-section" id="services">
+    <div class="demo-title-row">
+      <div>
+        <span class="demo-eyebrow">НАШИ НАПРАВЛЕНИЯ</span>
+        <h2>
+          Для вашей
+          <br />
+          <em>улыбки.</em>
+        </h2>
+      </div>
+      <p>
+        От знакомства до индивидуального плана.
+        <br />
+        Выберите направление, чтобы начать.
+      </p>
+    </div>
+    <div class="dental-services">
+      {[
+        [
+          "01",
+          "Знакомство и диагностика",
+          "Обсудим вопросы и следующий шаг.",
+          "↗",
+        ],
+        ["02", "Терапия", "Место для описания лечения зубов.", "◒"],
+        [
+          "03",
+          "Профилактика",
+          "Место для описания профессионального ухода.",
+          "✳",
+        ],
+        [
+          "04",
+          "Ортодонтия",
+          "Место для описания вариантов коррекции прикуса.",
+          "⌁",
+        ],
+      ].map(([n, title, copy, icon]) => (
+        <a href="#booking">
+          <div>
+            <small>{n}</small>
+            <span aria-hidden="true">{icon}</span>
+          </div>
+          <h3>{title}</h3>
+          <p>{copy}</p>
+          <span class="service-more">Подробнее на консультации ↗</span>
+        </a>
+      ))}
+    </div>
+    <p class="demo-note">
+      Перечень услуг показывает структуру сайта. Это не предложение медицинских
+      услуг.
+    </p>
+  </section>
+  <section class="dental-team demo-section" id="team">
+    <div class="wrap">
+      <div class="demo-title-row">
+        <div>
+          <span class="demo-eyebrow">ЛЮДИ, КОТОРЫМ ДОВЕРЯЮТ</span>
+          <h2>
+            Познакомьтесь
+            <br />
+            <em>с командой.</em>
+          </h2>
+        </div>
+        <p>
+          Здесь будут реальные специалисты,
+          <br />
+          их образование и профессиональный опыт.
+        </p>
+      </div>
+      <div class="doctor-grid">
+        {["Врач-терапевт", "Врач-ортодонт", "Специалист по профилактике"].map(
+          (role, i) => (
+            <article>
+              <div class="doctor-placeholder">
+                <svg
+                  width="130"
+                  height="160"
+                  viewBox="0 0 130 160"
+                  aria-hidden="true"
+                >
+                  <circle cx="65" cy="45" r="27" fill="currentColor" />
+                  <path
+                    d="M10 150v-20a55 55 0 0 1 110 0v20"
+                    fill="currentColor"
+                  />
+                </svg>
+                <span>МЕСТО ДЛЯ ФОТО</span>
+              </div>
+              <h3>[Имя специалиста {i + 1}]</h3>
+              <p>{role}</p>
+              <small>Данные и квалификация будут добавлены</small>
+            </article>
+          ),
+        )}
+      </div>
+    </div>
+  </section>
+  <section class="wrap demo-section dental-results">
+    <div>
+      <span class="demo-eyebrow">РЕЗУЛЬТАТЫ И ОТЗЫВЫ</span>
+      <h2>
+        Доверие строится
+        <br />
+        <em>на реальном опыте.</em>
+      </h2>
+      <p>
+        В этом концепте нет придуманных отзывов и медицинских результатов. Здесь
+        появятся подтверждённые материалы с разрешения пациентов.
+      </p>
+      <div class="review-placeholder">
+        <span>“</span>
+        <p>
+          Место для настоящего отзыва.
+          <br />
+          <small>Имя, текст и источник пока не добавлены.</small>
+        </p>
+      </div>
+    </div>
+    <div class="before-after">
+      <div>
+        <span>ДО</span>
+        <span>Фото пациента</span>
+      </div>
+      <div>
+        <span>ПОСЛЕ</span>
+        <span>Фото результата</span>
+      </div>
+      <p>PLACEHOLDER / Материалы не добавлены</p>
+    </div>
+  </section>
+  <section class="dental-prices demo-section" id="prices">
+    <div class="wrap">
+      <div class="demo-title-row">
+        <div>
+          <span class="demo-eyebrow">ПОНЯТНАЯ СТОИМОСТЬ</span>
+          <h2>
+            Без мелкого
+            <br />
+            <em>шрифта.</em>
+          </h2>
+        </div>
+        <p>
+          Цены заполнит реальная клиника.
+          <br />
+          Стоимость лечения определяется после консультации.
+        </p>
+      </div>
+      <div class="price-list">
+        {[
+          "Первичная консультация",
+          "Профессиональная гигиена",
+          "Лечение кариеса",
+          "Ортодонтическая консультация",
+        ].map((item) => (
+          <div>
+            <span>{item}</span>
+            <span>Цена не указана</span>
+            <a href="#booking" aria-label={`Узнать об услуге: ${item}`}>
+              ↗
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  <section class="wrap demo-section dental-faq" id="faq">
+    <div>
+      <span class="demo-eyebrow">ДО ПЕРВОГО ВИЗИТА</span>
+      <h2>
+        Можно
+        <br />
+        <em>спросить.</em>
+      </h2>
+      <p>
+        Понятные ответы помогают
+        <br />
+        сделать первый шаг.
+      </p>
+    </div>
+    <div>
+      {[
+        [
+          "Как записаться на приём?",
+          "В этой демонстрации можно выбрать услугу, дату и время в форме ниже. Реальная запись не создаётся. После подключения контактов здесь появится связь с администратором.",
+        ],
+        [
+          "Что будет на первой консультации?",
+          "В рабочей версии клиника опишет свой порядок консультации и необходимые документы. Здесь показано место для подтверждённой информации.",
+        ],
+        [
+          "Где посмотреть стоимость?",
+          "Для цен предусмотрен отдельный раздел. Сейчас цены не заполнены, поскольку клиника вымышленная.",
+        ],
+        [
+          "Как связаться через WhatsApp?",
+          "В контактном блоке предусмотрен WhatsApp. Ссылка станет активной после добавления настоящего номера.",
+        ],
+      ].map(([question, answer]) => (
+        <details>
+          <summary>
+            {question}
+            <span aria-hidden="true">+</span>
+          </summary>
+          <p>{answer}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+  <section class="dental-booking demo-section" id="booking">
+    <div class="wrap">
+      <div class="demo-title-row">
+        <div>
+          <span class="demo-eyebrow">ПЕРВЫЙ ШАГ — ПРОСТОЙ</span>
+          <h2>
+            Поговорим
+            <br />
+            <em>о вашей улыбке.</em>
+          </h2>
+        </div>
+        <p>
+          Выберите удобное время
+          <br />в демонстрационной форме.
+        </p>
+      </div>
+      <div class="demo-contact-grid">
+        <DemoLocation city="Казахстан" {...demoContacts.aqtis} />
+        <DemoForm kind="booking" />
+      </div>
+    </div>
+  </section>
+  <a class="mobile-booking" href="#booking">
+    Записаться на консультацию ↗
+  </a>
+</DemoLayout>

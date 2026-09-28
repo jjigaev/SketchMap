@@ -1,0 +1,278 @@
+---
+import DemoLayout from "../../../portfolio/layouts/DemoLayout.astro";
+import DemoForm from "../../../portfolio/components/DemoForm.astro";
+import DemoLocation from "../../../portfolio/components/DemoLocation.astro";
+import { demoContacts } from "../../../portfolio/config";
+import { withBase } from "../../../lib/paths";
+const image = withBase("/portfolio/media/architecture.webp");
+---
+
+<DemoLayout
+  name="ORYN"
+  slug="oryn"
+  theme="construction"
+  title="ORYN — место для вашей жизни"
+  description="Концепт сайта современного девелопера Казахстана. Архитектура, жилые пространства и коммерческая недвижимость."
+  image="/portfolio/media/architecture.webp"
+>
+  <header class="demo-header wrap" id="top">
+    <a class="demo-brand" href="#top">
+      ORYN
+    </a>
+    <nav aria-label="Навигация ORYN">
+      <a href="#projects">Проекты</a>
+      <a href="#about">Подход</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+    <a class="demo-header-cta" href="#contact">
+      Обсудить проект ↗
+    </a>
+  </header>
+  <section class="oryn-hero">
+    <div class="wrap">
+      <div class="demo-kicker">
+        <span>ДЕВЕЛОПМЕНТ / КАЗАХСТАН</span>
+        <span>ПРОСТРАНСТВА СО СМЫСЛОМ</span>
+      </div>
+      <h1>
+        МЕСТО ДЛЯ
+        <br />
+        <span>ВАШЕЙ ЖИЗНИ.</span>
+      </h1>
+      <div class="oryn-intro">
+        <p>
+          Продуманная архитектура.
+          <br />
+          Естественный ритм. Ваше место в городе.
+        </p>
+        <a href="#projects" class="demo-button">
+          Выбрать пространство <span>↘</span>
+        </a>
+      </div>
+    </div>
+    <div class="oryn-hero-image">
+      <img
+        src={image}
+        srcset={`${withBase("/portfolio/media/architecture-800.webp")} 800w, ${image} 1600w`}
+        sizes="100vw"
+        alt="Архитектурная визуализация жилого квартала: светлый камень, террасы и зелёный двор"
+        width="1600"
+        height="900"
+        fetchpriority="high"
+      />
+      <span class="image-caption">
+        ORYN GARDEN / АРХИТЕКТУРНАЯ ВИЗУАЛИЗАЦИЯ
+      </span>
+      <a href="#projects" aria-label="Перейти к проектам" class="image-arrow">
+        ↘
+      </a>
+    </div>
+  </section>
+  <section class="wrap demo-section" id="about">
+    <div class="split-title">
+      <span class="demo-eyebrow">01 / НАШ ПОДХОД</span>
+      <h2>
+        Архитектура,
+        <br />в которой есть
+        <br />
+        <em>место человеку.</em>
+      </h2>
+    </div>
+    <div class="offset-copy">
+      <p>
+        Мы исследуем среду, в которой хочется жить. Свет в утренней комнате.
+        Тихий двор. Удобный путь домой. Большая идея начинается с простых вещей.
+      </p>
+      <p class="demo-note">
+        ORYN — вымышленный бренд. Представленные объекты и параметры созданы для
+        демонстрации дизайна сайта.
+      </p>
+    </div>
+    <div class="oryn-numbers">
+      <div>
+        <strong>03</strong>
+        <span>типа пространства в концепте</span>
+      </div>
+      <div>
+        <strong>04</strong>
+        <span>этапа от идеи до реализации</span>
+      </div>
+      <div>
+        <strong>01</strong>
+        <span>фокус — повседневная жизнь</span>
+      </div>
+    </div>
+  </section>
+  <section class="oryn-projects demo-section" id="projects" data-filter-group>
+    <div class="wrap">
+      <div class="demo-kicker">
+        <span>02 / ПРОСТРАНСТВА</span>
+        <span>ДЕМОНСТРАЦИОННЫЕ ОБЪЕКТЫ</span>
+      </div>
+      <div class="demo-title-row">
+        <h2>
+          Выберите
+          <br />
+          свой ритм.
+        </h2>
+        <div class="demo-filters" aria-label="Тип недвижимости">
+          <button type="button" data-filter="all" aria-pressed="true">
+            Все
+          </button>
+          <button type="button" data-filter="home" aria-pressed="false">
+            Жилые
+          </button>
+          <button type="button" data-filter="business" aria-pressed="false">
+            Коммерческие
+          </button>
+        </div>
+      </div>
+      <div class="property-grid">
+        <article data-category="home">
+          <a href="#garden">
+            <img
+              src={image}
+              alt="Визуализация жилого концепта ORYN Garden"
+              width="1600"
+              height="900"
+              loading="lazy"
+            />
+            <div>
+              <h3>ORYN Garden</h3>
+              <span>↗</span>
+            </div>
+            <p>Жилой квартал / концепт / Алматы</p>
+          </a>
+        </article>
+        <article data-category="business">
+          <a href="#contact">
+            <div class="property-drawing" aria-hidden="true">
+              <span class="drawing-building"></span>
+              <small>OFFICE / STUDY 02</small>
+            </div>
+            <div>
+              <h3>ORYN Work</h3>
+              <span>↗</span>
+            </div>
+            <p>Рабочие пространства / концепт / Астана</p>
+          </a>
+        </article>
+      </div>
+      <p class="demo-note" data-filter-status aria-live="polite">
+        Показано: 2
+      </p>
+    </div>
+  </section>
+  <section class="wrap demo-section" id="services">
+    <div class="split-title">
+      <span class="demo-eyebrow">03 / НАПРАВЛЕНИЯ</span>
+      <h2>
+        От масштаба города
+        <br />
+        до детали дома.
+      </h2>
+    </div>
+    <div class="oryn-service-list">
+      {[
+        ["Жилая среда", "Кварталы, дома и общественные пространства."],
+        ["Коммерческие пространства", "Места для работы, встреч и новых идей."],
+        [
+          "Архитектурная концепция",
+          "Взаимосвязь формы, материала и окружения.",
+        ],
+      ].map(([title, text], i) => (
+        <div>
+          <span>0{i + 1}</span>
+          <h3>{title}</h3>
+          <p>{text}</p>
+          <span>↗</span>
+        </div>
+      ))}
+    </div>
+  </section>
+  <section class="oryn-process demo-section">
+    <div class="wrap">
+      <div class="demo-kicker">
+        <span>04 / ПРОЦЕСС</span>
+        <span>ПОСЛЕДОВАТЕЛЬНО. ВНИМАТЕЛЬНО.</span>
+      </div>
+      <h2>
+        Идея становится
+        <br />
+        пространством.
+      </h2>
+      <ol>
+        {[
+          ["Исследование", "Место, окружение и будущий сценарий жизни."],
+          ["Проектирование", "Архитектура, инженерия и ландшафт."],
+          ["Строительство", "Последовательная реализация замысла."],
+          ["Передача", "Проверка деталей и знакомство с пространством."],
+        ].map(([title, text], i) => (
+          <li data-reveal>
+            <span>0{i + 1}</span>
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+  <section class="wrap demo-section garden-showcase" id="garden">
+    <div>
+      <span class="demo-eyebrow">В ФОКУСЕ / ORYN GARDEN</span>
+      <h2>
+        Город рядом.
+        <br />
+        <em>Природа ближе.</em>
+      </h2>
+      <p>
+        Камерные дома вокруг зелёного двора. Открытые террасы и натуральные
+        материалы задают спокойный ритм жизни.
+      </p>
+      <dl>
+        <div>
+          <dt>Формат</dt>
+          <dd>Жилой квартал</dd>
+        </div>
+        <div>
+          <dt>Город концепта</dt>
+          <dd>Алматы</dd>
+        </div>
+        <div>
+          <dt>Статус</dt>
+          <dd>Вымышленный проект</dd>
+        </div>
+      </dl>
+      <a class="demo-button" href="#contact">
+        Узнать о концепте <span>↗</span>
+      </a>
+    </div>
+    <img
+      src={image}
+      alt="Террасы и внутренний двор архитектурного концепта ORYN Garden"
+      width="1600"
+      height="900"
+      loading="lazy"
+    />
+  </section>
+  <section class="oryn-contact demo-section" id="contact">
+    <div class="wrap">
+      <div class="demo-title-row">
+        <h2>
+          Найдём место
+          <br />
+          вашим планам.
+        </h2>
+        <p>
+          Попробуйте сценарий
+          <br />
+          обращения к девелоперу.
+        </p>
+      </div>
+      <div class="demo-contact-grid">
+        <DemoLocation city="Казахстан" {...demoContacts.oryn} />
+        <DemoForm kind="consultation" />
+      </div>
+    </div>
+  </section>
+</DemoLayout>

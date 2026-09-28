@@ -1,0 +1,71 @@
+---
+import "@fontsource-variable/ibm-plex-sans/wght.css";
+import "@fontsource-variable/cormorant-garamond/wght.css";
+import "@fontsource-variable/cormorant-garamond/wght-italic.css";
+import "../styles/demos.css";
+import { withBase } from "../../lib/paths";
+interface Props {
+  name: string;
+  slug: string;
+  theme: string;
+  title: string;
+  description: string;
+  image: string;
+}
+const { name, slug, theme, title, description, image } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} — концепт сайта</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={withBase("/portfolio/favicon.svg")} />
+    <meta
+      name="theme-color"
+      content={theme === "restaurant" ? "#331c20" : "#f5f4ee"}
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={`${title} — концепт сайта`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta
+      property="og:image"
+      content={new URL(withBase(image), Astro.site).href}
+    />
+  </head>
+  <body class={`demo ${theme}`}>
+    <a href="#main" class="skip">
+      Перейти к содержимому
+    </a>
+    <aside class="concept-bar">
+      <a href={withBase("/portfolio/#work")}>← Портфолио</a>
+      <span>
+        CONCEPT PROJECT <span class="concept-detail">/ Вымышленный бренд</span>
+      </span>
+      <a href={withBase(`/portfolio/work/${slug}/`)}>О проекте ↗</a>
+    </aside>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="demo-footer wrap">
+      <a href="#top" class="demo-brand">
+        {name}
+      </a>
+      <p>
+        Демонстрационный сайт вымышленного бренда.
+        <br />
+        Изображения созданы с помощью ИИ. Заявки не отправляются.
+      </p>
+      <a href={withBase("/portfolio/")}>Создать сайт для вашего бизнеса ↗</a>
+    </footer>
+    <script>
+      import "../scripts/demos";
+    </script>
+  </body>
+</html>

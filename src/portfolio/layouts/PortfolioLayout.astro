@@ -1,0 +1,65 @@
+---
+import "@fontsource-variable/ibm-plex-sans/wght.css";
+import "../styles/portfolio.css";
+import { studio } from "../config";
+import Header from "../components/Header.astro";
+import { withBase } from "../../lib/paths";
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+const {
+  title = `${studio.name} — дизайн и разработка сайтов`,
+  description = studio.description,
+  image = "/portfolio/media/og.jpg",
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f4f3ee" />
+    <link rel="canonical" href={canonical} />
+    <link
+      rel="icon"
+      href={withBase("/portfolio/favicon.svg")}
+      type="image/svg+xml"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ru_KZ" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta
+      property="og:image"
+      content={new URL(withBase(image), Astro.site).href}
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <a class="skip" href="#main">
+      Перейти к содержимому
+    </a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="p-footer shell">
+      <a class="wordmark" href={withBase("/portfolio/")}>
+        {studio.name}
+        <span class="brand-dot"></span>
+      </a>
+      <span>Дизайн с характером. Разработка с вниманием.</span>
+      <a href="#top">Наверх ↑</a>
+    </footer>
+    <script>
+      import "../scripts/portfolio";
+    </script>
+  </body>
+</html>

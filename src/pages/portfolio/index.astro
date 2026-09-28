@@ -1,0 +1,243 @@
+---
+import PortfolioLayout from "../../portfolio/layouts/PortfolioLayout.astro";
+import ProjectShowcase from "../../portfolio/components/ProjectShowcase.astro";
+import Contact from "../../portfolio/components/Contact.astro";
+import Arrow from "../../portfolio/components/Arrow.astro";
+import { projects } from "../../portfolio/projects";
+import { process, services, studio } from "../../portfolio/config";
+import { withBase } from "../../lib/paths";
+const counts = {
+  all: String(projects.length).padStart(2, "0"),
+  implemented: String(
+    projects.filter((project) => project.type === "implemented").length,
+  ).padStart(2, "0"),
+  concept: String(
+    projects.filter((project) => project.type === "concept").length,
+  ).padStart(2, "0"),
+};
+---
+
+<PortfolioLayout>
+  <section class="p-hero shell" id="top">
+    <div class="hero-topline">
+      <span class="eyebrow">
+        <span class="status-dot"></span> НЕБОЛЬШАЯ КОМАНДА. БОЛЬШИЕ ИДЕИ.
+      </span>
+      <span class="eyebrow">WEB / DESIGN / DEVELOPMENT</span>
+    </div>
+    <div class="hero-title-row">
+      <h1>
+        Сайты, которые
+        <br />
+        хочется <span class="blue">открыть.</span>
+      </h1>
+      <div class="hero-symbol" aria-hidden="true">
+        <svg viewBox="0 0 140 140">
+          <path
+            d="M20 120 120 20M20 20h100v100"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="13"
+          />
+        </svg>
+      </div>
+    </div>
+    <div class="hero-bottom">
+      <span class="hero-footnote">И удобно использовать.</span>
+      <div class="hero-description">
+        <p>
+          Проектируем и разрабатываем современные сайты для бизнеса — от первой
+          идеи до запуска.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#work">
+            Посмотреть работы <Arrow />
+          </a>
+          <a class="text-link" href="#contact">
+            Обсудить проект <Arrow diagonal />
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-reel" aria-label="Разные направления дизайна">
+      {projects.slice(0, 4).map((project, i) => (
+        <a
+          class={`reel-tile reel-${project.theme}`}
+          href={withBase(`/portfolio/work/${project.slug}/`)}
+        >
+          <img
+            src={withBase(project.heroImage)}
+            alt=""
+            width="800"
+            height="450"
+            loading={i === 0 ? "eager" : "lazy"}
+          />
+          <div>
+            <span>{project.title}</span>
+            <small>{project.industry}</small>
+          </div>
+          <span class="reel-index">{String(i + 1).padStart(2, "0")}</span>
+        </a>
+      ))}
+    </div>
+    <div class="reel-caption eyebrow">
+      <span>РАЗНЫЕ ЗАДАЧИ. РАЗНЫЙ ХАРАКТЕР.</span>
+      <a href="#work">ЛИСТАЙТЕ НИЖЕ ↓</a>
+    </div>
+  </section>
+
+  <section class="work-section shell section-space" id="work" data-filter-group>
+    <div class="section-kicker">
+      <span>01 / ИЗБРАННЫЕ РАБОТЫ</span>
+      <span>ОТ ИДЕИ К ИНТЕРФЕЙСУ</span>
+    </div>
+    <div class="section-heading">
+      <h2>
+        Бизнес разный.
+        <br />
+        <span class="muted">Сайты тоже.</span>
+      </h2>
+      <p>
+        Реализованные сайты и дизайн-концепты.
+        <br />У каждого — своя задача, логика и визуальный язык.
+      </p>
+    </div>
+    <div class="filter-row">
+      <div class="filters" aria-label="Фильтр работ">
+        <button type="button" data-filter="all" aria-pressed="true">
+          Все работы <sup>{counts.all}</sup>
+        </button>
+        <button type="button" data-filter="implemented" aria-pressed="false">
+          Реализованные <sup>{counts.implemented}</sup>
+        </button>
+        <button type="button" data-filter="concept" aria-pressed="false">
+          Концепты <sup>{counts.concept}</sup>
+        </button>
+      </div>
+      <span class="sr-only" data-filter-status aria-live="polite">
+        Показано: {projects.length}
+      </span>
+    </div>
+    <div class="project-grid">
+      {projects.map((project, index) => (
+        <ProjectShowcase project={project} index={index} />
+      ))}
+    </div>
+  </section>
+
+  <section class="services-section section-space" id="services">
+    <div class="shell">
+      <div class="section-kicker">
+        <span>02 / ЧТО МЫ ДЕЛАЕМ</span>
+        <span>ОТ ПЕРВОГО ЭКРАНА ДО ПОСЛЕДНЕЙ ДЕТАЛИ</span>
+      </div>
+      <div class="section-heading">
+        <h2>
+          Всё, что нужно
+          <br />
+          вашему сайту.
+        </h2>
+        <p>
+          Подключаемся на любом этапе.
+          <br />
+          Или проходим весь путь вместе.
+        </p>
+      </div>
+      <div class="service-list">
+        {services.map((service, i) => (
+          <details class="service-row" open={i === 0}>
+            <summary>
+              <span class="service-number">0{i + 1}</span>
+              <span>{service.title}</span>
+              <small>{service.tag}</small>
+              <span class="details-icon" aria-hidden="true">
+                +
+              </span>
+            </summary>
+            <p>{service.text}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="process-section shell section-space" id="process">
+    <div class="process-intro">
+      <span class="eyebrow">03 / КАК МЫ РАБОТАЕМ</span>
+      <h2>
+        Понятный процесс.
+        <br />
+        <span class="muted">На каждом шаге.</span>
+      </h2>
+      <p>
+        Вы знаете, что происходит с проектом.
+        <br />
+        Мы держим фокус на результате.
+      </p>
+      <div class="process-mark" aria-hidden="true">
+        ↘
+      </div>
+    </div>
+    <ol class="process-list">
+      {process.map(([title, text], i) => (
+        <li data-reveal>
+          <span>{String(i + 1).padStart(2, "0")}</span>
+          <div>
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="about-section section-space" id="about">
+    <div class="shell">
+      <div class="section-kicker">
+        <span>04 / О СТУДИИ</span>
+        <span>ЛЮДИ, КОТОРЫМ НЕ ВСЁ РАВНО</span>
+      </div>
+      <div class="about-statement" data-reveal>
+        <h2>
+          Небольшая команда.
+          <br />
+          Прямой диалог.
+          <br />
+          <span>Внимание к вашему делу.</span>
+        </h2>
+        <p>
+          Соединяем дизайн и разработку, чтобы идея не терялась по дороге к
+          готовому сайту. Обсуждаем решения открыто и делаем каждый экран частью
+          одной истории.
+        </p>
+      </div>
+      <div class="principles">
+        <span>Индивидуальный дизайн ↗</span>
+        <span>Адаптивность ↗</span>
+        <span>Внимание к скорости ↗</span>
+        <span>Базовая SEO-подготовка ↗</span>
+        <span>Современные технологии ↗</span>
+        <span>Короткий путь от идеи к запуску ↗</span>
+        <span>Поддержка после запуска ↗</span>
+      </div>
+      <div class="team-grid">
+        {studio.team.map((person, i) => (
+          <article>
+            <div class="team-avatar" aria-hidden="true">
+              0{i + 1}
+              <span>↗</span>
+            </div>
+            <h3>{person.name}</h3>
+            <span class="eyebrow">{person.role}</span>
+            <p>{person.description}</p>
+          </article>
+        ))}
+      </div>
+      <p class="placeholder-note">
+        {studio.name} — рабочее название. Знакомство с командой скоро появится
+        здесь.
+      </p>
+    </div>
+  </section>
+  <Contact />
+</PortfolioLayout>
