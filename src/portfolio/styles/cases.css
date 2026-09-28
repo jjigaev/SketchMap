@@ -1,0 +1,226 @@
+.case-head {
+  padding-top: 40px;
+  padding-bottom: 60px;
+}
+.back-link {
+  display: inline-block;
+  font-size: 12px;
+  min-height: 44px;
+}
+.case-head .section-kicker {
+  margin-top: 24px;
+}
+.case-head h1 {
+  font-size: clamp(76px, 14vw, 220px);
+  line-height: 1;
+  letter-spacing: -0.065em;
+  margin: 20px 0 30px;
+}
+.case-head-bottom {
+  display: flex;
+  gap: 40px;
+  justify-content: space-between;
+  align-items: end;
+}
+.case-head-bottom p {
+  font-size: clamp(23px, 3vw, 40px);
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+  max-width: 650px;
+}
+.case-cover {
+  padding: 50px 12% 0;
+  max-height: 780px;
+  overflow: hidden;
+  background: #8b9983;
+}
+.case-cover.oryn {
+  background: #b8b4a6;
+}
+.case-cover.dental {
+  background: #b9d5cc;
+}
+.case-cover.restaurant {
+  background: #552a31;
+}
+.case-story {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 12%;
+  padding-block: 80px;
+}
+.case-story h2 {
+  font-size: 30px;
+  letter-spacing: -0.03em;
+}
+.story-content {
+  display: grid;
+  gap: 36px;
+}
+.story-content h3 {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+.story-content p {
+  font-size: 17px;
+  color: var(--muted);
+  max-width: 750px;
+}
+.case-devices {
+  padding: 70px var(--gutter);
+  background: #e6e8df;
+}
+.case-devices .section-heading {
+  margin-top: 0;
+}
+.device-composition {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 6%;
+  max-width: 1360px;
+  margin: auto;
+}
+.device-composition .desktop-frame {
+  transform: none;
+}
+.phone-frame {
+  max-width: 300px;
+  border: 7px solid #303630;
+  background: #303630;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px #0002;
+}
+.phone-frame img {
+  width: 100%;
+  height: auto;
+}
+.device-composition figure > figcaption {
+  font-size: 10px;
+  margin-top: 18px;
+  color: var(--muted);
+  text-align: center;
+}
+.case-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 70px;
+  padding-block: 80px;
+}
+.case-features h2 {
+  font-size: 36px;
+  margin-bottom: 28px;
+}
+.feature-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.feature-list li {
+  border-top: 1px solid var(--line);
+  padding: 17px 0;
+  font-size: 14px;
+}
+.feature-list li::before {
+  content: "↗";
+  color: var(--blue);
+  padding-right: 18px;
+}
+.tech-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+.tech-tags span {
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: 25px;
+  font-size: 12px;
+}
+.result-copy {
+  color: var(--muted);
+  font-size: 15px;
+  margin-bottom: 28px;
+}
+.next-project {
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+  padding-block: 44px;
+}
+.next-project span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.next-project a {
+  font-size: clamp(28px, 4vw, 64px);
+  letter-spacing: -0.05em;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+@media (max-width: 760px) {
+  .case-head {
+    padding-top: 25px;
+    padding-bottom: 35px;
+  }
+  .case-head h1 {
+    font-size: 25vw;
+  }
+  .case-head-bottom {
+    display: block;
+  }
+  .case-head-bottom .button {
+    margin-top: 25px;
+  }
+  .case-head-bottom p {
+    font-size: 25px;
+  }
+  .case-cover {
+    padding: 26px 24px 0;
+    max-height: 350px;
+  }
+  .case-story {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding-block: 50px;
+  }
+  .story-content p {
+    font-size: 15px;
+  }
+  .case-devices {
+    padding-block: 42px;
+  }
+  .device-composition {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: 5%;
+  }
+  .phone-frame {
+    border-width: 4px;
+    border-radius: 17px;
+  }
+  .case-features {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding-block: 50px;
+  }
+  .case-features h2 {
+    font-size: 32px;
+  }
+  .next-project {
+    align-items: start;
+    flex-direction: column;
+  }
+  .device-composition .browser-chrome {
+    height: 14px;
+  }
+  .device-composition .browser-chrome > span {
+    font-size: 5px;
+  }
+}

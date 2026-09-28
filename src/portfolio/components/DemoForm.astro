@@ -1,0 +1,111 @@
+---
+interface Props {
+  kind: "consultation" | "booking" | "reservation";
+}
+const { kind } = Astro.props;
+const labels = {
+  consultation: "Обсудим ваши планы",
+  booking: "Начнём со знакомства",
+  reservation: "Ваш стол ждёт своей истории",
+};
+---
+
+<div class="demo-form-wrap">
+  <h3>{labels[kind]}</h3>
+  <p class="form-notice">
+    Попробуйте форму. Это демонстрация: данные никуда не отправляются и не
+    сохраняются.
+  </p>
+  <noscript>
+    <p class="form-notice">
+      Для проверки формы включите JavaScript. Демонстрация не отправляет заявки.
+    </p>
+  </noscript>
+  <form data-demo-form data-kind={kind}>
+    <fieldset disabled>
+      <label>
+        Имя
+        <input
+          name="name"
+          type="text"
+          placeholder="Например, Алекс"
+          maxlength="80"
+          autocomplete="off"
+          required
+        />
+      </label>
+      {kind === "consultation" ? (
+        <>
+          <label>
+            Что вас интересует?
+            <select name="service" required>
+              <option value="">Выберите направление</option>
+              <option>Квартира</option>
+              <option>Коммерческое пространство</option>
+              <option>Архитектурный проект</option>
+            </select>
+          </label>
+          <label class="form-wide">
+            О проекте
+            <textarea
+              name="message"
+              placeholder="Несколько слов о вашей идее"
+              maxlength="1000"
+              rows="3"
+            ></textarea>
+          </label>
+        </>
+      ) : (
+        <>
+          <label>
+            {kind === "booking" ? "Услуга" : "Количество гостей"}
+            <select name="service" required>
+              <option value="">Выберите вариант</option>
+              {(kind === "booking"
+                ? [
+                    "Первичная консультация",
+                    "Профилактика",
+                    "Терапия",
+                    "Ортодонтия",
+                  ]
+                : ["1 гость", "2 гостя", "3 гостя", "4 гостя", "5–6 гостей"]
+              ).map((option) => (
+                <option>{option}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Желаемая дата
+            <input name="date" type="date" required />
+          </label>
+          <label>
+            Время
+            <select name="time" required>
+              <option value="">Выберите время</option>
+              {(kind === "booking"
+                ? ["10:00", "12:00", "14:00", "16:00"]
+                : ["12:00", "14:00", "18:00", "19:00", "20:00"]
+              ).map((time) => (
+                <option>{time}</option>
+              ))}
+            </select>
+          </label>
+        </>
+      )}
+      <button class="demo-button form-wide" type="submit">
+        {kind === "reservation"
+          ? "Проверить бронирование"
+          : kind === "booking"
+            ? "Проверить запись"
+            : "Проверить заявку"}{" "}
+        <span aria-hidden="true">↗</span>
+      </button>
+      <p
+        class="form-result form-wide"
+        role="status"
+        aria-live="polite"
+        hidden
+      ></p>
+    </fieldset>
+  </form>
+</div>

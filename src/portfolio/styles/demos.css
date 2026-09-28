@@ -1,0 +1,1753 @@
+:root {
+  font-family: "IBM Plex Sans Variable", sans-serif;
+  font-synthesis: none;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 32px;
+}
+body {
+  margin: 0;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+button {
+  cursor: pointer;
+}
+img {
+  display: block;
+  max-width: 100%;
+  object-fit: cover;
+}
+h1,
+h2,
+h3,
+p,
+figure {
+  margin: 0;
+}
+h1,
+h2,
+h3 {
+  font-weight: 450;
+}
+p {
+  line-height: 1.65;
+}
+a,
+button,
+summary {
+  touch-action: manipulation;
+}
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 5px;
+}
+[hidden] {
+  display: none !important;
+}
+.demo {
+  --bg: #eeeee8;
+  --fg: #292d29;
+  --accent: #363f34;
+  --subtle: #555b4d;
+  --border: #bfc4b8;
+  background: var(--bg);
+  color: var(--fg);
+}
+.wrap {
+  max-width: 1700px;
+  margin-inline: auto;
+  padding-inline: clamp(22px, 5.4vw, 95px);
+}
+.concept-bar {
+  background: #20251f;
+  color: #fff;
+  padding: 10px 24px;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  align-items: center;
+  font-size: 10px;
+  letter-spacing: 0.03em;
+}
+.concept-bar a {
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+}
+.concept-bar a:hover {
+  text-decoration: underline;
+}
+.skip {
+  position: fixed;
+  left: 20px;
+  top: 20px;
+  z-index: 100;
+  background: #fff;
+  color: #222;
+  padding: 15px;
+  transform: translateY(-200%);
+}
+.skip:focus {
+  transform: none;
+}
+.demo-header {
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+}
+.demo-brand {
+  font-size: 42px;
+  line-height: 1;
+  letter-spacing: -2px;
+  font-weight: 600;
+}
+.demo-brand > span {
+  font-size: 13px;
+  vertical-align: top;
+  letter-spacing: 0;
+  margin-left: 6px;
+}
+.demo-header nav {
+  display: flex;
+  gap: 30px;
+  font-size: 12px;
+}
+.demo-header nav a {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+.demo-header-cta {
+  border-bottom: 1px solid currentColor;
+  font-size: 12px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.demo-eyebrow,
+.demo-kicker {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.075em;
+}
+.demo-kicker {
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+  margin-bottom: 34px;
+}
+.demo-button {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 35px;
+  min-height: 52px;
+  padding: 16px 23px;
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid var(--accent);
+  font-size: 12px;
+  transition: filter 0.2s;
+}
+.demo-button > span {
+  font-size: 21px;
+  line-height: 1;
+}
+.demo-button:hover {
+  filter: brightness(1.2);
+}
+.demo-section {
+  padding-block: 100px;
+}
+.demo h2 {
+  font-size: clamp(40px, 5vw, 82px);
+  line-height: 1.05;
+  letter-spacing: -0.055em;
+}
+.demo h2 em {
+  font-weight: 400;
+}
+.demo-title-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 45px;
+  align-items: end;
+  margin-bottom: 42px;
+}
+.demo-title-row .demo-eyebrow {
+  display: block;
+  margin-bottom: 22px;
+}
+.demo-title-row > p,
+.demo-title-row > div > p {
+  font-size: 14px;
+  color: var(--subtle);
+  max-width: 380px;
+}
+.demo-note {
+  font-size: 11px !important;
+  color: var(--subtle);
+  margin-top: 22px;
+  line-height: 1.65;
+}
+.demo-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.demo-filters button {
+  min-height: 44px;
+  border: 1px solid var(--border);
+  color: inherit;
+  background: transparent;
+  padding: 12px 20px;
+  font-size: 12px;
+}
+.demo-filters button[aria-pressed="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+.demo-contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7%;
+}
+.demo-form-wrap h3 {
+  font-size: 26px;
+  letter-spacing: -0.035em;
+  margin-bottom: 14px;
+}
+.form-notice {
+  font-size: 11px;
+  color: var(--subtle);
+  margin-bottom: 25px;
+}
+.demo-form-wrap form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.demo-form-wrap label {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  font-size: 11px;
+}
+.demo-form-wrap input,
+.demo-form-wrap select,
+.demo-form-wrap textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 12px;
+  font-size: 13px;
+}
+.demo-form-wrap textarea {
+  resize: vertical;
+}
+.demo-form-wrap input::placeholder,
+.demo-form-wrap textarea::placeholder {
+  color: var(--subtle);
+}
+.form-wide {
+  grid-column: 1/-1;
+}
+.form-result {
+  font-size: 13px;
+  border-left: 3px solid var(--accent);
+  padding: 10px 15px;
+}
+.location-placeholder {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.location-grid {
+  background:
+    linear-gradient(
+      90deg,
+      transparent 48%,
+      var(--border) 49%,
+      var(--border) 50%,
+      transparent 51%
+    ),
+    linear-gradient(
+      0deg,
+      transparent 48%,
+      var(--border) 49%,
+      var(--border) 50%,
+      transparent 51%
+    );
+  background-size: 52px 52px;
+  height: 180px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+}
+.location-grid > span {
+  display: grid;
+  place-items: center;
+  background: var(--fg);
+  color: var(--bg);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-size: 30px;
+}
+.location-placeholder h3 {
+  font-size: 23px;
+  letter-spacing: -0.03em;
+  margin: 13px 0;
+}
+.location-placeholder p {
+  font-size: 12px;
+  color: var(--subtle);
+}
+.contact-options {
+  display: flex;
+  gap: 10px 20px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+  font-size: 11px;
+}
+.contact-options a {
+  text-decoration: underline;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+.demo-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 35px;
+  align-items: center;
+  border-top: 1px solid var(--border);
+  padding-block: 35px;
+}
+.demo-footer p {
+  font-size: 10px;
+  color: var(--subtle);
+}
+.demo-footer > a:last-child {
+  font-size: 11px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+.mobile-booking {
+  display: none;
+}
+/* ORYN: typographic, architectural, rectilinear. */
+.construction .demo-header {
+  border-bottom: 1px solid var(--border);
+}
+.oryn-hero {
+  padding-top: 30px;
+}
+.oryn-hero h1 {
+  font-size: clamp(52px, 8.6vw, 148px);
+  line-height: 1.1;
+  letter-spacing: -0.065em;
+  font-weight: 500;
+  margin: 40px 0 28px;
+}
+.oryn-hero h1 > span {
+  color: #767b6d;
+}
+.oryn-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 45px;
+}
+.oryn-intro p {
+  font-size: 14px;
+  color: var(--subtle);
+}
+.oryn-hero-image {
+  position: relative;
+  height: clamp(340px, 42vw, 730px);
+}
+.oryn-hero-image img {
+  width: 100%;
+  height: 100%;
+}
+.image-caption {
+  position: absolute;
+  left: 5.4%;
+  bottom: 26px;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  background: #eeeee8;
+  padding: 12px 15px;
+}
+.image-arrow {
+  position: absolute;
+  right: 5.4%;
+  bottom: 26px;
+  background: var(--bg);
+  width: 65px;
+  height: 65px;
+  display: grid;
+  place-items: center;
+  font-size: 34px;
+}
+.split-title {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 50px;
+}
+.split-title > .demo-eyebrow {
+  padding-top: 12px;
+}
+.split-title h2 {
+  font-size: clamp(40px, 5.3vw, 80px);
+}
+.construction h2 em {
+  color: #737b68;
+  font-style: normal;
+}
+.offset-copy {
+  margin: 35px 0 0 auto;
+  max-width: 54%;
+  padding-right: 8%;
+  font-size: 16px;
+  color: var(--subtle);
+}
+.oryn-numbers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  margin-top: 65px;
+  border-top: 1px solid var(--border);
+  padding-top: 30px;
+}
+.oryn-numbers > div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.oryn-numbers strong {
+  font-size: 78px;
+  line-height: 1;
+  font-weight: 450;
+  letter-spacing: -0.05em;
+}
+.oryn-numbers span {
+  font-size: 12px;
+  color: var(--subtle);
+}
+.oryn-projects {
+  background: #dedfd5;
+}
+.property-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 30px;
+  align-items: start;
+}
+.property-grid article img,
+.property-drawing {
+  aspect-ratio: 1.5;
+  width: 100%;
+  object-fit: cover;
+}
+.property-grid article a > div:not(.property-drawing) {
+  display: flex;
+  justify-content: space-between;
+  font-size: 28px;
+  margin-top: 18px;
+}
+.property-grid article h3 {
+  font-size: 28px;
+  letter-spacing: -1px;
+}
+.property-grid article p {
+  font-size: 11px;
+  color: var(--subtle);
+  margin-top: 9px;
+}
+.property-drawing {
+  background: #454d43;
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.drawing-building {
+  width: 50%;
+  height: 70%;
+  border: 1px solid #9ba58a;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 20px,
+      #9ba58a 21px,
+      #9ba58a 22px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 35px,
+      #9ba58a 36px,
+      #9ba58a 37px
+    );
+  transform: skewY(-8deg);
+}
+.property-drawing small {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  color: #cad4b9;
+  font-size: 9px;
+}
+.oryn-service-list {
+  margin-top: 55px;
+}
+.oryn-service-list > div {
+  display: grid;
+  grid-template-columns: 45px 1.2fr 1fr 24px;
+  gap: 20px;
+  align-items: center;
+  border-top: 1px solid var(--border);
+  padding: 25px 0;
+}
+.oryn-service-list h3 {
+  font-size: 27px;
+  letter-spacing: -0.035em;
+}
+.oryn-service-list p {
+  font-size: 12px;
+  color: var(--subtle);
+}
+.oryn-service-list > div > span {
+  font-size: 13px;
+}
+.oryn-process {
+  background: #30382f;
+  color: #f1f1e6;
+  --subtle: #bcc5b5;
+}
+.oryn-process ol {
+  list-style: none;
+  margin: 60px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 35px;
+}
+.oryn-process li {
+  border-top: 1px solid #6f7a65;
+  padding-top: 20px;
+}
+.oryn-process li > span {
+  font-size: 13px;
+  color: #b8c5a8;
+}
+.oryn-process h3 {
+  font-size: 23px;
+  margin-top: 55px;
+  margin-bottom: 15px;
+  letter-spacing: -0.03em;
+}
+.oryn-process li p {
+  font-size: 12px;
+  color: var(--subtle);
+}
+.garden-showcase {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7%;
+  align-items: center;
+}
+.garden-showcase h2 {
+  font-size: clamp(38px, 4.2vw, 64px);
+  margin: 25px 0;
+}
+.garden-showcase p {
+  font-size: 14px;
+  color: var(--subtle);
+  max-width: 400px;
+}
+.garden-showcase > img {
+  height: 620px;
+  object-position: 65% center;
+}
+.garden-showcase dl {
+  margin: 30px 0;
+}
+.garden-showcase dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  border-top: 1px solid var(--border);
+  padding: 14px 0;
+  font-size: 11px;
+}
+.garden-showcase dd {
+  margin: 0;
+}
+.oryn-contact {
+  background: #e0e1d6;
+}
+/* AQ TIS: bright, soft, calm, with a short path to booking. */
+.dental {
+  --bg: #fafbf7;
+  --fg: #234940;
+  --accent: #28594c;
+  --subtle: #576c64;
+  --border: #cbd8ce;
+}
+.dental .demo-brand {
+  font-size: 43px;
+  font-weight: 500;
+  letter-spacing: -2px;
+}
+.dental .demo-brand .dental-logo {
+  font-size: 33px;
+  vertical-align: middle;
+  margin-left: 12px;
+}
+.dental .demo-header-cta {
+  padding: 0 23px;
+  background: #28594c;
+  border-radius: 50px;
+  color: white;
+}
+.dental h1 em,
+.dental h2 em {
+  font-family: "Cormorant Garamond Variable", serif;
+  letter-spacing: -0.04em;
+}
+.dental-hero {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 35px;
+  align-items: center;
+  padding-block: 40px 55px;
+}
+.dental-hero-copy {
+  padding-block: 30px;
+}
+.dental-hero h1 {
+  font-size: clamp(48px, 5.8vw, 90px);
+  letter-spacing: -0.06em;
+  line-height: 1.08;
+  margin: 30px 0 22px;
+}
+.dental-hero h1 em {
+  font-size: 1.2em;
+  font-weight: 450;
+}
+.dental-hero-copy > p {
+  font-size: 14px;
+  max-width: 375px;
+  color: var(--subtle);
+}
+.dental .demo-button {
+  border-radius: 50px;
+}
+.dental-hero-copy > .demo-button {
+  margin-top: 30px;
+}
+.dental-hero-media {
+  height: 600px;
+  position: relative;
+  border-radius: 170px 170px 12px 12px;
+  overflow: hidden;
+}
+.dental-hero-media img {
+  width: 100%;
+  height: 100%;
+  object-position: 66% center;
+}
+.dental-hero-media > span {
+  position: absolute;
+  bottom: 25px;
+  left: 20px;
+  right: 20px;
+  text-align: center;
+  font-size: 9px;
+  letter-spacing: 0.09em;
+  background: #f7f8f0eb;
+  padding: 14px 10px;
+  border-radius: 30px;
+}
+.dental-hero-note {
+  display: flex;
+  gap: 15px;
+  margin-top: 35px;
+  align-items: center;
+  font-size: 11px;
+  color: var(--subtle);
+}
+.dental-hero-note > span:first-child {
+  font-size: 37px;
+  color: #7c9981;
+}
+.dental-values {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  background: #e8efe5;
+  padding-block: 25px;
+  font-size: 12px;
+}
+.dental-values > span::before {
+  content: "✳";
+  margin-right: 12px;
+  color: #55745a;
+}
+.dental-services {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+.dental-services > a {
+  padding: 24px 20px;
+  border-radius: 16px;
+  background: #eff3eb;
+  display: flex;
+  flex-direction: column;
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+.dental-services > a:hover {
+  background: #e2ebdb;
+  transform: translateY(-4px);
+}
+.dental-services > a > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+.dental-services small {
+  font-size: 10px;
+  color: var(--subtle);
+}
+.dental-services > a > div > span {
+  font-size: 40px;
+  line-height: 1;
+}
+.dental-services h3 {
+  font-size: 23px;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  min-height: 52px;
+}
+.dental-services p {
+  font-size: 12px;
+  color: var(--subtle);
+  margin: 15px 0 28px;
+}
+.service-more {
+  font-size: 10px;
+  margin-top: auto;
+}
+.dental-team {
+  background: #eaf0e7;
+}
+.doctor-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+.doctor-placeholder {
+  position: relative;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  aspect-ratio: 1.1;
+  background: #d9e4d5;
+  overflow: hidden;
+  border-radius: 110px 110px 6px 6px;
+  padding-top: 25px;
+}
+.doctor-placeholder svg {
+  width: 52%;
+  height: 75%;
+  color: #b8cdb3;
+}
+.doctor-placeholder > span {
+  position: absolute;
+  bottom: 13px;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  background: #edf3e7;
+  padding: 9px 16px;
+  border-radius: 22px;
+}
+.doctor-grid h3 {
+  font-size: 22px;
+  letter-spacing: -0.025em;
+  margin-top: 22px;
+}
+.doctor-grid p {
+  font-size: 12px;
+  margin: 8px 0;
+}
+.doctor-grid small {
+  font-size: 10px;
+  color: var(--subtle);
+}
+.dental-results {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8%;
+  align-items: center;
+}
+.dental-results h2 {
+  font-size: clamp(38px, 4.3vw, 63px);
+  margin: 25px 0;
+}
+.dental-results > div > p {
+  font-size: 13px;
+  color: var(--subtle);
+}
+.review-placeholder {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  border-top: 1px solid var(--border);
+  margin-top: 25px;
+  padding-top: 20px;
+}
+.review-placeholder > span {
+  font-family: serif;
+  font-size: 80px;
+  line-height: 1;
+  color: #86a085;
+}
+.review-placeholder p {
+  font-size: 13px;
+}
+.review-placeholder small {
+  font-size: 10px;
+  color: var(--subtle);
+}
+.before-after {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  background: #e6ece0;
+  border-radius: 20px;
+  overflow: hidden;
+  padding-bottom: 45px;
+}
+.before-after > div {
+  height: 290px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 35px 15px;
+  color: #546f56;
+  font-size: 12px;
+}
+.before-after > div:first-child {
+  border-right: 1px solid var(--border);
+  background: #f0f2ea;
+}
+.before-after p {
+  position: absolute;
+  bottom: 17px;
+  width: 100%;
+  text-align: center;
+  font-size: 9px;
+  color: var(--subtle);
+}
+.dental-prices {
+  background: #f0f3ec;
+}
+.price-list > div {
+  display: grid;
+  grid-template-columns: 1fr 200px 44px;
+  align-items: center;
+  gap: 25px;
+  border-top: 1px solid var(--border);
+  padding: 15px 0;
+}
+.price-list > div > span:first-child {
+  font-size: 20px;
+  letter-spacing: -0.025em;
+}
+.price-list > div > span:nth-child(2) {
+  font-size: 12px;
+  color: var(--subtle);
+}
+.price-list a {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 23px;
+}
+.dental-faq {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 8%;
+}
+.dental-faq h2 {
+  margin: 25px 0;
+}
+.dental-faq > div > p {
+  font-size: 13px;
+  color: var(--subtle);
+}
+.dental-faq details {
+  border-top: 1px solid var(--border);
+}
+.dental-faq summary {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+  align-items: center;
+  padding: 25px 0;
+  font-size: 17px;
+  cursor: pointer;
+}
+.dental-faq summary::-webkit-details-marker {
+  display: none;
+}
+.dental-faq details > p {
+  font-size: 13px;
+  color: var(--subtle);
+  padding: 0 30px 25px 0;
+}
+.dental-faq details[open] summary > span {
+  transform: rotate(45deg);
+}
+.dental-booking {
+  background: #e2ecdd;
+}
+.dental .demo-form-wrap input,
+.dental .demo-form-wrap select {
+  border-radius: 8px;
+}
+.dental .location-grid {
+  border-radius: 15px;
+}
+/* SARY: editorial, tactile, cinematic. */
+.restaurant {
+  --bg: #f0e8d8;
+  --fg: #46282c;
+  --accent: #582c33;
+  --subtle: #69534d;
+  --border: #ccb9a4;
+}
+.restaurant .concept-bar {
+  background: #201416;
+}
+.restaurant .demo-header {
+  background: #352025;
+  color: #f1e5cc;
+}
+.restaurant .demo-brand {
+  font-family: "Cormorant Garamond Variable", serif;
+  font-size: 64px;
+  font-weight: 500;
+  letter-spacing: -3px;
+}
+.restaurant .demo-brand > span {
+  font-family: sans-serif;
+  font-size: 18px;
+  margin-left: 6px;
+}
+.restaurant h1,
+.restaurant h2 {
+  font-family: "Cormorant Garamond Variable", serif;
+  font-weight: 400;
+  letter-spacing: -0.05em;
+}
+.restaurant h2 {
+  font-size: clamp(52px, 6.3vw, 100px);
+}
+.sary-hero {
+  position: relative;
+  min-height: 680px;
+  height: calc(100svh - 144px);
+  max-height: 950px;
+  background: #211617;
+  color: #fff4df;
+  isolation: isolate;
+}
+.sary-hero > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+}
+.sary-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, #160f10b8, transparent 85%),
+    linear-gradient(0deg, #170d13a6, transparent 30%);
+  z-index: -1;
+}
+.sary-hero-copy {
+  padding-top: 80px;
+}
+.sary-hero h1 {
+  font-size: clamp(90px, 11vw, 170px);
+  line-height: 0.87;
+  margin: 35px 0 25px;
+}
+.sary-hero h1 em {
+  font-weight: 400;
+}
+.sary-hero-copy > p {
+  font-size: 15px;
+  color: #e3d4c1;
+}
+.sary-hero .demo-button {
+  background: #efe4cc;
+  color: #46282c;
+  border-color: #efe4cc;
+  margin-top: 30px;
+}
+.sary-hero-bottom {
+  position: absolute;
+  bottom: 28px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 9px;
+  letter-spacing: 0.07em;
+}
+.sary-concept {
+  display: grid;
+  grid-template-columns: 1fr 2fr 0.7fr;
+  gap: 35px;
+}
+.sary-concept > .demo-eyebrow {
+  padding-top: 15px;
+}
+.sary-concept h2 {
+  margin-bottom: 30px;
+}
+.sary-concept p {
+  font-size: 15px;
+  max-width: 510px;
+  color: var(--subtle);
+}
+.sary-sun {
+  font-size: 140px;
+  font-weight: 200;
+  line-height: 1;
+  align-self: center;
+  justify-self: end;
+  color: #a48658;
+}
+.sary-menu {
+  background: #e5dbc9;
+}
+.restaurant .demo-filters button {
+  border-radius: 50px;
+}
+.sary-menu-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 60px;
+  margin-top: 45px;
+}
+.sary-menu-list article {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--border);
+  padding: 25px 0;
+}
+.sary-menu-list h3 {
+  font-family: "Cormorant Garamond Variable", serif;
+  font-size: 31px;
+  letter-spacing: -0.02em;
+}
+.sary-menu-list p {
+  font-size: 11px;
+  color: var(--subtle);
+  margin-top: 7px;
+}
+.sary-menu-list article > span {
+  white-space: nowrap;
+  font-size: 13px;
+}
+.sary-menu .demo-kicker {
+  align-items: end;
+  margin: 20px 0 0;
+  font-size: 10px;
+}
+.sary-signature {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  background: #47252b;
+  color: #f2e6d1;
+}
+.sary-signature > img {
+  height: 650px;
+  width: 100%;
+  object-position: 70% center;
+}
+.sary-signature > div {
+  padding: 80px 13%;
+  align-self: center;
+}
+.sary-signature h2 {
+  margin: 25px 0;
+}
+.sary-signature p {
+  font-size: 13px;
+  color: #d1bda8;
+}
+.sary-signature a {
+  display: inline-block;
+  margin-top: 30px;
+  font-size: 12px;
+  border-bottom: 1px solid #b69a87;
+  padding: 10px 0;
+}
+.sary-gallery {
+  display: grid;
+  grid-template-columns: 1.65fr 1fr;
+  gap: 30px;
+  align-items: start;
+}
+.sary-gallery > figure:first-child {
+  padding-bottom: 80px;
+}
+.sary-gallery > figure:last-child {
+  padding-top: 100px;
+}
+.sary-gallery img {
+  width: 100%;
+  height: 460px;
+}
+.sary-gallery > figure:last-child img {
+  height: 390px;
+  object-position: 72% center;
+}
+.sary-gallery figcaption {
+  font-size: 10px;
+  margin-top: 15px;
+  color: var(--subtle);
+}
+.sary-reservation {
+  background: #e3d7c3;
+}
+.restaurant .demo-footer {
+  background: #352025;
+  color: #f1e5cc;
+  --subtle: #d0b9a3;
+  --border: #765351;
+}
+.restaurant .form-result {
+  border-color: #582c33;
+}
+@media (max-width: 1100px) {
+  .demo-header {
+    gap: 22px;
+  }
+  .demo-header nav {
+    gap: 20px;
+  }
+  .dental-hero {
+    gap: 25px;
+  }
+  .dental-hero-media {
+    height: 500px;
+  }
+  .dental-services {
+    grid-template-columns: 1fr 1fr;
+  }
+  .dental-services h3 {
+    min-height: auto;
+  }
+  .dental-services > a > div {
+    margin-bottom: 25px;
+  }
+  .demo h2 {
+    font-size: 50px;
+  }
+  .restaurant h2 {
+    font-size: 72px;
+  }
+  .sary-concept {
+    grid-template-columns: 0.8fr 2fr 0.3fr;
+  }
+  .sary-sun {
+    font-size: 85px;
+  }
+  .sary-signature > div {
+    padding: 55px 10%;
+  }
+  .sary-menu-list {
+    gap: 0 35px;
+  }
+  .sary-menu-list h3 {
+    font-size: 27px;
+  }
+  .oryn-service-list h3 {
+    font-size: 23px;
+  }
+  .oryn-process ol {
+    gap: 22px;
+  }
+  .oryn-process h3 {
+    font-size: 20px;
+  }
+}
+@media (max-width: 760px) {
+  .concept-bar {
+    padding: 8px 16px;
+    font-size: 8px;
+    gap: 10px;
+  }
+  .concept-detail {
+    display: none;
+  }
+  .demo-header {
+    height: auto;
+    min-height: 80px;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-block: 18px;
+  }
+  .demo-brand {
+    font-size: 33px;
+  }
+  .demo-header nav {
+    order: 3;
+    flex-basis: 100%;
+    justify-content: space-between;
+    font-size: 11px;
+    border-top: 1px solid var(--border);
+    padding-top: 4px;
+  }
+  .demo-header nav a {
+    min-height: 38px;
+  }
+  .demo-header-cta {
+    font-size: 10px;
+    min-height: 40px;
+    margin-left: auto;
+  }
+  .demo-section {
+    padding-block: 58px;
+  }
+  .demo-kicker {
+    font-size: 8px;
+    gap: 20px;
+  }
+  .demo-kicker > span:last-child {
+    text-align: right;
+    max-width: 48%;
+  }
+  .demo h2 {
+    font-size: 42px;
+  }
+  .demo-title-row {
+    display: block;
+    margin-bottom: 30px;
+  }
+  .demo-title-row > p,
+  .demo-title-row > div > p {
+    font-size: 12px;
+    margin-top: 22px;
+  }
+  .demo-title-row .demo-filters {
+    margin-top: 22px;
+  }
+  .demo-contact-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .demo-form-wrap form {
+    gap: 16px;
+  }
+  .demo-form-wrap h3 {
+    font-size: 24px;
+  }
+  .demo-form-wrap label {
+    font-size: 10px;
+  }
+  .demo-form-wrap input,
+  .demo-form-wrap select {
+    font-size: 12px;
+    padding: 10px;
+  }
+  .location-grid {
+    height: 140px;
+  }
+  .location-placeholder h3 {
+    font-size: 22px;
+  }
+  .demo-footer {
+    flex-wrap: wrap;
+    gap: 24px;
+    padding-block: 30px;
+  }
+  .demo-footer p {
+    max-width: 65%;
+    font-size: 9px;
+  }
+  .demo-footer > a:last-child {
+    font-size: 10px;
+  }
+  .demo-filters {
+    gap: 6px;
+  }
+  .demo-filters button {
+    font-size: 10px;
+    padding: 10px 15px;
+  }
+  .oryn-hero {
+    padding-top: 20px;
+  }
+  .oryn-hero h1 {
+    font-size: clamp(39px, 8.8vw, 67px);
+    margin: 30px 0 25px;
+    letter-spacing: -0.07em;
+  }
+  .oryn-intro {
+    display: block;
+    margin-bottom: 30px;
+  }
+  .oryn-intro p {
+    font-size: 12px;
+  }
+  .oryn-intro .demo-button {
+    margin-top: 20px;
+  }
+  .oryn-hero-image {
+    height: 390px;
+  }
+  .oryn-hero-image img {
+    object-position: 60% center;
+  }
+  .image-caption {
+    font-size: 7px;
+    left: 20px;
+    bottom: 20px;
+    padding: 10px;
+    max-width: 68%;
+  }
+  .image-arrow {
+    width: 45px;
+    height: 45px;
+    right: 20px;
+    bottom: 20px;
+    font-size: 25px;
+  }
+  .split-title {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+  .split-title h2 {
+    font-size: 43px;
+  }
+  .offset-copy {
+    max-width: 100%;
+    padding: 0;
+    margin-top: 25px;
+    font-size: 14px;
+  }
+  .oryn-numbers {
+    gap: 15px;
+    margin-top: 35px;
+    padding-top: 23px;
+  }
+  .oryn-numbers strong {
+    font-size: 52px;
+  }
+  .oryn-numbers span {
+    font-size: 10px;
+  }
+  .property-grid {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+  .property-grid article h3 {
+    font-size: 26px;
+  }
+  .oryn-service-list {
+    margin-top: 30px;
+  }
+  .oryn-service-list > div {
+    grid-template-columns: 25px 1fr 20px;
+    gap: 14px;
+    padding: 22px 0;
+  }
+  .oryn-service-list h3 {
+    font-size: 21px;
+  }
+  .oryn-service-list p {
+    grid-column: 2;
+    grid-row: 2;
+    font-size: 11px;
+  }
+  .oryn-service-list > div > span:last-child {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .oryn-process ol {
+    grid-template-columns: 1fr 1fr;
+    gap: 30px 23px;
+    margin-top: 35px;
+  }
+  .oryn-process h3 {
+    margin-top: 32px;
+    font-size: 19px;
+  }
+  .oryn-process li p {
+    font-size: 11px;
+  }
+  .garden-showcase {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+  .garden-showcase > img {
+    height: 390px;
+    width: 100%;
+  }
+  .garden-showcase h2 {
+    font-size: 43px;
+  }
+  .garden-showcase p {
+    font-size: 13px;
+  }
+  .dental .demo-brand {
+    font-size: 37px;
+  }
+  .dental .demo-brand .dental-logo {
+    font-size: 28px;
+  }
+  .dental .demo-header-cta {
+    padding: 0 17px;
+  }
+  .dental-hero {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding-block: 15px 35px;
+  }
+  .dental-hero-copy {
+    padding: 10px 0 0;
+  }
+  .dental-hero-copy > .demo-eyebrow {
+    font-size: 8px;
+  }
+  .dental-hero h1 {
+    font-size: clamp(40px, 9.2vw, 63px);
+    margin: 22px 0 15px;
+  }
+  .dental-hero-copy > p {
+    font-size: 13px;
+  }
+  .dental-hero-copy > .demo-button {
+    margin-top: 23px;
+  }
+  .dental-hero-note {
+    display: none;
+  }
+  .dental-hero-media {
+    height: 330px;
+    border-radius: 100px 100px 10px 10px;
+  }
+  .dental-hero-media > span {
+    font-size: 8px;
+  }
+  .dental-values {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    font-size: 10px;
+    gap: 20px;
+    padding-block: 22px;
+  }
+  .dental-values > span::before {
+    margin-right: 7px;
+  }
+  .dental-services {
+    gap: 10px;
+  }
+  .dental-services > a {
+    padding: 20px 15px;
+  }
+  .dental-services h3 {
+    font-size: 21px;
+    overflow-wrap: anywhere;
+  }
+  .dental-services p {
+    font-size: 11px;
+  }
+  .dental-services > a > div > span {
+    font-size: 32px;
+  }
+  .service-more {
+    font-size: 9px;
+  }
+  .doctor-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .doctor-grid article {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 8px 20px;
+  }
+  .doctor-placeholder {
+    grid-row: 1/4;
+    aspect-ratio: auto;
+    height: 145px;
+    border-radius: 50px 50px 5px 5px;
+  }
+  .doctor-placeholder svg {
+    width: 90%;
+    height: 90%;
+  }
+  .doctor-placeholder > span {
+    font-size: 6px;
+    bottom: 9px;
+    padding: 7px 10px;
+  }
+  .doctor-grid h3 {
+    font-size: 20px;
+    align-self: end;
+    margin: 5px 0 0;
+  }
+  .doctor-grid p {
+    margin: 0;
+    font-size: 12px;
+  }
+  .doctor-grid small {
+    font-size: 9px;
+  }
+  .dental-results {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .dental-results h2 {
+    font-size: 42px;
+  }
+  .before-after > div {
+    height: 210px;
+  }
+  .price-list > div {
+    grid-template-columns: 1fr 95px 35px;
+    gap: 12px;
+    padding: 15px 0;
+  }
+  .price-list > div > span:first-child {
+    font-size: 15px;
+  }
+  .price-list > div > span:nth-child(2) {
+    font-size: 10px;
+  }
+  .price-list a {
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+  }
+  .dental-faq {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .dental-faq summary {
+    font-size: 15px;
+    padding: 22px 0;
+  }
+  .dental .demo-footer {
+    padding-bottom: 100px;
+  }
+  .mobile-booking {
+    position: fixed;
+    bottom: 12px;
+    left: 20px;
+    right: 20px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 50px;
+    padding: 15px 20px;
+    background: #28594c;
+    color: white;
+    border: 1px solid #f5f7f0;
+    border-radius: 50px;
+    font-size: 12px;
+    box-shadow: 0 3px 20px #233f3325;
+  }
+  .restaurant .demo-brand {
+    font-size: 53px;
+  }
+  .restaurant .demo-header nav {
+    border-color: #6c5053;
+  }
+  .restaurant h2 {
+    font-size: 59px;
+  }
+  .sary-hero {
+    height: 640px;
+    min-height: 0;
+    max-height: none;
+  }
+  .sary-hero > img {
+    object-position: 65% center;
+  }
+  .sary-hero::after {
+    background:
+      linear-gradient(90deg, #160f10bd, transparent),
+      linear-gradient(0deg, #170d1399, transparent 60%);
+  }
+  .sary-hero-copy {
+    padding-top: 65px;
+  }
+  .sary-hero h1 {
+    font-size: clamp(74px, 16.5vw, 120px);
+    margin: 35px 0 25px;
+  }
+  .sary-hero-copy > p {
+    font-size: 13px;
+  }
+  .sary-hero-bottom {
+    bottom: 22px;
+    font-size: 7px;
+    gap: 20px;
+  }
+  .sary-hero-bottom > span {
+    max-width: 58%;
+  }
+  .sary-concept {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    position: relative;
+  }
+  .sary-concept p {
+    font-size: 13px;
+    max-width: 95%;
+  }
+  .sary-sun {
+    position: absolute;
+    right: 25px;
+    top: 50px;
+    font-size: 45px;
+  }
+  .sary-menu-list {
+    grid-template-columns: 1fr;
+    margin-top: 30px;
+  }
+  .sary-menu-list h3 {
+    font-size: 28px;
+  }
+  .sary-menu-list p {
+    font-size: 10px;
+  }
+  .sary-menu-list article > span {
+    font-size: 12px;
+  }
+  .sary-menu .demo-kicker > .demo-note {
+    max-width: 72%;
+    margin: 0;
+    font-size: 9px !important;
+  }
+  .sary-menu .demo-kicker > span:last-child {
+    font-size: 9px;
+    white-space: nowrap;
+  }
+  .sary-signature {
+    grid-template-columns: 1fr;
+  }
+  .sary-signature > img {
+    height: 330px;
+    object-position: 70% center;
+  }
+  .sary-signature > div {
+    padding: 45px 25px 50px;
+  }
+  .sary-signature h2 {
+    font-size: 65px;
+  }
+  .sary-gallery {
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+  }
+  .sary-gallery > figure:first-child {
+    padding-bottom: 40px;
+  }
+  .sary-gallery > figure:last-child {
+    padding-top: 65px;
+  }
+  .sary-gallery img {
+    height: 300px;
+  }
+  .sary-gallery > figure:last-child img {
+    height: 220px;
+  }
+  .sary-gallery figcaption {
+    font-size: 9px;
+  }
+  .restaurant .demo-footer p {
+    max-width: 67%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+  .dental-services > a:hover {
+    transform: none;
+  }
+}
+.demo-form-wrap fieldset {
+  display: contents;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.demo-form-wrap fieldset:disabled {
+  opacity: 0.6;
+}

@@ -1,0 +1,48 @@
+---
+import { studio } from "../config";
+import { projects } from "../projects";
+import { withBase } from "../../lib/paths";
+import Arrow from "./Arrow.astro";
+const home = withBase("/portfolio/");
+const count = String(projects.length).padStart(2, "0");
+---
+
+<header class="p-header shell">
+  <a class="wordmark" href={home} aria-label={`${studio.name} — главная`}>
+    {studio.name}
+    <span class="brand-dot"></span>
+  </a>
+  <nav aria-label="Основная навигация" class="desktop-nav">
+    <a href={`${home}#work`}>
+      Работы <sup>{count}</sup>
+    </a>
+    <a href={`${home}#services`}>Услуги</a>
+    <a href={`${home}#about`}>О нас</a>
+  </nav>
+  <a class="header-cta" href={`${home}#contact`}>
+    Обсудить проект <Arrow diagonal />
+  </a>
+  <button
+    class="menu-toggle"
+    type="button"
+    aria-expanded="false"
+    aria-controls="mobile-navigation"
+    aria-label="Открыть меню"
+  >
+    <span></span>
+    <span></span>
+  </button>
+  <nav
+    id="mobile-navigation"
+    class="mobile-nav"
+    aria-label="Мобильная навигация"
+    hidden
+  >
+    <a href={`${home}#work`}>
+      Работы <sup>{count}</sup>
+    </a>
+    <a href={`${home}#services`}>Услуги</a>
+    <a href={`${home}#about`}>О нас</a>
+    <a href={`${home}#contact`}>Обсудить проект ↗</a>
+  </nav>
+</header>
