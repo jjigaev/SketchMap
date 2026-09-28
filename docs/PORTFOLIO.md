@@ -24,7 +24,7 @@ The portfolio adds 8 HTML pages to the existing 33 FORMA pages. Demo pages have 
 
 ## Editable content
 
-- `src/portfolio/config.ts`: studio name, empty contact channels, team placeholders, services, process and demo contacts. `STUDIO /` is a working name, not a claimed real identity. WhatsApp accepts an international number, Telegram accepts a handle without the URL, email and phone accept their usual values. Empty channels render as clearly unavailable, without fake links.
+- `src/portfolio/config.ts`: the user-supplied Cerebrum name, company description, biographies of Ибрахим Абдибек and Бекзат Муратбай, Bekzat's stack, and real public WhatsApp/Telegram/email contacts. WhatsApp accepts an international number, Telegram accepts a handle without the URL, email and phone accept their usual values. Unprovided channels are omitted when real channels exist. Demo-company contacts remain intentionally empty and separate.
 - `src/portfolio/projects.ts`: typed project records, status, narrative, features, stack, cover and live URL. Add a record to generate its case study and update catalog counts automatically. Add matching desktop/mobile captures and a live route for the new project. The hero reel is a curated selection of the first four projects.
 - `src/portfolio/components/`: shared header, showcase, contact, form and location components.
 - `src/portfolio/layouts/`: independent portfolio and demo document shells.
@@ -35,7 +35,7 @@ The portfolio content is separate from FORMA's existing RU/KK/EN system. Its ini
 
 ## Honest demos
 
-FORMA is an implemented website for a fictional architecture studio, confirmed by the owner during this task. ORYN, AQ TIS and SARY are explicitly labeled concepts. No commercial outcomes, client testimonials, credentials, team biographies or contact details were invented.
+FORMA is an implemented website for a fictional architecture studio, confirmed by the owner during this task. ORYN, AQ TIS and SARY are explicitly labeled concepts. No commercial outcomes, client testimonials, credentials, team biographies or contact details were invented. Cerebrum's biographies and contact information were supplied directly by the user.
 
 The clinic leaves doctors, before/after material, reviews and prices as explicit placeholders. Restaurant dishes and prices are labeled demonstration content. ORYN's numbers count elements of the concept, not business achievements. No real maps, addresses or registered trademarks are fabricated.
 
@@ -53,7 +53,7 @@ To recapture real previews, run `npm run dev`, then `npm run screenshots`. This 
 
 ## Review and publication
 
-1. Fill in the real studio name, contact channels and team in `config.ts` before using the link in sales.
+1. Review the user-supplied Cerebrum name, biographies, stack and public contact channels in `config.ts`. Optional phone/Instagram fields can be filled later; they are currently omitted.
 2. Run `npm ci`, `npm run check`, `npm run build`, and `npm test`. Tests start a production preview at port 4322 with the real GitHub Pages base.
 3. Local tests use installed Edge. On Linux/macOS set `PLAYWRIGHT_CHANNEL=chromium` after `npx playwright install chromium`, or use the CI configuration.
 4. Review the homepage, all cases and demos on desktop and mobile. No fake send-success state should appear.

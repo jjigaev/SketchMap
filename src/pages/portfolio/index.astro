@@ -46,8 +46,8 @@ const counts = {
       <span class="hero-footnote">И удобно использовать.</span>
       <div class="hero-description">
         <p>
-          Проектируем и разрабатываем современные сайты для бизнеса — от первой
-          идеи до запуска.
+          Создаём сайты, веб-приложения и CRM-системы для бизнеса — от идеи до
+          работающего продукта.
         </p>
         <div class="hero-actions">
           <a class="button primary" href="#work">
@@ -205,11 +205,7 @@ const counts = {
           <br />
           <span>Внимание к вашему делу.</span>
         </h2>
-        <p>
-          Соединяем дизайн и разработку, чтобы идея не терялась по дороге к
-          готовому сайту. Обсуждаем решения открыто и делаем каждый экран частью
-          одной истории.
-        </p>
+        <p>{studio.description}</p>
       </div>
       <div class="principles">
         <span>Индивидуальный дизайн ↗</span>
@@ -221,22 +217,28 @@ const counts = {
         <span>Поддержка после запуска ↗</span>
       </div>
       <div class="team-grid">
-        {studio.team.map((person, i) => (
+        {studio.team.map((person) => (
           <article>
             <div class="team-avatar" aria-hidden="true">
-              0{i + 1}
+              {person.initials}
               <span>↗</span>
             </div>
             <h3>{person.name}</h3>
             <span class="eyebrow">{person.role}</span>
             <p>{person.description}</p>
+            {person.skills.length > 0 && (
+              <div class="team-skills">
+                <span class="eyebrow">Основной стек</span>
+                <ul>
+                  {person.skills.map((skill) => (
+                    <li>{skill}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </article>
         ))}
       </div>
-      <p class="placeholder-note">
-        {studio.name} — рабочее название. Знакомство с командой скоро появится
-        здесь.
-      </p>
     </div>
   </section>
   <Contact />

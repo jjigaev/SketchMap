@@ -10,6 +10,7 @@ import {
   caseUrl,
 } from "../../../portfolio/projects";
 import { withBase } from "../../../lib/paths";
+import { studio } from "../../../portfolio/config";
 export function getStaticPaths() {
   return projects.map((project, index) => ({
     params: { slug: project.slug },
@@ -24,7 +25,7 @@ const { project, next } = Astro.props;
 ---
 
 <PortfolioLayout
-  title={`${project.title} — кейс сайта | STUDIO /`}
+  title={`${project.title} — кейс сайта | ${studio.name}`}
   description={project.description}
   image={project.cover}
 >
