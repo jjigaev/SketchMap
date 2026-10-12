@@ -825,6 +825,12 @@ sup {
 .contact-bottom > p {
   font-size: 15px;
 }
+.contact-market {
+  display: block;
+  margin-top: 16px;
+  color: #e0e7ff;
+  font-size: 12px;
+}
 .contact-channels {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -930,6 +936,9 @@ sup {
     height: 78px;
     gap: 16px;
   }
+  .p-header > .language-switch {
+    margin-left: auto;
+  }
   .desktop-nav {
     display: none;
   }
@@ -937,8 +946,7 @@ sup {
     font-size: 23px;
   }
   .header-cta {
-    margin-left: auto;
-    font-size: 11px;
+    display: none;
   }
   .header-cta svg {
     width: 15px;

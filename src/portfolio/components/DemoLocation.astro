@@ -1,12 +1,22 @@
 ---
+import type { PortfolioLocale } from "../i18n";
 interface Props {
+  locale?: PortfolioLocale;
   city: string;
   address?: string;
   map?: string;
   phone?: string;
   whatsapp?: string;
 }
-const { city, address = "", map = "", phone = "", whatsapp = "" } = Astro.props;
+const {
+  city,
+  address = "",
+  map = "",
+  phone = "",
+  whatsapp = "",
+  locale = "ru",
+} = Astro.props;
+const t = (ru: string, en: string) => (locale === "en" ? en : ru);
 ---
 
 <div class="location-placeholder">
@@ -15,29 +25,36 @@ const { city, address = "", map = "", phone = "", whatsapp = "" } = Astro.props;
   </div>
   <div>
     <span class="demo-eyebrow">{city.toUpperCase()}</span>
-    <h3>{address || "Здесь будет наш адрес"}</h3>
+    <h3>
+      {address || t("Здесь будет наш адрес", "Our address will appear here")}
+    </h3>
     <p>
       {address
-        ? "Будем рады встрече."
-        : "Место для адреса и карты реальной компании."}
+        ? t("Будем рады встрече.", "We look forward to meeting you.")
+        : t(
+            "Место для адреса и карты реальной компании.",
+            "Space for a real business address and map.",
+          )}
     </p>
     <div class="contact-options">
       {map ? (
         <a href={map} target="_blank" rel="noopener noreferrer">
-          Открыть карту ↗
+          {t("Открыть карту", "Open map")} ↗
         </a>
       ) : (
-        <span>Карта: адрес не указан</span>
+        <span>{t("Карта: адрес не указан", "Map: no address provided")}</span>
       )}
       {phone ? (
-        <a href={`tel:${phone.replace(/[^+\d]/g, "")}`}>Позвонить ↗</a>
+        <a href={`tel:${phone.replace(/[^+\d]/g, "")}`}>
+          {t("Позвонить", "Call us")} ↗
+        </a>
       ) : (
-        <span>Телефон: не указан</span>
+        <span>{t("Телефон: не указан", "Phone: not provided")}</span>
       )}
       {whatsapp ? (
         <a href={`https://wa.me/${whatsapp.replace(/\D/g, "")}`}>WhatsApp ↗</a>
       ) : (
-        <span>WhatsApp: не указан</span>
+        <span>{t("WhatsApp: не указан", "WhatsApp: not provided")}</span>
       )}
     </div>
   </div>

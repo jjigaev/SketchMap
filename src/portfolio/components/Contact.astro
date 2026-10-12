@@ -1,6 +1,14 @@
 ---
-import { studio } from "../config";
+import { getStudio } from "../config";
+import { getCopy } from "../copy";
+import type { PortfolioLocale } from "../i18n";
 import Arrow from "./Arrow.astro";
+interface Props {
+  locale?: PortfolioLocale;
+}
+const { locale = "ru" } = Astro.props;
+const studio = getStudio(locale);
+const copy = getCopy(locale);
 const contact = studio.contact;
 const channels = [
   {
@@ -23,7 +31,7 @@ const channels = [
     href: contact.email ? `mailto:${contact.email}` : "",
   },
   {
-    label: "Телефон",
+    label: copy.phone,
     value: contact.phone,
     href: contact.phone ? `tel:${contact.phone.replace(/[^+\d]/g, "")}` : "",
   },
@@ -37,16 +45,16 @@ const visibleChannels = hasContact
 <section class="contact-section" id="contact">
   <div class="shell">
     <div class="section-kicker">
-      <span>ЕСТЬ ПРОЕКТ?</span>
-      <span>ДАВАЙТЕ ОБСУДИМ</span>
+      <span>{copy.projectQuestion}</span>
+      <span>{copy.letsTalk}</span>
     </div>
     <div class="contact-heading">
       <h2>
-        Хорошие идеи
+        {copy.contactTitle}
         <br />
-        заслуживают
+        {copy.contactLead}
         <br />
-        <span>хорошего сайта.</span>
+        <span>{copy.contactAccent}</span>
       </h2>
       <span class="contact-arrow" aria-hidden="true">
         ↗
@@ -54,9 +62,14 @@ const visibleChannels = hasContact
     </div>
     <div class="contact-bottom">
       <p>
-        Расскажите о вашем бизнесе.
+        {copy.tellUs}
         <br />
-        Начнём с простого разговора.
+        {copy.startTalking}
+        <span class="contact-market">
+          {locale === "en"
+            ? "For businesses in the US and Kazakhstan."
+            : "Для бизнеса в Казахстане и США."}
+        </span>
       </p>
       <div class="contact-channels">
         {visibleChannels.map((channel) =>
@@ -71,17 +84,12 @@ const visibleChannels = hasContact
           ) : (
             <span class="pending-channel">
               {channel.label}
-              <small>Скоро</small>
+              <small>{copy.soon}</small>
             </span>
           ),
         )}
       </div>
     </div>
-    {!hasContact && (
-      <p class="contact-placeholder">
-        Контакты студии пока не добавлены. Связь через сайт станет доступна
-        после их заполнения.
-      </p>
-    )}
+    {!hasContact && <p class="contact-placeholder">{copy.contactPending}</p>}
   </div>
 </section>

@@ -1,0 +1,431 @@
+---
+import DemoLayout from "../layouts/DemoLayout.astro";
+import DemoForm from "../components/DemoForm.astro";
+import DemoLocation from "../components/DemoLocation.astro";
+import { demoContacts } from "../config";
+import { withBase } from "../../lib/paths";
+import type { PortfolioLocale } from "../i18n";
+interface Props {
+  locale?: PortfolioLocale;
+}
+const { locale = "ru" } = Astro.props;
+const t = (ru: string, en: string) => (locale === "en" ? en : ru);
+const image = withBase("/portfolio/media/dental.webp");
+---
+
+<DemoLayout
+  locale={locale}
+  name="aq tis"
+  slug="aq-tis"
+  theme="dental"
+  title={t(
+    "AQ TIS — забота начинается с доверия",
+    "AQ TIS — care begins with trust",
+  )}
+  description={t(
+    "Демонстрационный сайт вымышленной стоматологической клиники. Спокойный интерфейс и понятный путь к записи.",
+    "A demo website for a fictional dental clinic. A calm interface with a clear path to booking.",
+  )}
+  image="/portfolio/media/dental.webp"
+>
+  <header class="demo-header wrap" id="top">
+    <a href="#top" class="demo-brand">
+      aq tis
+      <span class="dental-logo" aria-hidden="true">
+        ✳
+      </span>
+    </a>
+    <nav aria-label={t("Навигация AQ TIS", "AQ TIS navigation")}>
+      <a href="#services">{t("Услуги", "Services")}</a>
+      <a href="#team">{t("Врачи", "Our team")}</a>
+      <a href="#faq">{t("Вопросы", "FAQ")}</a>
+    </nav>
+    <a class="demo-header-cta" href="#booking">
+      {t("Записаться", "Book a visit")} ↗
+    </a>
+  </header>
+  <section class="dental-hero wrap">
+    <div class="dental-hero-copy">
+      <span class="demo-eyebrow">
+        <i></i>{" "}
+        {t("СТОМАТОЛОГИЯ С ВНИМАНИЕМ К ВАМ", "DENTAL CARE THAT LISTENS")}
+      </span>
+      <h1>
+        {t("Забота начинается", "Care begins")}
+        <br />
+        {t("с", "with")} <em>{t("доверия.", "trust.")}</em>
+      </h1>
+      <p>
+        {t(
+          "Знакомство, понятный план и внимание к вашим вопросам. Первый шаг к здоровой улыбке — спокойный разговор.",
+          "An introduction, a clear plan and time for your questions. A relaxed conversation is the first step toward a healthy smile.",
+        )}
+      </p>
+      <a class="demo-button" href="#booking">
+        {t("Записаться на консультацию", "Book a consultation")} <span>↗</span>
+      </a>
+      <div class="dental-hero-note">
+        <span aria-hidden="true">✳</span>
+        <span>
+          {t("Ваш комфорт — часть", "Your comfort is part")}
+          <br />
+          {t("хорошего опыта.", "of good care.")}
+        </span>
+      </div>
+    </div>
+    <div class="dental-hero-media">
+      <img
+        src={image}
+        srcset={`${withBase("/portfolio/media/dental-800.webp")} 800w, ${image} 1600w`}
+        sizes="(max-width: 760px) 100vw, 55vw"
+        alt={t(
+          "Визуализация спокойного светлого кабинета стоматологии с зелёными акцентами",
+          "Rendering of a calm, light dental treatment room with green accents",
+        )}
+        width="1600"
+        height="900"
+        fetchpriority="high"
+      />
+      <span>{t("МЕСТО, ГДЕ ВАС СЛЫШАТ", "A PLACE WHERE YOU FEEL HEARD")}</span>
+    </div>
+  </section>
+  <section class="dental-values wrap">
+    <span>{t("Понятно объясняем", "Clear explanations")}</span>
+    <span>{t("Внимательно слушаем", "Thoughtful listening")}</span>
+    <span>{t("Планируем вместе", "A plan made together")}</span>
+    <span>{t("Думаем о комфорте", "Comfort comes first")}</span>
+  </section>
+  <section class="wrap demo-section" id="services">
+    <div class="demo-title-row">
+      <div>
+        <span class="demo-eyebrow">
+          {t("НАШИ НАПРАВЛЕНИЯ", "OUR SERVICES")}
+        </span>
+        <h2>
+          {t("Для вашей", "For your")}
+          <br />
+          <em>{t("улыбки.", "smile.")}</em>
+        </h2>
+      </div>
+      <p>
+        {t(
+          "От знакомства до индивидуального плана.",
+          "From a first conversation to a personal plan.",
+        )}
+        <br />
+        {t(
+          "Выберите направление, чтобы начать.",
+          "Choose a service to get started.",
+        )}
+      </p>
+    </div>
+    <div class="dental-services">
+      {[
+        [
+          "01",
+          t("Знакомство и диагностика", "Consultation and assessment"),
+          t(
+            "Обсудим вопросы и следующий шаг.",
+            "Talk through your questions and the next step.",
+          ),
+          "↗",
+        ],
+        [
+          "02",
+          t("Терапия", "General dentistry"),
+          t(
+            "Место для описания лечения зубов.",
+            "Space for details about dental treatment.",
+          ),
+          "◒",
+        ],
+        [
+          "03",
+          t("Профилактика", "Preventive care"),
+          t(
+            "Место для описания профессионального ухода.",
+            "Space for details about professional care.",
+          ),
+          "✳",
+        ],
+        [
+          "04",
+          t("Ортодонтия", "Orthodontics"),
+          t(
+            "Место для описания вариантов коррекции прикуса.",
+            "Space for details about teeth alignment options.",
+          ),
+          "⌁",
+        ],
+      ].map(([n, title, copy, icon]) => (
+        <a href="#booking">
+          <div>
+            <small>{n}</small>
+            <span aria-hidden="true">{icon}</span>
+          </div>
+          <h3>{title}</h3>
+          <p>{copy}</p>
+          <span class="service-more">
+            {t("Подробнее на консультации", "Discuss at your consultation")} ↗
+          </span>
+        </a>
+      ))}
+    </div>
+    <p class="demo-note">
+      {t(
+        "Перечень услуг показывает структуру сайта. Это не предложение медицинских услуг.",
+        "This service list demonstrates the website structure. It is not an offer of medical services.",
+      )}
+    </p>
+  </section>
+  <section class="dental-team demo-section" id="team">
+    <div class="wrap">
+      <div class="demo-title-row">
+        <div>
+          <span class="demo-eyebrow">
+            {t("ЛЮДИ, КОТОРЫМ ДОВЕРЯЮТ", "PEOPLE YOU CAN TRUST")}
+          </span>
+          <h2>
+            {t("Познакомьтесь", "Meet")}
+            <br />
+            <em>{t("с командой.", "the team.")}</em>
+          </h2>
+        </div>
+        <p>
+          {t(
+            "Здесь будут реальные специалисты,",
+            "This space is for real clinicians,",
+          )}
+          <br />
+          {t(
+            "их образование и профессиональный опыт.",
+            "their education and professional experience.",
+          )}
+        </p>
+      </div>
+      <div class="doctor-grid">
+        {[
+          t("Врач-терапевт", "General dentist"),
+          t("Врач-ортодонт", "Orthodontist"),
+          t("Специалист по профилактике", "Preventive care specialist"),
+        ].map((role, i) => (
+          <article>
+            <div class="doctor-placeholder">
+              <svg
+                width="130"
+                height="160"
+                viewBox="0 0 130 160"
+                aria-hidden="true"
+              >
+                <circle cx="65" cy="45" r="27" fill="currentColor" />
+                <path
+                  d="M10 150v-20a55 55 0 0 1 110 0v20"
+                  fill="currentColor"
+                />
+              </svg>
+              <span>{t("МЕСТО ДЛЯ ФОТО", "PHOTO PLACEHOLDER")}</span>
+            </div>
+            <h3>
+              [{t("Имя специалиста", "Clinician name")} {i + 1}]
+            </h3>
+            <p>{role}</p>
+            <small>
+              {t(
+                "Данные и квалификация будут добавлены",
+                "Details and qualifications to be added",
+              )}
+            </small>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+  <section class="wrap demo-section dental-results">
+    <div>
+      <span class="demo-eyebrow">
+        {t("РЕЗУЛЬТАТЫ И ОТЗЫВЫ", "RESULTS AND REVIEWS")}
+      </span>
+      <h2>
+        {t("Доверие строится", "Trust is built")}
+        <br />
+        <em>{t("на реальном опыте.", "on real experience.")}</em>
+      </h2>
+      <p>
+        {t(
+          "В этом концепте нет придуманных отзывов и медицинских результатов. Здесь появятся подтверждённые материалы с разрешения пациентов.",
+          "This concept contains no invented reviews or treatment results. Verified materials would be added here with patients’ permission.",
+        )}
+      </p>
+      <div class="review-placeholder">
+        <span>“</span>
+        <p>
+          {t("Место для настоящего отзыва.", "Space for a real review.")}
+          <br />
+          <small>
+            {t(
+              "Имя, текст и источник пока не добавлены.",
+              "Name, review and source have not been added.",
+            )}
+          </small>
+        </p>
+      </div>
+    </div>
+    <div class="before-after">
+      <div>
+        <span>{t("ДО", "BEFORE")}</span>
+        <span>{t("Фото пациента", "Patient photo")}</span>
+      </div>
+      <div>
+        <span>{t("ПОСЛЕ", "AFTER")}</span>
+        <span>{t("Фото результата", "Result photo")}</span>
+      </div>
+      <p>
+        {t(
+          "PLACEHOLDER / Материалы не добавлены",
+          "PLACEHOLDER / No materials added",
+        )}
+      </p>
+    </div>
+  </section>
+  <section class="dental-prices demo-section" id="prices">
+    <div class="wrap">
+      <div class="demo-title-row">
+        <div>
+          <span class="demo-eyebrow">
+            {t("ПОНЯТНАЯ СТОИМОСТЬ", "CLEAR PRICING")}
+          </span>
+          <h2>
+            {t("Без мелкого", "No fine")}
+            <br />
+            <em>{t("шрифта.", "print.")}</em>
+          </h2>
+        </div>
+        <p>
+          {t(
+            "Цены заполнит реальная клиника.",
+            "A real clinic would provide these prices.",
+          )}
+          <br />
+          {t(
+            "Стоимость лечения определяется после консультации.",
+            "Treatment costs are confirmed after a consultation.",
+          )}
+        </p>
+      </div>
+      <div class="price-list">
+        {[
+          t("Первичная консультация", "Initial consultation"),
+          t("Профессиональная гигиена", "Professional cleaning"),
+          t("Лечение кариеса", "Cavity treatment"),
+          t("Ортодонтическая консультация", "Orthodontic consultation"),
+        ].map((item) => (
+          <div>
+            <span>{item}</span>
+            <span>{t("Цена не указана", "Price not provided")}</span>
+            <a
+              href="#booking"
+              aria-label={`${t("Узнать об услуге:", "Learn about:")} ${item}`}
+            >
+              ↗
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  <section class="wrap demo-section dental-faq" id="faq">
+    <div>
+      <span class="demo-eyebrow">
+        {t("ДО ПЕРВОГО ВИЗИТА", "BEFORE YOUR FIRST VISIT")}
+      </span>
+      <h2>
+        {t("Можно", "Questions")}
+        <br />
+        <em>{t("спросить.", "are welcome.")}</em>
+      </h2>
+      <p>
+        {t("Понятные ответы помогают", "Clear answers help you")}
+        <br />
+        {t("сделать первый шаг.", "take the first step.")}
+      </p>
+    </div>
+    <div>
+      {[
+        [
+          t("Как записаться на приём?", "How do I book an appointment?"),
+          t(
+            "В этой демонстрации можно выбрать услугу, дату и время в форме ниже. Реальная запись не создаётся. После подключения контактов здесь появится связь с администратором.",
+            "In this demo, you can choose a service, date and time in the form below. No real appointment is created. Once real contact details are added, this section can connect visitors with the clinic team.",
+          ),
+        ],
+        [
+          t(
+            "Что будет на первой консультации?",
+            "What happens at the first consultation?",
+          ),
+          t(
+            "В рабочей версии клиника опишет свой порядок консультации и необходимые документы. Здесь показано место для подтверждённой информации.",
+            "In a live version, the clinic would describe its consultation process and any documents needed. This is a space for verified information.",
+          ),
+        ],
+        [
+          t("Где посмотреть стоимость?", "Where can I find prices?"),
+          t(
+            "Для цен предусмотрен отдельный раздел. Сейчас цены не заполнены, поскольку клиника вымышленная.",
+            "There is a dedicated pricing section. Prices are not provided because this clinic is fictional.",
+          ),
+        ],
+        [
+          t(
+            "Как связаться через WhatsApp?",
+            "How can I get in touch on WhatsApp?",
+          ),
+          t(
+            "В контактном блоке предусмотрен WhatsApp. Ссылка станет активной после добавления настоящего номера.",
+            "The contact section includes space for WhatsApp. The link will become active once a real number is added.",
+          ),
+        ],
+      ].map(([question, answer]) => (
+        <details>
+          <summary>
+            {question}
+            <span aria-hidden="true">+</span>
+          </summary>
+          <p>{answer}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+  <section class="dental-booking demo-section" id="booking">
+    <div class="wrap">
+      <div class="demo-title-row">
+        <div>
+          <span class="demo-eyebrow">
+            {t("ПЕРВЫЙ ШАГ — ПРОСТОЙ", "AN EASY FIRST STEP")}
+          </span>
+          <h2>
+            {t("Поговорим", "Let’s talk")}
+            <br />
+            <em>{t("о вашей улыбке.", "about your smile.")}</em>
+          </h2>
+        </div>
+        <p>
+          {t("Выберите удобное время", "Choose a convenient time")}
+          <br />
+          {t("в демонстрационной форме.", "in the demo form.")}
+        </p>
+      </div>
+      <div class="demo-contact-grid">
+        <DemoLocation
+          locale={locale}
+          city={t("Казахстан", "Kazakhstan")}
+          {...demoContacts.aqtis}
+        />
+        <DemoForm locale={locale} kind="booking" />
+      </div>
+    </div>
+  </section>
+  <a class="mobile-booking" href="#booking">
+    {t("Записаться на консультацию", "Book a consultation")} ↗
+  </a>
+</DemoLayout>

@@ -24,7 +24,7 @@ Use case: photorealistic-natural. Asset type: premium restaurant interior photog
 
 ## Website screenshots
 
-`media/{forma,oryn,aq-tis,sary}-{desktop,mobile}.webp` are actual browser captures of the implemented pages at 1440 x 960 and 390 x 844, with reduced motion enabled. Run `npm run screenshots` against a running preview to update them. `og.jpg` is a resized crop of the portfolio homepage screenshot.
+`media/{forma,oryn,aq-tis,sary}-{desktop,mobile}.webp` and `media/{forma,oryn,aq-tis,sary}-en-{desktop,mobile}.webp` are actual browser captures of the Russian and English pages at 1440 x 960 and 390 x 844, with reduced motion enabled. Run `npm run screenshots` and `npm run screenshots -- --english` against a running preview to update them. `og.jpg` and `og-en.jpg` are resized crops of the corresponding portfolio homepage screenshots. English captures were added and Russian previews refreshed on 2026-10-12; no new generated imagery was created for the translation.
 
 FORMA captures contain an adapted photograph of Almaty Botanical Garden by Nikolai Bulykin, via Wikimedia Commons, CC BY-SA 4.0; adaptation by the FORMA demo project. Photo source and adaptation details: [existing video credits](../video/VIDEO-CREDITS.md). [Original source](https://commons.wikimedia.org/wiki/File:%D0%90%D0%BB%D0%BC%D0%B0%D1%82%D1%8B,_%D0%B1%D0%BE%D1%82%D1%81%D0%B0%D0%B4_%D1%81%D0%B2%D0%B5%D1%80%D1%85%D1%83.jpg). [License](https://creativecommons.org/licenses/by-sa/4.0/). The adapted photographic content retains this license. Attribution is also visible beside the screenshots on the portfolio and FORMA case page.
 

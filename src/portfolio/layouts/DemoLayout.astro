@@ -4,7 +4,15 @@ import "@fontsource-variable/cormorant-garamond/wght.css";
 import "@fontsource-variable/cormorant-garamond/wght-italic.css";
 import "../styles/demos.css";
 import { withBase } from "../../lib/paths";
+import LanguageSwitch from "../components/LanguageSwitch.astro";
+import {
+  alternatePortfolioHref,
+  portfolioHref,
+  portfolioLocales,
+  type PortfolioLocale,
+} from "../i18n";
 interface Props {
+  locale?: PortfolioLocale;
   name: string;
   slug: string;
   theme: string;
@@ -12,26 +20,61 @@ interface Props {
   description: string;
   image: string;
 }
-const { name, slug, theme, title, description, image } = Astro.props;
+const {
+  name,
+  slug,
+  theme,
+  title,
+  description,
+  image,
+  locale = "ru",
+} = Astro.props;
+const t = (ru: string, en: string) => (locale === "en" ? en : ru);
+const pageTitle = `${title} — ${t("концепт сайта", "website concept")}`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <!doctype html>
-<html lang="ru">
+<html lang={locale}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title} — концепт сайта</title>
+    <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <meta name="robots" content="noindex, follow" />
     <link rel="canonical" href={canonical} />
+    {portfolioLocales.map((language) => (
+      <link
+        rel="alternate"
+        hreflang={language}
+        href={
+          new URL(
+            alternatePortfolioHref(Astro.url.pathname, language),
+            Astro.site,
+          ).href
+        }
+      />
+    ))}
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={
+        new URL(alternatePortfolioHref(Astro.url.pathname, "ru"), Astro.site)
+          .href
+      }
+    />
     <link rel="icon" href={withBase("/portfolio/favicon.svg")} />
     <meta
       name="theme-color"
       content={theme === "restaurant" ? "#331c20" : "#f5f4ee"}
     />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content={`${title} — концепт сайта`} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:locale" content={locale === "en" ? "en_US" : "ru_RU"} />
+    <meta
+      property="og:locale:alternate"
+      content={locale === "en" ? "ru_RU" : "en_US"}
+    />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta
@@ -41,14 +84,24 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
   </head>
   <body class={`demo ${theme}`}>
     <a href="#main" class="skip">
-      Перейти к содержимому
+      {t("Перейти к содержимому", "Skip to content")}
     </a>
     <aside class="concept-bar">
-      <a href={withBase("/portfolio/#work")}>← Портфолио</a>
-      <span>
-        CONCEPT PROJECT <span class="concept-detail">/ Вымышленный бренд</span>
+      <a href={portfolioHref(locale, "#work")}>
+        ← {t("Портфолио", "Portfolio")}
+      </a>
+      <span class="concept-label">
+        CONCEPT PROJECT{" "}
+        <span class="concept-detail">
+          / {t("Вымышленный бренд", "Fictional brand")}
+        </span>
       </span>
-      <a href={withBase(`/portfolio/work/${slug}/`)}>О проекте ↗</a>
+      <div class="concept-actions">
+        <a href={portfolioHref(locale, `work/${slug}/`)}>
+          {t("О проекте", "Case study")} ↗
+        </a>
+        <LanguageSwitch locale={locale} />
+      </div>
     </aside>
     <main id="main">
       <slot />
@@ -58,11 +111,23 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
         {name}
       </a>
       <p>
-        Демонстрационный сайт вымышленного бренда.
+        {t(
+          "Демонстрационный сайт вымышленного бренда.",
+          "A demo website for a fictional brand.",
+        )}
         <br />
-        Изображения созданы с помощью ИИ. Заявки не отправляются.
+        {t(
+          "Изображения созданы с помощью ИИ. Заявки не отправляются.",
+          "Images are AI-generated. Inquiries are not sent.",
+        )}
       </p>
-      <a href={withBase("/portfolio/")}>Создать сайт для вашего бизнеса ↗</a>
+      <a href={portfolioHref(locale)}>
+        {t(
+          "Создать сайт для вашего бизнеса",
+          "Build a website for your business",
+        )}{" "}
+        ↗
+      </a>
     </footer>
     <script>
       import "../scripts/demos";

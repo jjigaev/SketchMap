@@ -4,7 +4,7 @@ import { readdir, readFile, stat } from "node:fs/promises";
 import { resolve, relative, sep } from "node:path";
 
 const root = "/SketchMap/portfolio/";
-const routes = [
+const localizedRoutes = [
   "",
   "work/forma/",
   "work/oryn/",
@@ -13,6 +13,10 @@ const routes = [
   "demos/oryn/",
   "demos/aq-tis/",
   "demos/sary/",
+];
+const routes = [
+  ...localizedRoutes,
+  ...localizedRoutes.map((route) => `en/${route}`),
 ];
 for (const width of [360, 390, 768, 1024, 1280, 1440]) {
   for (const route of routes) {
@@ -207,7 +211,7 @@ test("Every built HTML link, fragment, asset and old FORMA route resolves", asyn
     }
   }
   await walk(dist);
-  expect(htmlFiles.length).toBe(41);
+  expect(htmlFiles.length).toBe(49);
   const oldPages = htmlFiles.filter(
     (path) => !relative(dist, path).startsWith(`portfolio${sep}`),
   );
