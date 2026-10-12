@@ -1,0 +1,255 @@
+---
+import PortfolioLayout from "../layouts/PortfolioLayout.astro";
+import ProjectShowcase from "../components/ProjectShowcase.astro";
+import Contact from "../components/Contact.astro";
+import Arrow from "../components/Arrow.astro";
+import { getProjects } from "../projects";
+import { getProcess, getServices, getStudio } from "../config";
+import { portfolioHref, type PortfolioLocale } from "../i18n";
+import { getCopy } from "../copy";
+import { withBase } from "../../lib/paths";
+interface Props {
+  locale?: PortfolioLocale;
+}
+const { locale = "ru" } = Astro.props;
+const copy = getCopy(locale);
+const projects = getProjects(locale);
+const studio = getStudio(locale);
+const services = getServices(locale);
+const process = getProcess(locale);
+const counts = {
+  all: String(projects.length).padStart(2, "0"),
+  implemented: String(
+    projects.filter((project) => project.type === "implemented").length,
+  ).padStart(2, "0"),
+  concept: String(
+    projects.filter((project) => project.type === "concept").length,
+  ).padStart(2, "0"),
+};
+---
+
+<PortfolioLayout locale={locale}>
+  <section class="p-hero shell" id="top">
+    <div class="hero-topline">
+      <span class="eyebrow">
+        <span class="status-dot"></span> {copy.smallTeam}
+      </span>
+      <span class="eyebrow">WEB / DESIGN / DEVELOPMENT</span>
+    </div>
+    <div class="hero-title-row">
+      <h1>
+        {copy.heroTitle}
+        <br />
+        {copy.heroLead}
+        <span class="blue">{copy.heroAccent}</span>
+      </h1>
+      <div class="hero-symbol" aria-hidden="true">
+        <svg viewBox="0 0 140 140">
+          <path
+            d="M20 120 120 20M20 20h100v100"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="13"
+          />
+        </svg>
+      </div>
+    </div>
+    <div class="hero-bottom">
+      <span class="hero-footnote">{copy.heroFootnote}</span>
+      <div class="hero-description">
+        <p>{copy.heroDescription}</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#work">
+            {copy.viewWork} <Arrow />
+          </a>
+          <a class="text-link" href="#contact">
+            {copy.discuss} <Arrow diagonal />
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-reel" aria-label={copy.designDirections}>
+      {projects.slice(0, 4).map((project, i) => (
+        <a
+          class={`reel-tile reel-${project.theme}`}
+          href={portfolioHref(locale, `work/${project.slug}/`)}
+        >
+          <img
+            src={withBase(project.heroImage)}
+            alt=""
+            width="800"
+            height="450"
+            loading={i === 0 ? "eager" : "lazy"}
+          />
+          <div>
+            <span>{project.title}</span>
+            <small>{project.industry}</small>
+          </div>
+          <span class="reel-index">{String(i + 1).padStart(2, "0")}</span>
+        </a>
+      ))}
+    </div>
+    <div class="reel-caption eyebrow">
+      <span>{copy.differentBriefs}</span>
+      <a href="#work">{copy.scroll}</a>
+    </div>
+  </section>
+
+  <section class="work-section shell section-space" id="work" data-filter-group>
+    <div class="section-kicker">
+      <span>{copy.selectedWork}</span>
+      <span>{copy.ideaToInterface}</span>
+    </div>
+    <div class="section-heading">
+      <h2>
+        {copy.workTitle}
+        <br />
+        <span class="muted">{copy.workAccent}</span>
+      </h2>
+      <p>
+        {copy.workIntro}
+        <br />
+        {copy.workDescription}
+      </p>
+    </div>
+    <div class="filter-row">
+      <div class="filters" aria-label={copy.filterWork}>
+        <button type="button" data-filter="all" aria-pressed="true">
+          {copy.allWork} <sup>{counts.all}</sup>
+        </button>
+        <button type="button" data-filter="implemented" aria-pressed="false">
+          {copy.implemented} <sup>{counts.implemented}</sup>
+        </button>
+        <button type="button" data-filter="concept" aria-pressed="false">
+          {copy.concepts} <sup>{counts.concept}</sup>
+        </button>
+      </div>
+      <span class="sr-only" data-filter-status aria-live="polite">
+        {copy.shown} {projects.length}
+      </span>
+    </div>
+    <div class="project-grid">
+      {projects.map((project, index) => (
+        <ProjectShowcase project={project} index={index} locale={locale} />
+      ))}
+    </div>
+  </section>
+
+  <section class="services-section section-space" id="services">
+    <div class="shell">
+      <div class="section-kicker">
+        <span>{copy.whatWeDo}</span>
+        <span>{copy.everyDetail}</span>
+      </div>
+      <div class="section-heading">
+        <h2>
+          {copy.servicesTitle}
+          <br />
+          {copy.servicesAccent}
+        </h2>
+        <p>
+          {copy.servicesIntro}
+          <br />
+          {copy.servicesDescription}
+        </p>
+      </div>
+      <div class="service-list">
+        {services.map((service, i) => (
+          <details class="service-row" open={i === 0}>
+            <summary>
+              <span class="service-number">0{i + 1}</span>
+              <span>{service.title}</span>
+              <small>{service.tag}</small>
+              <span class="details-icon" aria-hidden="true">
+                +
+              </span>
+            </summary>
+            <p>{service.text}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="process-section shell section-space" id="process">
+    <div class="process-intro">
+      <span class="eyebrow">{copy.howWeWork}</span>
+      <h2>
+        {copy.processTitle}
+        <br />
+        <span class="muted">{copy.processAccent}</span>
+      </h2>
+      <p>
+        {copy.processIntro}
+        <br />
+        {copy.processDescription}
+      </p>
+      <div class="process-mark" aria-hidden="true">
+        ↘
+      </div>
+    </div>
+    <ol class="process-list">
+      {process.map(([title, text], i) => (
+        <li data-reveal>
+          <span>{String(i + 1).padStart(2, "0")}</span>
+          <div>
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="about-section section-space" id="about">
+    <div class="shell">
+      <div class="section-kicker">
+        <span>{copy.aboutStudio}</span>
+        <span>{copy.peopleWhoCare}</span>
+      </div>
+      <div class="about-statement" data-reveal>
+        <h2>
+          {copy.aboutTitle}
+          <br />
+          {copy.aboutDialogue}
+          <br />
+          <span>{copy.aboutAccent}</span>
+        </h2>
+        <p>{studio.description}</p>
+      </div>
+      <div class="principles">
+        <span>{copy.customDesign} ↗</span>
+        <span>{copy.responsive} ↗</span>
+        <span>{copy.performance} ↗</span>
+        <span>{copy.seo} ↗</span>
+        <span>{copy.technologies} ↗</span>
+        <span>{copy.ideaToLaunch} ↗</span>
+        <span>{copy.support} ↗</span>
+      </div>
+      <div class="team-grid">
+        {studio.team.map((person) => (
+          <article>
+            <div class="team-avatar" aria-hidden="true">
+              {person.initials}
+              <span>↗</span>
+            </div>
+            <h3>{person.name}</h3>
+            <span class="eyebrow">{person.role}</span>
+            <p>{person.description}</p>
+            {person.skills.length > 0 && (
+              <div class="team-skills">
+                <span class="eyebrow">{copy.mainStack}</span>
+                <ul>
+                  {person.skills.map((skill) => (
+                    <li>{skill}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+  <Contact locale={locale} />
+</PortfolioLayout>

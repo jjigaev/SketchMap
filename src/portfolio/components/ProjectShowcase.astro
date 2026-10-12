@@ -3,11 +3,15 @@ import { type Project, caseUrl, projectLabel } from "../projects";
 import { withBase } from "../../lib/paths";
 import Arrow from "./Arrow.astro";
 import FormaCredit from "./FormaCredit.astro";
+import type { PortfolioLocale } from "../i18n";
+import { getCopy } from "../copy";
 interface Props {
+  locale?: PortfolioLocale;
   project: Project;
   index: number;
 }
-const { project, index } = Astro.props;
+const { project, index, locale = "ru" } = Astro.props;
+const copy = getCopy(locale);
 ---
 
 <article
@@ -17,8 +21,8 @@ const { project, index } = Astro.props;
 >
   <a
     class="project-preview"
-    href={withBase(caseUrl(project.slug))}
-    aria-label={`Смотреть кейс ${project.title}`}
+    href={withBase(caseUrl(project.slug, locale))}
+    aria-label={`${copy.viewCase} ${project.title}`}
   >
     <div class="project-stage-label">
       <span>{project.title}</span>
@@ -35,7 +39,7 @@ const { project, index } = Astro.props;
         src={withBase(project.cover)}
         width="1440"
         height="960"
-        alt={`Настоящий скриншот главной страницы сайта ${project.title}`}
+        alt={`${copy.homeScreenshot} ${project.title}`}
         loading="lazy"
         decoding="async"
       />
@@ -44,17 +48,17 @@ const { project, index } = Astro.props;
       <Arrow diagonal />
     </span>
   </a>
-  {project.slug === "forma" && <FormaCredit />}
+  {project.slug === "forma" && <FormaCredit locale={locale} />}
   <div class="project-caption">
     <div>
       <div class="project-meta">
         <span>
-          {String(index + 1).padStart(2, "0")} / {projectLabel(project)}
+          {String(index + 1).padStart(2, "0")} / {projectLabel(project, locale)}
         </span>
         <span>{project.industry}</span>
       </div>
       <h3>
-        <a href={withBase(caseUrl(project.slug))}>
+        <a href={withBase(caseUrl(project.slug, locale))}>
           {project.title}
           <Arrow diagonal />
         </a>
@@ -62,11 +66,11 @@ const { project, index } = Astro.props;
       <p>{project.description}</p>
     </div>
     <div class="project-links">
-      <a href={withBase(caseUrl(project.slug))}>
-        Подробнее о проекте <Arrow />
+      <a href={withBase(caseUrl(project.slug, locale))}>
+        {copy.aboutProject} <Arrow />
       </a>
       <a href={withBase(project.liveUrl)}>
-        Открыть сайт <Arrow diagonal />
+        {copy.openWebsite} <Arrow diagonal />
       </a>
     </div>
   </div>

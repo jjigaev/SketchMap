@@ -1,24 +1,37 @@
 ---
 import "@fontsource-variable/ibm-plex-sans/wght.css";
 import "../styles/portfolio.css";
-import { studio } from "../config";
+import { getStudio } from "../config";
+import { getCopy } from "../copy";
+import {
+  alternatePortfolioHref,
+  portfolioHref,
+  portfolioLocales,
+  type PortfolioLocale,
+} from "../i18n";
 import Header from "../components/Header.astro";
 import { withBase } from "../../lib/paths";
 interface Props {
+  locale?: PortfolioLocale;
   title?: string;
   description?: string;
   image?: string;
 }
+const { locale = "ru" } = Astro.props;
+const studio = getStudio(locale);
+const copy = getCopy(locale);
 const {
-  title = `${studio.name} — дизайн и разработка сайтов`,
+  title = `${studio.name} — ${copy.pageTitle}`,
   description = studio.description,
-  image = "/portfolio/media/og.jpg",
+  image = locale === "en"
+    ? "/portfolio/media/og-en.jpg"
+    : "/portfolio/media/og.jpg",
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <!doctype html>
-<html lang="ru">
+<html lang={locale}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -26,13 +39,37 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <meta name="description" content={description} />
     <meta name="theme-color" content="#f4f3ee" />
     <link rel="canonical" href={canonical} />
+    {portfolioLocales.map((language) => (
+      <link
+        rel="alternate"
+        hreflang={language}
+        href={
+          new URL(
+            alternatePortfolioHref(Astro.url.pathname, language),
+            Astro.site,
+          ).href
+        }
+      />
+    ))}
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={
+        new URL(alternatePortfolioHref(Astro.url.pathname, "ru"), Astro.site)
+          .href
+      }
+    />
     <link
       rel="icon"
       href={withBase("/portfolio/favicon.svg")}
       type="image/svg+xml"
     />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="ru_KZ" />
+    <meta property="og:locale" content={locale === "en" ? "en_US" : "ru_KZ"} />
+    <meta
+      property="og:locale:alternate"
+      content={locale === "en" ? "ru_KZ" : "en_US"}
+    />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -44,19 +81,19 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
   </head>
   <body>
     <a class="skip" href="#main">
-      Перейти к содержимому
+      {copy.skip}
     </a>
-    <Header />
+    <Header locale={locale} />
     <main id="main">
       <slot />
     </main>
     <footer class="p-footer shell">
-      <a class="wordmark" href={withBase("/portfolio/")}>
+      <a class="wordmark" href={portfolioHref(locale)}>
         {studio.name}
         <span class="brand-dot"></span>
       </a>
-      <span>Дизайн с характером. Разработка с вниманием.</span>
-      <a href="#top">Наверх ↑</a>
+      <span>{copy.footer}</span>
+      <a href="#top">{copy.backToTop}</a>
     </footer>
     <script>
       import "../scripts/portfolio";

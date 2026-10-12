@@ -1,0 +1,14 @@
+---
+import CasePage from "../../../../portfolio/pages/CasePage.astro";
+import { getProjects } from "../../../../portfolio/projects";
+export function getStaticPaths() {
+  const projects = getProjects("en");
+  return projects.map((project, index) => ({
+    params: { slug: project.slug },
+    props: { project, next: projects[(index + 1) % projects.length] },
+  }));
+}
+const { project, next } = Astro.props;
+---
+
+<CasePage locale="en" project={project} next={next} />

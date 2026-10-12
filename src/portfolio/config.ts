@@ -1,10 +1,12 @@
+import type { PortfolioLocale } from "./i18n";
+
 /** Public studio information supplied by the Cerebrum team. */
 export const studio = {
   name: "Cerebrum",
   nameIsPlaceholder: false,
   locale: "ru" as const,
   description:
-    "Разрабатываем сайты, веб-приложения и CRM-системы для бизнеса. Помогаем автоматизировать рабочие процессы, упрощать управление и превращать идеи в работающие продукты.",
+    "Разрабатываем сайты, веб-приложения и CRM-системы для бизнеса в Казахстане и США. Помогаем автоматизировать рабочие процессы, упрощать управление и превращать идеи в работающие продукты.",
   contact: {
     whatsapp: "+7 708 491 73 54",
     telegram: "@xcheney",
@@ -50,7 +52,7 @@ export const services = [
   {
     title: "Сайты, которыми пользуются.",
     tag: "DEVELOPMENT",
-    text: "Разрабатываем адаптивные сайты с аккуратной анимацией, быстрой загрузкой и удобной навигацией.",
+    text: "Разрабатываем сайты для компаний в Казахстане и США: адаптивные страницы с аккуратной анимацией, быстрой загрузкой и удобной навигацией.",
   },
   {
     title: "Один продукт. Точный фокус.",
@@ -104,6 +106,96 @@ export const process = [
     "Договариваемся об обновлениях и следующих шагах по развитию сайта.",
   ],
 ] as const;
+
+const studioEn = {
+  ...studio,
+  locale: "en" as const,
+  description:
+    "We build websites, web applications, and CRM systems for businesses in Kazakhstan and the United States. We help automate everyday work, simplify management, and turn ideas into working products.",
+  team: [
+    {
+      ...studio.team[0],
+      name: "Ibrahim Abdibek",
+      initials: "IA",
+      role: "Founder of Cerebrum",
+      description:
+        "A hackathon participant with experience developing and implementing CRM systems for businesses and organizations. Ibrahim leads the studio's growth, client communication, and team coordination, from the first conversation to launch. He also contributes to development and translates client needs into practical technical solutions.",
+    },
+    {
+      ...studio.team[1],
+      name: "Bekzat Muratbay",
+      initials: "BM",
+      role: "Lead Developer · Cybersecurity Specialist",
+      description:
+        "A hackathon participant focused on software development and security. Bekzat is responsible for technical architecture, core functionality, and code quality, with particular attention to data protection and system reliability.",
+    },
+  ],
+};
+
+const servicesEn = [
+  {
+    title: "Design with a distinct identity.",
+    text: "We find what makes your business distinctive and turn it into a clear, expressive interface.",
+  },
+  {
+    title: "Websites made to be used.",
+    text: "We build websites for businesses in Kazakhstan and the United States, with responsive layouts, thoughtful motion, fast loading, and clear navigation.",
+  },
+  {
+    title: "One product. A clear focus.",
+    text: "We shape your product's story into a landing page with a clear offer and a natural next step.",
+  },
+  {
+    title: "Less routine. More control.",
+    text: "We build web applications and CRM systems around your business processes to automate everyday tasks and simplify management.",
+  },
+  {
+    title: "A fresh perspective.",
+    text: "We rethink your website's structure and visual identity while keeping what already works.",
+  },
+  {
+    title: "Launch is just the beginning.",
+    text: "We help update content, add pages, and develop your website further after launch.",
+  },
+].map((service, index) => ({ ...services[index], ...service }));
+
+const processEn = [
+  [
+    "Understand the business",
+    "We explore who your product is for and what visitors need to do on your website.",
+  ],
+  [
+    "Define the concept",
+    "We establish the structure, character, and central idea, then agree on a direction.",
+  ],
+  [
+    "UI / UX",
+    "We plan the user journey and design for both mobile and desktop screens.",
+  ],
+  [
+    "Development",
+    "We turn the design into a working website with purposeful motion and interactions.",
+  ],
+  [
+    "Testing",
+    "We check pages, forms, accessibility, and responsive layouts across screen sizes.",
+  ],
+  [
+    "Launch",
+    "We publish the website, check its URLs, and hand over clear instructions.",
+  ],
+  [
+    "Support",
+    "We agree on updates and the next steps for your website's development.",
+  ],
+] as const;
+
+export const getStudio = (locale: PortfolioLocale) =>
+  locale === "en" ? studioEn : studio;
+export const getServices = (locale: PortfolioLocale) =>
+  locale === "en" ? servicesEn : services;
+export const getProcess = (locale: PortfolioLocale) =>
+  locale === "en" ? processEn : process;
 
 /** Empty demo contacts are intentional; never send visitors to fictional recipients. */
 export const demoContacts = {

@@ -1,34 +1,42 @@
 ---
+import type { PortfolioLocale } from "../i18n";
 interface Props {
   kind: "consultation" | "booking" | "reservation";
+  locale?: PortfolioLocale;
 }
-const { kind } = Astro.props;
+const { kind, locale = "ru" } = Astro.props;
+const t = (ru: string, en: string) => (locale === "en" ? en : ru);
 const labels = {
-  consultation: "Обсудим ваши планы",
-  booking: "Начнём со знакомства",
-  reservation: "Ваш стол ждёт своей истории",
+  consultation: t("Обсудим ваши планы", "Let’s talk about your plans"),
+  booking: t("Начнём со знакомства", "Let’s get to know you"),
+  reservation: t("Ваш стол ждёт своей истории", "Your table is waiting"),
 };
 ---
 
 <div class="demo-form-wrap">
   <h3>{labels[kind]}</h3>
   <p class="form-notice">
-    Попробуйте форму. Это демонстрация: данные никуда не отправляются и не
-    сохраняются.
+    {t(
+      "Попробуйте форму. Это демонстрация: данные никуда не отправляются и не сохраняются.",
+      "Try the form. This is a demo: your details are not sent or stored.",
+    )}
   </p>
   <noscript>
     <p class="form-notice">
-      Для проверки формы включите JavaScript. Демонстрация не отправляет заявки.
+      {t(
+        "Для проверки формы включите JavaScript. Демонстрация не отправляет заявки.",
+        "Enable JavaScript to try the form. This demo does not send inquiries.",
+      )}
     </p>
   </noscript>
   <form data-demo-form data-kind={kind}>
     <fieldset disabled>
       <label>
-        Имя
+        {t("Имя", "Name")}
         <input
           name="name"
           type="text"
-          placeholder="Например, Алекс"
+          placeholder={t("Например, Алекс", "For example, Alex")}
           maxlength="80"
           autocomplete="off"
           required
@@ -37,19 +45,28 @@ const labels = {
       {kind === "consultation" ? (
         <>
           <label>
-            Что вас интересует?
+            {t("Что вас интересует?", "What are you interested in?")}
             <select name="service" required>
-              <option value="">Выберите направление</option>
-              <option>Квартира</option>
-              <option>Коммерческое пространство</option>
-              <option>Архитектурный проект</option>
+              <option value="">
+                {t("Выберите направление", "Select a property type")}
+              </option>
+              <option>{t("Квартира", "Apartment")}</option>
+              <option>
+                {t("Коммерческое пространство", "Commercial space")}
+              </option>
+              <option>
+                {t("Архитектурный проект", "Architectural project")}
+              </option>
             </select>
           </label>
           <label class="form-wide">
-            О проекте
+            {t("О проекте", "About your project")}
             <textarea
               name="message"
-              placeholder="Несколько слов о вашей идее"
+              placeholder={t(
+                "Несколько слов о вашей идее",
+                "Tell us a little about your idea",
+              )}
               maxlength="1000"
               rows="3"
             ></textarea>
@@ -58,30 +75,40 @@ const labels = {
       ) : (
         <>
           <label>
-            {kind === "booking" ? "Услуга" : "Количество гостей"}
+            {kind === "booking"
+              ? t("Услуга", "Service")
+              : t("Количество гостей", "Number of guests")}
             <select name="service" required>
-              <option value="">Выберите вариант</option>
+              <option value="">
+                {t("Выберите вариант", "Select an option")}
+              </option>
               {(kind === "booking"
                 ? [
-                    "Первичная консультация",
-                    "Профилактика",
-                    "Терапия",
-                    "Ортодонтия",
+                    t("Первичная консультация", "Initial consultation"),
+                    t("Профилактика", "Preventive care"),
+                    t("Терапия", "General dentistry"),
+                    t("Ортодонтия", "Orthodontics"),
                   ]
-                : ["1 гость", "2 гостя", "3 гостя", "4 гостя", "5–6 гостей"]
+                : [
+                    t("1 гость", "1 guest"),
+                    t("2 гостя", "2 guests"),
+                    t("3 гостя", "3 guests"),
+                    t("4 гостя", "4 guests"),
+                    t("5–6 гостей", "5–6 guests"),
+                  ]
               ).map((option) => (
                 <option>{option}</option>
               ))}
             </select>
           </label>
           <label>
-            Желаемая дата
+            {t("Желаемая дата", "Preferred date")}
             <input name="date" type="date" required />
           </label>
           <label>
-            Время
+            {t("Время", "Time")}
             <select name="time" required>
-              <option value="">Выберите время</option>
+              <option value="">{t("Выберите время", "Select a time")}</option>
               {(kind === "booking"
                 ? ["10:00", "12:00", "14:00", "16:00"]
                 : ["12:00", "14:00", "18:00", "19:00", "20:00"]
@@ -94,10 +121,10 @@ const labels = {
       )}
       <button class="demo-button form-wide" type="submit">
         {kind === "reservation"
-          ? "Проверить бронирование"
+          ? t("Проверить бронирование", "Check reservation")
           : kind === "booking"
-            ? "Проверить запись"
-            : "Проверить заявку"}{" "}
+            ? t("Проверить запись", "Check appointment")
+            : t("Проверить заявку", "Check inquiry")}{" "}
         <span aria-hidden="true">↗</span>
       </button>
       <p

@@ -3,6 +3,9 @@ import sharp from "sharp";
 import { mkdir } from "node:fs/promises";
 
 const origin = process.env.PREVIEW_ORIGIN || "http://localhost:4321";
+const english = process.argv.includes("--english");
+const suffix = english ? "-en" : "";
+const portfolioPath = `/SketchMap/portfolio/${english ? "en/" : ""}`;
 const browser = await chromium.launch({
   channel: process.env.PLAYWRIGHT_CHANNEL || "msedge",
 });
@@ -24,10 +27,10 @@ try {
   const pages = process.argv.includes("--portfolio-only")
     ? {}
     : {
-        forma: "/SketchMap/",
-        oryn: "/SketchMap/portfolio/demos/oryn/",
-        "aq-tis": "/SketchMap/portfolio/demos/aq-tis/",
-        sary: "/SketchMap/portfolio/demos/sary/",
+        forma: english ? "/SketchMap/en/" : "/SketchMap/",
+        oryn: `${portfolioPath}demos/oryn/`,
+        "aq-tis": `${portfolioPath}demos/aq-tis/`,
+        sary: `${portfolioPath}demos/sary/`,
       };
   for (const [slug, path] of Object.entries(pages)) {
     for (const [device, width, height] of [
@@ -43,8 +46,8 @@ try {
       const buffer = await page.screenshot();
       await sharp(buffer)
         .webp({ quality: 85, effort: 6 })
-        .toFile(`public/portfolio/media/${slug}-${device}.webp`);
-      console.log(`Captured ${slug} ${device}`);
+        .toFile(`public/portfolio/media/${slug}${suffix}-${device}.webp`);
+      console.log(`Captured ${slug}${suffix} ${device}`);
     }
   }
   for (const [device, width, height] of [
@@ -52,29 +55,29 @@ try {
     ["mobile", 390, 844],
   ]) {
     await page.setViewportSize({ width, height });
-    await page.goto(`${origin}/SketchMap/portfolio/`, {
+    await page.goto(`${origin}${portfolioPath}`, {
       waitUntil: "networkidle",
     });
     await settlePage(page);
     await page.screenshot({
-      path: `review/portfolio/home-${device}.png`,
+      path: `review/portfolio/home${suffix}-${device}.png`,
       fullPage: true,
     });
     const hero = await page.screenshot();
     await sharp(hero)
       .webp({ quality: 85 })
-      .toFile(`review/portfolio/hero-${device}.webp`);
+      .toFile(`review/portfolio/hero${suffix}-${device}.webp`);
     if (device === "desktop")
       await sharp(hero)
         .resize(1200, 630, { fit: "cover", position: "top" })
         .jpeg({ quality: 82 })
-        .toFile("public/portfolio/media/og.jpg");
+        .toFile(`public/portfolio/media/og${suffix}.jpg`);
     await page
       .locator(".team-grid")
-      .screenshot({ path: `review/portfolio/team-${device}.png` });
+      .screenshot({ path: `review/portfolio/team${suffix}-${device}.png` });
     await page
       .locator(".contact-section")
-      .screenshot({ path: `review/portfolio/contact-${device}.png` });
+      .screenshot({ path: `review/portfolio/contact${suffix}-${device}.png` });
   }
 } finally {
   await browser.close();

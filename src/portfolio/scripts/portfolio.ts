@@ -1,11 +1,31 @@
 export {};
+const english = document.documentElement.lang === "en";
+const menuLabels = english
+  ? { open: "Open menu", close: "Close menu" }
+  : { open: "Открыть меню", close: "Закрыть меню" };
+
+const languageLinks =
+  document.querySelectorAll<HTMLAnchorElement>(".language-switch a");
+function syncLanguageHashes() {
+  languageLinks.forEach((link) => {
+    link.setAttribute(
+      "href",
+      `${link.pathname}${link.search}${window.location.hash}`,
+    );
+  });
+}
+syncLanguageHashes();
+window.addEventListener("hashchange", syncLanguageHashes);
+languageLinks.forEach((link) =>
+  link.addEventListener("click", syncLanguageHashes),
+);
 
 const menu = document.querySelector<HTMLButtonElement>(".menu-toggle");
 const navigation = document.querySelector<HTMLElement>(".mobile-nav");
 function closeMenu(restoreFocus = false) {
   if (!menu || !navigation) return;
   menu.setAttribute("aria-expanded", "false");
-  menu.setAttribute("aria-label", "Открыть меню");
+  menu.setAttribute("aria-label", menuLabels.open);
   navigation.hidden = true;
   if (restoreFocus) menu.focus();
 }
@@ -13,7 +33,7 @@ menu?.addEventListener("click", () => {
   if (!navigation) return;
   const open = menu.getAttribute("aria-expanded") !== "true";
   menu.setAttribute("aria-expanded", String(open));
-  menu.setAttribute("aria-label", open ? "Закрыть меню" : "Открыть меню");
+  menu.setAttribute("aria-label", open ? menuLabels.close : menuLabels.open);
   navigation.hidden = !open;
 });
 navigation
@@ -99,7 +119,8 @@ document
           item.hidden = value !== "all" && item.dataset.category !== value;
           if (!item.hidden) count++;
         });
-        if (status) status.textContent = `Показано: ${count}`;
+        if (status)
+          status.textContent = `${english ? "Shown:" : "Показано:"} ${count}`;
       }),
     );
   });

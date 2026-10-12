@@ -1,33 +1,43 @@
 ---
-import { studio } from "../config";
-import { projects } from "../projects";
-import { withBase } from "../../lib/paths";
+import { getStudio } from "../config";
+import { getProjects } from "../projects";
+import { getCopy } from "../copy";
+import { portfolioHref, type PortfolioLocale } from "../i18n";
 import Arrow from "./Arrow.astro";
-const home = withBase("/portfolio/");
+import LanguageSwitch from "./LanguageSwitch.astro";
+interface Props {
+  locale?: PortfolioLocale;
+}
+const { locale = "ru" } = Astro.props;
+const studio = getStudio(locale);
+const projects = getProjects(locale);
+const copy = getCopy(locale);
+const home = portfolioHref(locale);
 const count = String(projects.length).padStart(2, "0");
 ---
 
 <header class="p-header shell">
-  <a class="wordmark" href={home} aria-label={`${studio.name} — главная`}>
+  <a class="wordmark" href={home} aria-label={`${studio.name} — ${copy.home}`}>
     {studio.name}
     <span class="brand-dot"></span>
   </a>
-  <nav aria-label="Основная навигация" class="desktop-nav">
+  <nav aria-label={copy.navigation} class="desktop-nav">
     <a href={`${home}#work`}>
-      Работы <sup>{count}</sup>
+      {copy.work} <sup>{count}</sup>
     </a>
-    <a href={`${home}#services`}>Услуги</a>
-    <a href={`${home}#about`}>О нас</a>
+    <a href={`${home}#services`}>{copy.services}</a>
+    <a href={`${home}#about`}>{copy.about}</a>
   </nav>
   <a class="header-cta" href={`${home}#contact`}>
-    Обсудить проект <Arrow diagonal />
+    {copy.discuss} <Arrow diagonal />
   </a>
+  <LanguageSwitch locale={locale} />
   <button
     class="menu-toggle"
     type="button"
     aria-expanded="false"
     aria-controls="mobile-navigation"
-    aria-label="Открыть меню"
+    aria-label={copy.openMenu}
   >
     <span></span>
     <span></span>
@@ -35,14 +45,14 @@ const count = String(projects.length).padStart(2, "0");
   <nav
     id="mobile-navigation"
     class="mobile-nav"
-    aria-label="Мобильная навигация"
+    aria-label={copy.mobileNavigation}
     hidden
   >
     <a href={`${home}#work`}>
-      Работы <sup>{count}</sup>
+      {copy.work} <sup>{count}</sup>
     </a>
-    <a href={`${home}#services`}>Услуги</a>
-    <a href={`${home}#about`}>О нас</a>
-    <a href={`${home}#contact`}>Обсудить проект ↗</a>
+    <a href={`${home}#services`}>{copy.services}</a>
+    <a href={`${home}#about`}>{copy.about}</a>
+    <a href={`${home}#contact`}>{copy.discuss} ↗</a>
   </nav>
 </header>

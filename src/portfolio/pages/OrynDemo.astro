@@ -1,0 +1,382 @@
+---
+import DemoLayout from "../layouts/DemoLayout.astro";
+import DemoForm from "../components/DemoForm.astro";
+import DemoLocation from "../components/DemoLocation.astro";
+import { demoContacts } from "../config";
+import { withBase } from "../../lib/paths";
+import type { PortfolioLocale } from "../i18n";
+interface Props {
+  locale?: PortfolioLocale;
+}
+const { locale = "ru" } = Astro.props;
+const t = (ru: string, en: string) => (locale === "en" ? en : ru);
+const image = withBase("/portfolio/media/architecture.webp");
+---
+
+<DemoLayout
+  locale={locale}
+  name="ORYN"
+  slug="oryn"
+  theme="construction"
+  title={t("ORYN — место для вашей жизни", "ORYN — a place for your life")}
+  description={t(
+    "Концепт сайта современного девелопера Казахстана. Архитектура, жилые пространства и коммерческая недвижимость.",
+    "A website concept for a modern property developer in Kazakhstan. Architecture, residential spaces and commercial property.",
+  )}
+  image="/portfolio/media/architecture.webp"
+>
+  <header class="demo-header wrap" id="top">
+    <a class="demo-brand" href="#top">
+      ORYN
+    </a>
+    <nav aria-label={t("Навигация ORYN", "ORYN navigation")}>
+      <a href="#projects">{t("Проекты", "Projects")}</a>
+      <a href="#about">{t("Подход", "Approach")}</a>
+      <a href="#contact">{t("Контакты", "Contact")}</a>
+    </nav>
+    <a class="demo-header-cta" href="#contact">
+      {t("Обсудить проект", "Discuss a project")} ↗
+    </a>
+  </header>
+  <section class="oryn-hero">
+    <div class="wrap">
+      <div class="demo-kicker">
+        <span>{t("ДЕВЕЛОПМЕНТ / КАЗАХСТАН", "DEVELOPMENT / KAZAKHSTAN")}</span>
+        <span>{t("ПРОСТРАНСТВА СО СМЫСЛОМ", "SPACES WITH PURPOSE")}</span>
+      </div>
+      <h1>
+        {t("МЕСТО ДЛЯ", "A PLACE FOR")}
+        <br />
+        <span>{t("ВАШЕЙ ЖИЗНИ.", "YOUR LIFE.")}</span>
+      </h1>
+      <div class="oryn-intro">
+        <p>
+          {t("Продуманная архитектура.", "Thoughtful architecture.")}
+          <br />
+          {t(
+            "Естественный ритм. Ваше место в городе.",
+            "A natural rhythm. Your place in the city.",
+          )}
+        </p>
+        <a href="#projects" class="demo-button">
+          {t("Выбрать пространство", "Find your space")} <span>↘</span>
+        </a>
+      </div>
+    </div>
+    <div class="oryn-hero-image">
+      <img
+        src={image}
+        srcset={`${withBase("/portfolio/media/architecture-800.webp")} 800w, ${image} 1600w`}
+        sizes="100vw"
+        alt={t(
+          "Архитектурная визуализация жилого квартала: светлый камень, террасы и зелёный двор",
+          "Architectural rendering of a residential neighborhood with light stone, terraces and a green courtyard",
+        )}
+        width="1600"
+        height="900"
+        fetchpriority="high"
+      />
+      <span class="image-caption">
+        {t(
+          "ORYN GARDEN / АРХИТЕКТУРНАЯ ВИЗУАЛИЗАЦИЯ",
+          "ORYN GARDEN / ARCHITECTURAL RENDERING",
+        )}
+      </span>
+      <a
+        href="#projects"
+        aria-label={t("Перейти к проектам", "Explore projects")}
+        class="image-arrow"
+      >
+        ↘
+      </a>
+    </div>
+  </section>
+  <section class="wrap demo-section" id="about">
+    <div class="split-title">
+      <span class="demo-eyebrow">
+        {t("01 / НАШ ПОДХОД", "01 / OUR APPROACH")}
+      </span>
+      <h2>
+        {t("Архитектура,", "Architecture")}
+        <br />
+        {t("в которой есть", "with room")}
+        <br />
+        <em>{t("место человеку.", "for people.")}</em>
+      </h2>
+    </div>
+    <div class="offset-copy">
+      <p>
+        {t(
+          "Мы исследуем среду, в которой хочется жить. Свет в утренней комнате. Тихий двор. Удобный путь домой. Большая идея начинается с простых вещей.",
+          "We explore what makes a place feel like home. Morning light. A quiet courtyard. An easy journey back. Every big idea begins with simple things.",
+        )}
+      </p>
+      <p class="demo-note">
+        {t(
+          "ORYN — вымышленный бренд. Представленные объекты и параметры созданы для демонстрации дизайна сайта.",
+          "ORYN is a fictional brand. The properties and specifications shown here demonstrate the website design.",
+        )}
+      </p>
+    </div>
+    <div class="oryn-numbers">
+      <div>
+        <strong>03</strong>
+        <span>
+          {t("типа пространства в концепте", "types of space in the concept")}
+        </span>
+      </div>
+      <div>
+        <strong>04</strong>
+        <span>
+          {t("этапа от идеи до реализации", "steps from idea to delivery")}
+        </span>
+      </div>
+      <div>
+        <strong>01</strong>
+        <span>{t("фокус — повседневная жизнь", "focus — everyday life")}</span>
+      </div>
+    </div>
+  </section>
+  <section class="oryn-projects demo-section" id="projects" data-filter-group>
+    <div class="wrap">
+      <div class="demo-kicker">
+        <span>{t("02 / ПРОСТРАНСТВА", "02 / SPACES")}</span>
+        <span>{t("ДЕМОНСТРАЦИОННЫЕ ОБЪЕКТЫ", "CONCEPT PROPERTIES")}</span>
+      </div>
+      <div class="demo-title-row">
+        <h2>
+          {t("Выберите", "Find")}
+          <br />
+          {t("свой ритм.", "your rhythm.")}
+        </h2>
+        <div
+          class="demo-filters"
+          aria-label={t("Тип недвижимости", "Property type")}
+        >
+          <button type="button" data-filter="all" aria-pressed="true">
+            {t("Все", "All")}
+          </button>
+          <button type="button" data-filter="home" aria-pressed="false">
+            {t("Жилые", "Residential")}
+          </button>
+          <button type="button" data-filter="business" aria-pressed="false">
+            {t("Коммерческие", "Commercial")}
+          </button>
+        </div>
+      </div>
+      <div class="property-grid">
+        <article data-category="home">
+          <a href="#garden">
+            <img
+              src={image}
+              alt={t(
+                "Визуализация жилого концепта ORYN Garden",
+                "Rendering of the ORYN Garden residential concept",
+              )}
+              width="1600"
+              height="900"
+              loading="lazy"
+            />
+            <div>
+              <h3>ORYN Garden</h3>
+              <span>↗</span>
+            </div>
+            <p>
+              {t(
+                "Жилой квартал / концепт / Алматы",
+                "Residential neighborhood / concept / Almaty",
+              )}
+            </p>
+          </a>
+        </article>
+        <article data-category="business">
+          <a href="#contact">
+            <div class="property-drawing" aria-hidden="true">
+              <span class="drawing-building"></span>
+              <small>OFFICE / STUDY 02</small>
+            </div>
+            <div>
+              <h3>ORYN Work</h3>
+              <span>↗</span>
+            </div>
+            <p>
+              {t(
+                "Рабочие пространства / концепт / Астана",
+                "Workspaces / concept / Astana",
+              )}
+            </p>
+          </a>
+        </article>
+      </div>
+      <p class="demo-note" data-filter-status aria-live="polite">
+        {t("Показано: 2", "Shown: 2")}
+      </p>
+    </div>
+  </section>
+  <section class="wrap demo-section" id="services">
+    <div class="split-title">
+      <span class="demo-eyebrow">
+        {t("03 / НАПРАВЛЕНИЯ", "03 / EXPERTISE")}
+      </span>
+      <h2>
+        {t("От масштаба города", "From the city")}
+        <br />
+        {t("до детали дома.", "to the details of home.")}
+      </h2>
+    </div>
+    <div class="oryn-service-list">
+      {[
+        [
+          t("Жилая среда", "Residential spaces"),
+          t(
+            "Кварталы, дома и общественные пространства.",
+            "Neighborhoods, homes and shared spaces.",
+          ),
+        ],
+        [
+          t("Коммерческие пространства", "Commercial spaces"),
+          t(
+            "Места для работы, встреч и новых идей.",
+            "Places to work, connect and find new ideas.",
+          ),
+        ],
+        [
+          t("Архитектурная концепция", "Architectural concepts"),
+          t(
+            "Взаимосвязь формы, материала и окружения.",
+            "Connecting form, materials and surroundings.",
+          ),
+        ],
+      ].map(([title, text], i) => (
+        <div>
+          <span>0{i + 1}</span>
+          <h3>{title}</h3>
+          <p>{text}</p>
+          <span>↗</span>
+        </div>
+      ))}
+    </div>
+  </section>
+  <section class="oryn-process demo-section">
+    <div class="wrap">
+      <div class="demo-kicker">
+        <span>{t("04 / ПРОЦЕСС", "04 / PROCESS")}</span>
+        <span>
+          {t("ПОСЛЕДОВАТЕЛЬНО. ВНИМАТЕЛЬНО.", "STEP BY STEP. WITH CARE.")}
+        </span>
+      </div>
+      <h2>
+        {t("Идея становится", "An idea becomes")}
+        <br />
+        {t("пространством.", "a place.")}
+      </h2>
+      <ol>
+        {[
+          [
+            t("Исследование", "Research"),
+            t(
+              "Место, окружение и будущий сценарий жизни.",
+              "The site, its surroundings and how people will live.",
+            ),
+          ],
+          [
+            t("Проектирование", "Design"),
+            t(
+              "Архитектура, инженерия и ландшафт.",
+              "Architecture, engineering and landscape.",
+            ),
+          ],
+          [
+            t("Строительство", "Construction"),
+            t(
+              "Последовательная реализация замысла.",
+              "Bringing the vision to life, step by step.",
+            ),
+          ],
+          [
+            t("Передача", "Handover"),
+            t(
+              "Проверка деталей и знакомство с пространством.",
+              "Checking the details and getting to know the space.",
+            ),
+          ],
+        ].map(([title, text], i) => (
+          <li data-reveal>
+            <span>0{i + 1}</span>
+            <h3>{title}</h3>
+            <p>{text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+  <section class="wrap demo-section garden-showcase" id="garden">
+    <div>
+      <span class="demo-eyebrow">
+        {t("В ФОКУСЕ / ORYN GARDEN", "IN FOCUS / ORYN GARDEN")}
+      </span>
+      <h2>
+        {t("Город рядом.", "City life nearby.")}
+        <br />
+        <em>{t("Природа ближе.", "Nature even closer.")}</em>
+      </h2>
+      <p>
+        {t(
+          "Камерные дома вокруг зелёного двора. Открытые террасы и натуральные материалы задают спокойный ритм жизни.",
+          "Intimate homes around a green courtyard. Open terraces and natural materials set a calm rhythm for everyday life.",
+        )}
+      </p>
+      <dl>
+        <div>
+          <dt>{t("Формат", "Type")}</dt>
+          <dd>{t("Жилой квартал", "Residential neighborhood")}</dd>
+        </div>
+        <div>
+          <dt>{t("Город концепта", "Concept location")}</dt>
+          <dd>{t("Алматы", "Almaty")}</dd>
+        </div>
+        <div>
+          <dt>{t("Статус", "Status")}</dt>
+          <dd>{t("Вымышленный проект", "Fictional project")}</dd>
+        </div>
+      </dl>
+      <a class="demo-button" href="#contact">
+        {t("Узнать о концепте", "Explore the concept")} <span>↗</span>
+      </a>
+    </div>
+    <img
+      src={image}
+      alt={t(
+        "Террасы и внутренний двор архитектурного концепта ORYN Garden",
+        "Terraces and courtyard in the ORYN Garden architectural concept",
+      )}
+      width="1600"
+      height="900"
+      loading="lazy"
+    />
+  </section>
+  <section class="oryn-contact demo-section" id="contact">
+    <div class="wrap">
+      <div class="demo-title-row">
+        <h2>
+          {t("Найдём место", "Make room")}
+          <br />
+          {t("вашим планам.", "for your plans.")}
+        </h2>
+        <p>
+          {t("Попробуйте сценарий", "Try the demo")}
+          <br />
+          {t("обращения к девелоперу.", "developer inquiry form.")}
+        </p>
+      </div>
+      <div class="demo-contact-grid">
+        <DemoLocation
+          locale={locale}
+          city={t("Казахстан", "Kazakhstan")}
+          {...demoContacts.oryn}
+        />
+        <DemoForm locale={locale} kind="consultation" />
+      </div>
+    </div>
+  </section>
+</DemoLayout>
