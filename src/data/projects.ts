@@ -23,6 +23,7 @@ export interface Project {
   summary: string;
   description: string[];
   hero: ProjectImage;
+  sketch: ProjectImage;
   gallery: ProjectImage[];
 }
 
@@ -269,6 +270,11 @@ const image = (file: string, alt: string, width = 1536, height = 1024): ProjectI
 
 /** Materialize one locale without duplicating structural metadata or image paths. */
 export function getProjects(locale: Locale): Project[] {
+  const sketchDescription = {
+    ru: 'Карандашный эскиз с того же ракурса',
+    kk: 'Сол ракурстан қарындашпен салынған нобай',
+    en: 'Pencil sketch from the same viewpoint',
+  }[locale];
   return records.map((record) => {
     const copy = record.copy[locale];
     const [detailWidth, detailHeight] = record.detailSize ?? [1024, 1536];
@@ -282,6 +288,7 @@ export function getProjects(locale: Locale): Project[] {
       summary: copy.summary,
       description: copy.description,
       hero: image(`${record.slug}-hero-v2`, copy.imageAlts[0]),
+      sketch: image(`${record.slug}-sketch-v1`, `${sketchDescription}: ${copy.imageAlts[0]}.`),
       gallery: [
         image(`${record.slug}-detail-v2`, copy.imageAlts[1], detailWidth, detailHeight),
         image(`${record.slug}-interior-v2`, copy.imageAlts[2]),

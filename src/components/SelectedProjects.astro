@@ -8,9 +8,9 @@ interface Props { locale: Locale }
 const { locale } = Astro.props;
 const projects = getProjects(locale);
 const copy = {
-  ru: { label: '02 / Избранные проекты', title: 'Пространства с', emphasis: 'характером места.', intro: 'Разный масштаб и назначение. Общий подход: прислушаться к месту прежде, чем предложить форму.', previous: 'Предыдущий проект', next: 'Следующий проект', archive: 'Все проекты', carousel: 'Избранные проекты' },
-  kk: { label: '02 / Таңдаулы жобалар', title: 'Мекеннің мінезі', emphasis: 'көрінетін кеңістіктер.', intro: 'Ауқымы мен міндеті әртүрлі. Ортақ ұстаным — пішін ұсынбас бұрын мекенді түсіну.', previous: 'Алдыңғы жоба', next: 'Келесі жоба', archive: 'Барлық жобалар', carousel: 'Таңдаулы жобалар' },
-  en: { label: '02 / Selected work', title: 'Spaces shaped', emphasis: 'by their place.', intro: 'Different scales and purposes. One approach: understand the place before proposing its form.', previous: 'Previous project', next: 'Next project', archive: 'All projects', carousel: 'Selected projects' },
+  ru: { label: '02 / Избранные проекты', title: 'Пространства с', emphasis: 'характером места.', intro: 'Разный масштаб и назначение. Общий подход: прислушаться к месту прежде, чем предложить форму.', previous: 'Предыдущий проект', next: 'Следующий проект', archive: 'Все проекты', carousel: 'Избранные проекты', view: 'Общий вид', detail: 'Материал и свет', open: 'Открыть проект', instructions: 'Листайте свайпом или перетаскиванием. С клавиатуры используйте стрелки, Home и End.' },
+  kk: { label: '02 / Таңдаулы жобалар', title: 'Мекеннің мінезі', emphasis: 'көрінетін кеңістіктер.', intro: 'Ауқымы мен міндеті әртүрлі. Ортақ ұстаным — пішін ұсынбас бұрын мекенді түсіну.', previous: 'Алдыңғы жоба', next: 'Келесі жоба', archive: 'Барлық жобалар', carousel: 'Таңдаулы жобалар', view: 'Жалпы көрініс', detail: 'Материал мен жарық', open: 'Жобаны ашу', instructions: 'Сипау немесе сүйреу арқылы ауыстырыңыз. Пернетақтада бағыттауыштарды, Home және End пернелерін пайдаланыңыз.' },
+  en: { label: '02 / Selected work', title: 'Spaces shaped', emphasis: 'by their place.', intro: 'Different scales and purposes. One approach: understand the place before proposing its form.', previous: 'Previous project', next: 'Next project', archive: 'All projects', carousel: 'Selected projects', view: 'The whole', detail: 'Material and light', open: 'Open project', instructions: 'Swipe or drag to browse. With a keyboard, use the arrow, Home and End keys.' },
 }[locale];
 ---
 
@@ -30,13 +30,25 @@ const copy = {
     </div>
   </div>
 
-  <div class="selected__track" role="region" aria-roledescription="carousel" aria-label={copy.carousel} tabindex="0" data-track>
+  <p class="sr-only" id="selected-instructions">{copy.instructions}</p>
+  <div class="selected__track" role="region" aria-roledescription="carousel" aria-label={copy.carousel} aria-describedby="selected-instructions" tabindex="0" data-track>
     {projects.map((project, index) => (
       <article class:list={['selected__slide', { 'is-active': index === 0 }]} data-slide>
-        <a class="selected__project" href={localizedPath(`/projects/${project.slug}/`, locale)}>
-          <div class="selected__image">
-            <img src={withBase(project.hero.src)} alt={project.hero.alt} width={project.hero.width} height={project.hero.height} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" draggable="false" />
-            <span class="selected__open" aria-hidden="true">↗</span>
+        <a class="selected__project" href={localizedPath(`/projects/${project.slug}/`, locale)} draggable="false" aria-label={`${copy.open}: ${project.title}`}>
+          <div class="selected__pair">
+            <figure class="selected__whole">
+              <div class="selected__image">
+                <img src={withBase(project.hero.src)} alt={project.hero.alt} width={project.hero.width} height={project.hero.height} loading="lazy" decoding="async" draggable="false" sizes="(max-width: 768px) 90vw, 65vw" />
+                <span class="selected__open" aria-hidden="true">↗</span>
+              </div>
+              <figcaption>{copy.view}</figcaption>
+            </figure>
+            <figure class="selected__detail">
+              <div class="selected__image">
+                <img src={withBase(project.gallery[0].src)} alt={project.gallery[0].alt} width={project.gallery[0].width} height={project.gallery[0].height} loading="lazy" decoding="async" draggable="false" sizes="(max-width: 768px) 45vw, 25vw" />
+              </div>
+              <figcaption>{copy.detail}</figcaption>
+            </figure>
           </div>
           <div class="selected__caption">
             <div><span class="selected__project-index eyebrow">{String(index + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}</span><h3 class="selected__project-title editorial">{project.title}</h3></div>
@@ -48,7 +60,6 @@ const copy = {
   </div>
 
   <div class="selected__bottom site-width">
-    <div class="selected__progress" aria-hidden="true"><span data-progress style={`--progress-count: ${projects.length}`}></span></div>
     <p class="sr-only" aria-live="polite" data-announcement>01 / {String(projects.length).padStart(2, '0')} — {projects[0]?.title}</p>
     <a class="selected__all" href={localizedPath('/projects/', locale)}><span class="eyebrow">{copy.archive}</span><span aria-hidden="true">↗</span></a>
   </div>
@@ -57,70 +68,31 @@ const copy = {
 <script>
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { initLinkedGallery } from '../lib/linkedGallery';
 
   const selected = document.querySelector<HTMLElement>('[data-selected]');
   if (selected) {
-    const track = selected.querySelector<HTMLElement>('[data-track]');
-    const slides = [...selected.querySelectorAll<HTMLElement>('[data-slide]')];
-    const previous = selected.querySelector<HTMLButtonElement>('[data-prev]');
-    const next = selected.querySelector<HTMLButtonElement>('[data-next]');
-    const count = selected.querySelector<HTMLElement>('[data-count]');
-    const announcement = selected.querySelector<HTMLElement>('[data-announcement]');
-    const progress = selected.querySelector<HTMLElement>('[data-progress]');
+    const disposeGallery = initLinkedGallery(selected);
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let active = 0;
-    let ticking = false;
-
-    const render = (index: number) => {
-      const bounded = Math.max(0, Math.min(slides.length - 1, index));
-      if (bounded === active && selected.dataset.ready === 'true') return;
-      active = bounded;
-      selected.dataset.ready = 'true';
-      slides.forEach((slide, slideIndex) => slide.classList.toggle('is-active', slideIndex === active));
-      if (previous) previous.disabled = active === 0;
-      if (next) next.disabled = active === slides.length - 1;
-      const position = `${String(active + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
-      if (count) count.textContent = position;
-      if (progress) progress.style.transform = `translateX(${active * 100}%)`;
-      if (announcement) announcement.textContent = `${position} — ${slides[active]?.querySelector('.selected__project-title')?.textContent || ''}`;
-    };
-    const goTo = (index: number) => {
-      if (!track || !slides[index]) return;
-      render(index);
-      track.scrollTo({ left: slides[index].offsetLeft - slides[0].offsetLeft, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
-    };
-    previous?.addEventListener('click', () => goTo(active - 1));
-    next?.addEventListener('click', () => goTo(active + 1));
-    track?.addEventListener('keydown', (event) => {
-      if (event.key === 'ArrowRight') { event.preventDefault(); goTo(active + 1); }
-      if (event.key === 'ArrowLeft') { event.preventDefault(); goTo(active - 1); }
-    });
-    track?.addEventListener('scroll', () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        if (track && slides.length) {
-          const nearest = slides.reduce((best, slide, index) => {
-            const distance = Math.abs(slide.offsetLeft - slides[0].offsetLeft - track.scrollLeft);
-            return distance < best.distance ? { index, distance } : best;
-          }, { index: 0, distance: Number.POSITIVE_INFINITY });
-          render(nearest.index);
-        }
-        ticking = false;
-      });
-    }, { passive: true });
-    render(0);
+    let entrance: gsap.core.Tween | undefined;
 
     if (!reducedMotion.matches) {
       gsap.registerPlugin(ScrollTrigger);
       const heading = selected.querySelector<HTMLElement>('.selected__head');
-      gsap.fromTo(heading, { autoAlpha: 0, y: 28 }, { autoAlpha: 1, y: 0, duration: 1.15, ease: 'power3.out', clearProps: 'all', scrollTrigger: { trigger: selected, start: 'top 85%', once: true } });
+      entrance = gsap.fromTo(heading, { autoAlpha: 0, y: 28 }, { autoAlpha: 1, y: 0, duration: 1.15, ease: 'power3.out', clearProps: 'all', scrollTrigger: { trigger: selected, start: 'top 85%', once: true } });
     }
+
+    window.addEventListener('pagehide', (event) => {
+      if (event.persisted) return;
+      disposeGallery();
+      entrance?.scrollTrigger?.kill();
+      entrance?.kill();
+    });
   }
 </script>
 
 <style>
-  .selected { padding: 0 0 var(--space-10); overflow: hidden; }
+  .selected { --selected-gutter: max(var(--gutter), calc((100% - var(--content-max)) / 2)); padding: 0 0 var(--space-10); overflow: clip; }
   .selected__head { display: grid; grid-template-columns: 8fr 4fr; gap: var(--grid-gap); padding-top: var(--space-4); border-top: 1px solid var(--color-ink); }
   .selected__eyebrow { margin: 0 0 var(--space-5); color: var(--color-muted); }
   .selected__title { margin: 0; font-size: var(--text-section); font-weight: 300; line-height: .95; letter-spacing: -.055em; }
@@ -131,29 +103,60 @@ const copy = {
   .selected__count { margin-right: var(--space-2); color: var(--color-muted); white-space: nowrap; }
   .selected__arrow { display: grid; place-items: center; width: 3.25rem; height: 3.25rem; padding: 0; border: 1px solid var(--color-ink); border-radius: 50%; background: transparent; color: var(--color-ink); font-size: 1.45rem; transition: color var(--duration-fast), background var(--duration-fast), opacity var(--duration-fast); }
   .selected__arrow:hover:not(:disabled) { background: var(--color-ink); color: var(--color-paper); }
+  .selected__arrow:active:not(:disabled) { transform: scale(.95); }
   .selected__arrow:disabled { opacity: .28; }
-  .selected__track { display: flex; gap: var(--grid-gap); overflow-x: auto; overflow-y: hidden; padding: var(--space-7) var(--gutter) var(--space-4); scroll-padding-left: var(--gutter); scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
-  .selected__track::-webkit-scrollbar { display: none; }
-  .selected__slide { flex: 0 0 min(76vw, 74rem); min-width: 0; scroll-snap-align: start; }
+  .selected__track { display: flex; gap: var(--space-6); overflow-x: auto; overflow-y: hidden; padding: var(--space-7) var(--selected-gutter) var(--space-4); scroll-padding-inline: var(--selected-gutter); scroll-snap-type: x mandatory; scrollbar-width: thin; overscroll-behavior-x: contain; }
+  .selected__track:focus-visible { outline-offset: -4px; }
+  .selected__track.is-dragging { scroll-snap-type: none; cursor: grabbing; }
+  .selected__slide { flex: 0 0 100%; min-width: 0; scroll-snap-align: start; }
   .selected__project { display: block; }
-  .selected__image { position: relative; overflow: hidden; aspect-ratio: 1.72; background: var(--color-mineral); }
-  .selected__image img { width: 100%; height: 100%; object-fit: cover; opacity: .8; transform: scale(1.045); transition: opacity 700ms var(--ease-out), transform 900ms var(--ease-out); }
-  .selected__slide.is-active img { opacity: 1; transform: scale(1); }
-  .selected__project:hover img { transform: scale(1.04); }
+  .selected__pair { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 3fr); align-items: start; gap: clamp(1.5rem, 4vw, 5rem); }
+  .selected__pair figure { min-width: 0; margin: 0; }
+  .selected__pair figcaption { padding-top: var(--space-2); color: var(--color-muted); font-size: .8rem; line-height: 1.5; }
+  .selected__pair .selected__detail { padding-top: clamp(2.5rem, 7vw, 7.5rem); }
+  .selected__image { position: relative; overflow: hidden; aspect-ratio: 1.6; background: var(--color-mineral); }
+  .selected__detail .selected__image { aspect-ratio: .75; }
+  .selected__image img { width: 100%; height: 100%; object-fit: cover; transition: transform 900ms var(--ease-out); }
   .selected__open { position: absolute; right: var(--space-4); bottom: var(--space-4); display: grid; place-items: center; width: 3.1rem; height: 3.1rem; border-radius: 50%; background: var(--color-paper); color: var(--color-ink); font-size: 1.7rem; line-height: 1; transform: translateY(.45rem); opacity: 0; transition: transform var(--duration-reveal) var(--ease-out), opacity var(--duration-reveal) var(--ease-out); }
   .selected__project:hover .selected__open, .selected__project:focus-visible .selected__open { transform: translateY(0); opacity: 1; }
-  .selected__caption { display: flex; justify-content: space-between; align-items: end; gap: var(--space-4); padding-top: var(--space-4); }
+  .selected__caption { display: flex; justify-content: space-between; align-items: end; gap: var(--space-4); padding-top: var(--space-5); }
   .selected__project-index { color: var(--color-muted); }
   .selected__project-title { margin: .55rem 0 0; font-size: clamp(2.25rem, 3.2vw, 4rem); font-weight: 350; line-height: .95; letter-spacing: -.04em; }
   .selected__caption p { margin: 0 0 .1rem; color: var(--color-muted); font-size: .9rem; text-align: right; }
-  .selected__bottom { padding-top: var(--space-5); }
-  .selected__progress { height: 1px; overflow: hidden; background: var(--color-mineral); }
-  .selected__progress span { display: block; width: calc(100% / var(--progress-count)); height: 100%; background: var(--color-ink); transition: transform var(--duration-filter) var(--ease-out); }
+  .selected__bottom { padding-top: var(--space-3); }
   .selected__all { display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); margin-top: var(--space-7); padding: var(--space-4) 0; border-top: 1px solid var(--color-ink); border-bottom: 1px solid var(--color-ink); transition: color var(--duration-fast); }
   .selected__all span:last-child { font-size: 2rem; line-height: .8; transition: transform var(--duration-fast) var(--ease-out); }
   .selected__all:hover { color: var(--color-olive); }
   .selected__all:hover span:last-child { transform: translate(4px, -4px); }
-  @media (max-width: 1024px) { .selected__slide { flex-basis: 82vw; } }
-  @media (max-width: 768px) { .selected__head { grid-template-columns: 1fr; } .selected__aside { flex-direction: row; align-items: end; } .selected__aside > p { margin: 0; } .selected__track { padding-top: var(--space-6); } .selected__slide { flex-basis: 84vw; } .selected__image { aspect-ratio: 1.23; } }
-  @media (max-width: 600px) { .selected__aside { align-items: start; flex-direction: column; } .selected__aside > p { max-width: 25rem; } .selected__controls { align-self: end; } .selected__track { padding-top: var(--space-5); } .selected__slide { flex-basis: calc(100vw - var(--gutter) * 2 - 1.5rem); } .selected__image { aspect-ratio: .92; } .selected__image img { opacity: 1; transform: none; } .selected__open { opacity: 1; transform: none; width: 2.6rem; height: 2.6rem; right: var(--space-3); bottom: var(--space-3); font-size: 1.35rem; } .selected__caption { align-items: start; flex-direction: column; gap: var(--space-3); } .selected__caption p { text-align: left; } }
+  @media (hover: hover) and (pointer: fine) {
+    .selected__track[data-draggable] .selected__project { cursor: grab; user-select: none; -webkit-user-select: none; }
+    .selected__track.is-dragging .selected__project { cursor: grabbing; }
+    .selected__project:hover .selected__whole img { transform: scale(1.025); }
+    .selected__project:hover .selected__detail img { transform: scale(1.045); }
+    .selected__track.is-dragging .selected__project img { transform: none; }
+  }
+  @media (max-width: 768px) {
+    .selected__head { grid-template-columns: 1fr; }
+    .selected__aside { flex-direction: row; align-items: end; }
+    .selected__aside > p { margin: 0; }
+    .selected__track { padding-top: var(--space-6); gap: var(--space-4); }
+    .selected__pair { grid-template-columns: 1fr; gap: 0; }
+    .selected__whole .selected__image { aspect-ratio: 1.3; }
+    .selected__pair .selected__detail { position: relative; justify-self: end; width: 48%; margin-top: -4.5rem; padding: var(--space-1) 0 0 var(--space-1); background: var(--color-paper); }
+    .selected__pair figcaption { font-size: .75rem; }
+    .selected__caption { padding-top: var(--space-4); }
+    .selected__open { right: auto; left: var(--space-3); bottom: var(--space-3); }
+  }
+  @media (max-width: 600px) {
+    .selected__aside { align-items: start; flex-direction: column; }
+    .selected__aside > p { max-width: 25rem; }
+    .selected__controls { align-self: end; }
+    .selected__track { padding-top: var(--space-5); }
+    .selected__open { opacity: 1; transform: none; width: 2.6rem; height: 2.6rem; font-size: 1.35rem; }
+    .selected__caption { align-items: start; flex-direction: column; gap: var(--space-3); }
+    .selected__caption p { text-align: left; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .selected__project img, .selected__project .selected__open { transform: none !important; }
+  }
 </style>

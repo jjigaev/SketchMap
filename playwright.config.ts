@@ -2,6 +2,7 @@ import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests",
+  testIgnore: "**/*.test.mjs",
   fullyParallel: true,
   workers: 2,
   timeout: 45_000,

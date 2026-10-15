@@ -8,7 +8,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "test": "playwright test",
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:unit": "node --experimental-strip-types --test tests/*.test.mjs",
+    "test:e2e": "playwright test",
     "screenshots": "node scripts/capture-portfolio.mjs",
     "format:portfolio": "prettier --plugin=prettier-plugin-astro --write \"src/portfolio/**/*.{astro,ts,css}\" \"src/pages/portfolio/**/*.{astro,ts}\" \"scripts/*.mjs\" \"tests/*.ts\" playwright.config.ts"
   },
